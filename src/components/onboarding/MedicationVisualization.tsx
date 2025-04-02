@@ -572,14 +572,10 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
     <div className="animate-fade-in bg-white/5 rounded-lg p-4 h-full overflow-auto">
       <h3 className="text-xl font-bold text-white mb-4">Medication Schedule</h3>
       <Tabs defaultValue="calendar" className="w-full">
-        <TabsList className="bg-white/10 mb-4 w-full grid grid-cols-4">
+        <TabsList className="bg-white/10 mb-4 w-full grid grid-cols-3">
           <TabsTrigger value="calendar" className="data-[state=active]:bg-white/20">
             <Calendar className="h-4 w-4 mr-2" />
             Calendar
-          </TabsTrigger>
-          <TabsTrigger value="timeline" className="data-[state=active]:bg-white/20">
-            <List className="h-4 w-4 mr-2" />
-            Timeline
           </TabsTrigger>
           <TabsTrigger value="days" className="data-[state=active]:bg-white/20">
             <Sun className="h-4 w-4 mr-2" />
@@ -593,10 +589,6 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
         
         <TabsContent value="calendar" className="mt-0">
           {renderCalendarView()}
-        </TabsContent>
-        
-        <TabsContent value="timeline" className="mt-0">
-          {renderTimelineView()}
         </TabsContent>
         
         <TabsContent value="days" className="mt-0">

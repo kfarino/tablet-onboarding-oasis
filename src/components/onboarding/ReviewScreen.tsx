@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, Pill, User, Phone, Heart, BellRing } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { getDayAbbreviation } from '@/utils/dateUtils';
-import { ALERT_PREFERENCES } from '@/types/onboarding';
+import { ALERT_PREFERENCES, UserRole } from '@/types/onboarding';
 
 interface ReviewScreenProps {
   showExample?: boolean;
@@ -20,7 +20,9 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
     lastName: "Smith",
     role: "caregiver",
     relationship: "child",
+    dateOfBirth: "",  // Empty for caregivers
     phoneNumber: "(555) 123-4567",
+    alertPreference: null,  // Alert preference only for primary users
     healthConditions: ["Diabetes Type 2", "Hypertension", "Arthritis"],
     medications: [
       {
@@ -60,7 +62,43 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
     }
   };
 
-  const displayProfile = showExample ? exampleProfile : userProfile;
+  // Example for primary user
+  const examplePrimaryUser = {
+    firstName: "Robert",
+    lastName: "Johnson",
+    role: "primary_user",
+    relationship: "",  // Empty for primary users
+    dateOfBirth: "05/12/1945",
+    phoneNumber: "(555) 987-6543",
+    alertPreference: "app_notification",
+    healthConditions: ["Hypertension", "Glaucoma"],
+    medications: [
+      {
+        id: uuidv4(),
+        name: "Lisinopril",
+        strength: "10mg",
+        form: "tablet",
+        doses: [
+          {
+            id: uuidv4(),
+            days: ["everyday"],
+            times: ["9:00 AM"],
+            quantity: 1
+          }
+        ]
+      }
+    ],
+    lovedOne: {
+      firstName: "",
+      lastName: "",
+      dateOfBirth: "",
+      alertPreference: null
+    }
+  };
+
+  const displayProfile = showExample 
+    ? userProfile.role === UserRole.Caregiver ? exampleProfile : examplePrimaryUser
+    : userProfile;
 
   const formatDays = (days: string[]) => {
     if (days.includes('everyday')) return 'Everyday';
@@ -89,13 +127,27 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
             </div>
             <div>
               <p className="text-sm text-white/50 uppercase tracking-wider mb-1">Role</p>
-              <p className="text-xl font-medium">{displayProfile.role || "—"}</p>
+              <p className="text-xl font-medium">{displayProfile.role === UserRole.Caregiver ? 'Caregiver' : 'Primary User'}</p>
             </div>
             <div>
               <p className="text-sm text-white/50 uppercase tracking-wider mb-1">Phone Number</p>
               <p className="text-xl font-medium">{displayProfile.phoneNumber || "—"}</p>
             </div>
-            {displayProfile.role === "caregiver" && (
+            {displayProfile.role === UserRole.PrimaryUser && (
+              <>
+                <div>
+                  <p className="text-sm text-white/50 uppercase tracking-wider mb-1">Date of Birth</p>
+                  <p className="text-xl font-medium">{displayProfile.dateOfBirth || "—"}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-white/50 uppercase tracking-wider mb-1">Alert Preference</p>
+                  <p className="text-xl font-medium">
+                    {getAlertPreferenceLabel(displayProfile.alertPreference)}
+                  </p>
+                </div>
+              </>
+            )}
+            {displayProfile.role === UserRole.Caregiver && (
               <div>
                 <p className="text-sm text-white/50 uppercase tracking-wider mb-1">Relationship</p>
                 <p className="text-xl font-medium">{displayProfile.relationship || "—"}</p>
@@ -105,7 +157,7 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
         </div>
 
         {/* Show Loved One section for caregivers */}
-        {displayProfile.role === "caregiver" && (
+        {displayProfile.role === UserRole.Caregiver && (
           <div className="p-5 rounded-lg border border-white/10 bg-white/5">
             <h3 className="text-xl font-medium text-white/90 mb-4 flex items-center">
               <User className="h-6 w-6 mr-3 text-highlight" />

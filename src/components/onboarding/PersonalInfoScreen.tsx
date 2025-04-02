@@ -22,12 +22,17 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
     phoneNumber: "(555) 123-4567",
   };
 
-  const handleRoleChange = (value: string) => {
-    updateUserProfile('role', value);
+  // Example for primary user
+  const examplePrimaryUser = {
+    firstName: "Robert",
+    lastName: "Johnson",
+    role: UserRole.PrimaryUser,
+    dateOfBirth: "05/12/1945",
+    phoneNumber: "(555) 987-6543",
   };
 
-  const handleRelationshipChange = (value: string) => {
-    updateUserProfile('relationship', value);
+  const handleRoleChange = (value: string) => {
+    updateUserProfile('role', value);
   };
 
   return (
@@ -40,7 +45,9 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
               <p className="text-white/70 text-lg mb-1">Full Name</p>
               <p className="text-2xl text-white">
                 {showExample 
-                  ? `${exampleProfile.firstName} ${exampleProfile.lastName}` 
+                  ? userProfile.role === UserRole.Caregiver
+                    ? `${exampleProfile.firstName} ${exampleProfile.lastName}`
+                    : `${examplePrimaryUser.firstName} ${examplePrimaryUser.lastName}`
                   : userProfile.firstName || userProfile.lastName 
                     ? `${userProfile.firstName} ${userProfile.lastName}` 
                     : "Listening..."}
@@ -54,7 +61,7 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
               <p className="text-white/70 text-lg mb-1">Role</p>
               {showExample ? (
                 <p className="text-2xl text-white">
-                  {exampleProfile.role === UserRole.Caregiver ? 'Caregiver' : 'Primary User'}
+                  {userProfile.role === UserRole.Caregiver ? 'Caregiver' : 'Primary User'}
                 </p>
               ) : (
                 <Select 
@@ -74,30 +81,34 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
             </div>
           </div>
 
+          {/* Date of Birth for Primary Users only */}
+          {(userProfile.role === UserRole.PrimaryUser || (showExample && examplePrimaryUser.role === UserRole.PrimaryUser)) && (
+            <div className="voice-display-card p-5 h-32">
+              <Calendar className="text-highlight h-6 w-6" />
+              <div className="flex-1">
+                <p className="text-white/70 text-lg mb-1">Date of Birth</p>
+                <p className="text-2xl text-white">
+                  {showExample 
+                    ? examplePrimaryUser.dateOfBirth 
+                    : userProfile.dateOfBirth || "Listening..."}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Relationship shown as voice captured for Caregivers */}
           {(userProfile.role === UserRole.Caregiver || (showExample && exampleProfile.role === UserRole.Caregiver)) && (
             <div className="voice-display-card p-5 h-32">
               <User className="text-highlight h-6 w-6" />
               <div className="flex-1">
                 <p className="text-white/70 text-lg mb-1">Relationship to Loved One</p>
-                {showExample ? (
-                  <p className="text-2xl text-white">
-                    {RELATIONSHIP_OPTIONS.find(r => r.value === exampleProfile.relationship)?.label || 'Child'}
-                  </p>
-                ) : (
-                  <Select 
-                    value={userProfile.relationship} 
-                    onValueChange={handleRelationshipChange}
-                  >
-                    <SelectTrigger className="w-full bg-transparent border-white/20 text-white text-2xl h-auto p-0">
-                      <SelectValue placeholder="Select relationship" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {RELATIONSHIP_OPTIONS.map((relationship) => (
-                        <SelectItem key={relationship.value} value={relationship.value}>{relationship.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
+                <p className="text-2xl text-white">
+                  {showExample 
+                    ? RELATIONSHIP_OPTIONS.find(r => r.value === exampleProfile.relationship)?.label || 'Child'
+                    : userProfile.relationship
+                      ? RELATIONSHIP_OPTIONS.find(r => r.value === userProfile.relationship)?.label
+                      : "Listening..."}
+                </p>
               </div>
             </div>
           )}
@@ -109,7 +120,9 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
               <p className="text-white/70 text-lg mb-1">Phone Number</p>
               <p className="text-2xl text-white">
                 {showExample 
-                  ? exampleProfile.phoneNumber 
+                  ? userProfile.role === UserRole.Caregiver
+                    ? exampleProfile.phoneNumber 
+                    : examplePrimaryUser.phoneNumber
                   : userProfile.phoneNumber || "Listening..."}
               </p>
             </div>

@@ -1,12 +1,11 @@
 
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { User, Calendar, Phone, ArrowRight } from 'lucide-react';
-import { Button } from "@/components/ui/button";
+import { User, Calendar, Phone } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 
 const PersonalInfoScreen: React.FC = () => {
-  const { userProfile, nextStep } = useOnboarding();
+  const { userProfile } = useOnboarding();
   const [showExample, setShowExample] = useState(false);
 
   // Example data for populated view
@@ -85,17 +84,7 @@ const PersonalInfoScreen: React.FC = () => {
         </div>
       </div>
 
-      <div className="mt-auto flex justify-end mb-6">
-        <Button
-          onClick={nextStep}
-          variant="ghost"
-          size="icon"
-          className="bg-white/10 text-white hover:bg-white/20 hover:text-white rounded-full h-12 w-12"
-          aria-label="Continue"
-        >
-          <ArrowRight className="h-6 w-6" />
-        </Button>
-      </div>
+      {/* Removed the next button as it's now in the header */}
     </div>
   );
 };

@@ -2,12 +2,11 @@
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, Pill, User, Phone, Heart, ArrowRight } from 'lucide-react';
-import { Button } from "@/components/ui/button";
+import { Calendar, Clock, Pill, User, Phone, Heart } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 
 const ReviewScreen: React.FC = () => {
-  const { userProfile, nextStep } = useOnboarding();
+  const { userProfile } = useOnboarding();
   const [showExample, setShowExample] = useState(false);
 
   // Example data for populated view
@@ -160,17 +159,7 @@ const ReviewScreen: React.FC = () => {
         </div>
       </div>
 
-      <div className="mt-6 flex justify-end mb-6">
-        <Button
-          onClick={nextStep}
-          variant="ghost"
-          size="icon" 
-          className="bg-white/10 text-white hover:bg-white/20 hover:text-white rounded-full h-12 w-12"
-          aria-label="Complete Setup"
-        >
-          <ArrowRight className="h-6 w-6" />
-        </Button>
-      </div>
+      {/* Removed the next button as it's now in the header */}
     </div>
   );
 };

@@ -63,17 +63,7 @@ const HealthConditionsScreen: React.FC = () => {
         </div>
       </div>
 
-      <div className="mt-auto flex justify-end mb-6">
-        <Button
-          onClick={nextStep}
-          variant="ghost"
-          size="icon"
-          className="bg-white/10 text-white hover:bg-white/20 hover:text-white rounded-full h-12 w-12"
-          aria-label="Continue"
-        >
-          <ArrowRight className="h-6 w-6" />
-        </Button>
-      </div>
+      {/* Removed the button from here as it will be moved to the Header */}
     </div>
   );
 };

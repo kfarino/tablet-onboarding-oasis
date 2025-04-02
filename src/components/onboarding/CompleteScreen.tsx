@@ -1,8 +1,7 @@
 
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { CheckCircle2, ArrowRight } from 'lucide-react';
-import { Button } from "@/components/ui/button";
+import { CheckCircle2 } from 'lucide-react';
 
 const CompleteScreen: React.FC = () => {
   const { userProfile } = useOnboarding();
@@ -27,17 +26,7 @@ const CompleteScreen: React.FC = () => {
           You can now access your medication schedule and reminders in the main dashboard.
         </p>
         
-        <div className="flex justify-end w-full">
-          <Button 
-            onClick={goToDashboard}
-            variant="ghost"
-            size="icon"
-            className="bg-white/10 text-white hover:bg-white/20 hover:text-white rounded-full h-12 w-12"
-            aria-label="Go to Dashboard"
-          >
-            <ArrowRight className="h-6 w-6" />
-          </Button>
-        </div>
+        {/* Button removed as the navigation is now handled in the Header component */}
       </div>
     </div>
   );

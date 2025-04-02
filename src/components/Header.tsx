@@ -1,9 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
-import { Wifi, ArrowLeft } from 'lucide-react';
+import { Wifi, ArrowLeft, ArrowRight } from 'lucide-react';
 import { format } from 'date-fns';
 import { OnboardingStep } from '@/types/onboarding';
 import { Button } from '@/components/ui/button';
+import { useOnboarding } from '@/contexts/OnboardingContext';
 
 interface HeaderProps {
   currentStep?: OnboardingStep;
@@ -12,6 +13,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ currentStep, onBack }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const { nextStep } = useOnboarding();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -45,6 +47,9 @@ const Header: React.FC<HeaderProps> = ({ currentStep, onBack }) => {
   const showBackButton = currentStep !== undefined && 
     currentStep !== OnboardingStep.Welcome && 
     currentStep !== OnboardingStep.Complete;
+    
+  const showNextButton = currentStep !== undefined && 
+    currentStep !== OnboardingStep.Complete;
 
   return (
     <div className="w-full bg-charcoal text-white py-3 px-6 flex flex-col relative">
@@ -70,6 +75,17 @@ const Header: React.FC<HeaderProps> = ({ currentStep, onBack }) => {
             aria-label="Go back"
           >
             <ArrowLeft size={24} />
+          </Button>
+        )}
+        {showNextButton && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={nextStep}
+            className="absolute right-0 bg-white/10 text-white hover:bg-white/20 hover:text-white rounded-full h-12 w-12"
+            aria-label="Continue"
+          >
+            <ArrowRight className="h-6 w-6" />
           </Button>
         )}
         {getStepTitle() && (

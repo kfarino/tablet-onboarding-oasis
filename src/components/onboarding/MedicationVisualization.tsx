@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { Calendar, List, LayoutGrid, Sun, Moon } from 'lucide-react';
+import { Calendar, List, LayoutGrid, Sun, Moon, Info } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { format, startOfWeek, addDays } from 'date-fns';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { v4 as uuidv4 } from 'uuid';
+import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
+import { Card, CardContent } from '@/components/ui/card';
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 interface MedicationDose {
   id: string;
@@ -303,6 +306,124 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
       });
     });
     
+    // Group medications by time within each day part
+    const groupMedsByTime = (meds: { med: Medication, dose: MedicationDose, time: string }[]) => {
+      const timeMap: Record<string, { med: Medication, dose: MedicationDose, time: string }[]> = {};
+      
+      meds.forEach(item => {
+        if (!timeMap[item.time]) {
+          timeMap[item.time] = [];
+        }
+        timeMap[item.time].push(item);
+      });
+      
+      return Object.entries(timeMap).sort((a, b) => compareTimeStrings(a[0], b[0]));
+    };
+    
+    // Render medication card with hover details
+    const renderMedicationCard = (time: string, meds: { med: Medication, dose: MedicationDose, time: string }[]) => {
+      return (
+        <Card key={time} className="bg-white/10 hover:bg-white/15 transition-colors">
+          <CardContent className="p-4">
+            <div className="flex justify-between items-center mb-2">
+              <div className="bg-white/20 text-white px-2 py-1 rounded text-sm">
+                {time}
+              </div>
+              <div className="text-white/70 text-xs">
+                {meds.length} medication{meds.length !== 1 ? 's' : ''}
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              {meds.map((item, index) => {
+                return (
+                  <HoverCard key={`${item.med.id}-${index}`}>
+                    <HoverCardTrigger asChild>
+                      <div className="bg-white/10 p-2 rounded-md flex justify-between items-center cursor-pointer hover:bg-white/20 transition-colors">
+                        <div className="text-white font-medium truncate max-w-[80%]">
+                          {item.med.name}
+                        </div>
+                        <Info className="h-4 w-4 text-white/60" />
+                      </div>
+                    </HoverCardTrigger>
+                    <HoverCardContent className="w-80 bg-popover/95 backdrop-blur-sm border-white/20">
+                      <div className="space-y-2">
+                        <h4 className="text-lg font-medium text-white">{item.med.name} {item.med.strength}</h4>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="text-white/70 text-sm">Form:</div>
+                          <div className="text-white text-sm">{item.med.form || 'Unknown'}</div>
+                          
+                          <div className="text-white/70 text-sm">Dosage:</div>
+                          <div className="text-white text-sm">
+                            {item.dose.quantity} {item.med.form || 'pill'}{item.dose.quantity !== 1 ? 's' : ''}
+                          </div>
+                          
+                          <div className="text-white/70 text-sm">Time:</div>
+                          <div className="text-white text-sm">{item.time}</div>
+                          
+                          <div className="text-white/70 text-sm">Days:</div>
+                          <div className="text-white text-sm">{formatDays(item.dose.days)}</div>
+                          
+                          {item.med.asNeeded && (
+                            <>
+                              <div className="text-yellow-500 text-sm">As needed:</div>
+                              <div className="text-white text-sm">Max {item.med.asNeeded.maxPerDay} per day</div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </HoverCardContent>
+                  </HoverCard>
+                );
+              })}
+            </div>
+            
+            <Dialog>
+              <DialogTrigger asChild>
+                <button className="w-full mt-3 py-1 text-xs text-white/60 bg-white/5 rounded hover:bg-white/10 transition-colors">
+                  View all medications
+                </button>
+              </DialogTrigger>
+              <DialogContent className="bg-background/95 backdrop-blur-sm text-white border-white/20 max-w-lg">
+                <DialogHeader>
+                  <DialogTitle className="text-white">{time} Medications</DialogTitle>
+                </DialogHeader>
+                <div className="mt-4 space-y-4">
+                  {meds.map((item, index) => (
+                    <div key={`dialog-${item.med.id}-${index}`} className="bg-white/10 p-4 rounded-lg">
+                      <h4 className="text-lg font-medium text-white">{item.med.name} {item.med.strength}</h4>
+                      <div className="grid grid-cols-2 gap-2 mt-2">
+                        <div className="text-white/70 text-sm">Form:</div>
+                        <div className="text-white text-sm">{item.med.form || 'Unknown'}</div>
+                        
+                        <div className="text-white/70 text-sm">Dosage:</div>
+                        <div className="text-white text-sm">
+                          {item.dose.quantity} {item.med.form || 'pill'}{item.dose.quantity !== 1 ? 's' : ''}
+                        </div>
+                        
+                        <div className="text-white/70 text-sm">Time:</div>
+                        <div className="text-white text-sm">{item.time}</div>
+                        
+                        <div className="text-white/70 text-sm">Days:</div>
+                        <div className="text-white text-sm">{formatDays(item.dose.days)}</div>
+                        
+                        {item.med.asNeeded && (
+                          <>
+                            <div className="text-yellow-500 text-sm">As needed:</div>
+                            <div className="text-white text-sm">Max {item.med.asNeeded.maxPerDay} per day</div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </DialogContent>
+            </Dialog>
+          </CardContent>
+        </Card>
+      );
+    };
+    
     return (
       <div className="space-y-6 my-4">
         {Object.entries(timeGroups).map(([key, group]) => (
@@ -316,28 +437,10 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
             </div>
             
             {group.meds.length > 0 ? (
-              <div className="space-y-3 ml-10">
-                {group.meds.map((item, index) => {
-                  // Create a unique key
-                  const itemKey = `${key}-${item.med.id}-${index}`;
-                  
-                  return (
-                    <div key={itemKey} className="bg-white/10 p-3 rounded-lg flex items-start gap-3">
-                      <div className="bg-white/20 text-white px-2 py-1 rounded text-sm min-w-16 text-center">
-                        {item.time}
-                      </div>
-                      <div>
-                        <div className="font-medium text-white">{item.med.name} {item.med.strength}</div>
-                        <div className="text-white/70 text-xs mt-1">
-                          {item.dose.quantity} {item.med.form || 'pill'}{item.dose.quantity !== 1 ? 's' : ''}
-                        </div>
-                        <div className="text-white/60 text-xs mt-1">
-                          {formatDays(item.dose.days)}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
+              <div className="space-y-4 ml-10">
+                {groupMedsByTime(group.meds).map(([time, medsAtTime]) => (
+                  renderMedicationCard(time, medsAtTime)
+                ))}
               </div>
             ) : (
               <div className="text-white/30 text-sm ml-10">No medications scheduled</div>
@@ -355,14 +458,37 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
                 med.doses.some(dose => dose.times.some(time => time.toLowerCase() === "as needed"))
               )
               .map(med => (
-                <div key={med.id} className="bg-white/10 p-3 rounded-lg">
-                  <div className="font-medium text-white">{med.name} {med.strength}</div>
-                  {med.asNeeded && (
-                    <div className="text-white/70 text-sm mt-1">
-                      Max {med.asNeeded.maxPerDay} per day
+                <HoverCard key={med.id}>
+                  <HoverCardTrigger asChild>
+                    <div className="bg-white/10 p-3 rounded-lg flex justify-between items-center cursor-pointer hover:bg-white/20 transition-colors">
+                      <div>
+                        <div className="font-medium text-white">{med.name}</div>
+                        {med.asNeeded && (
+                          <div className="text-white/70 text-xs">
+                            Max {med.asNeeded.maxPerDay} per day
+                          </div>
+                        )}
+                      </div>
+                      <Info className="h-4 w-4 text-white/60" />
                     </div>
-                  )}
-                </div>
+                  </HoverCardTrigger>
+                  <HoverCardContent className="w-80 bg-popover/95 backdrop-blur-sm border-white/20">
+                    <div className="space-y-2">
+                      <h4 className="text-lg font-medium text-white">{med.name} {med.strength}</h4>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="text-white/70 text-sm">Form:</div>
+                        <div className="text-white text-sm">{med.form || 'Unknown'}</div>
+                        
+                        {med.asNeeded && (
+                          <>
+                            <div className="text-yellow-500 text-sm">As needed:</div>
+                            <div className="text-white text-sm">Max {med.asNeeded.maxPerDay} per day</div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
               ))}
             {!medications.some(med => 
               med.asNeeded || 
@@ -450,7 +576,316 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
     );
   };
 
-  // Helper function to determine time group
+  const renderInteractiveDayPartsView = () => {
+    // Group medications into morning (before 12), day (12-5), and night (after 5)
+    const timeGroups = {
+      morning: { 
+        label: "Morning", 
+        icon: <Sun className="h-5 w-5 text-yellow-400" />, 
+        meds: [] as { med: Medication, dose: MedicationDose, time: string }[] 
+      },
+      day: { 
+        label: "Day", 
+        icon: <Sun className="h-5 w-5 text-orange-400" />, 
+        meds: [] as { med: Medication, dose: MedicationDose, time: string }[] 
+      },
+      night: { 
+        label: "Night", 
+        icon: <Moon className="h-5 w-5 text-blue-400" />, 
+        meds: [] as { med: Medication, dose: MedicationDose, time: string }[] 
+      }
+    };
+    
+    // Sort medications into time groups
+    medications.forEach(med => {
+      med.doses.forEach(dose => {
+        dose.times.forEach(time => {
+          if (time.toLowerCase() === "as needed") return;
+          
+          // Parse the time to determine the group
+          const timeGroup = getTimeGroup(time);
+          timeGroups[timeGroup].meds.push({ med, dose, time });
+        });
+      });
+    });
+    
+    // Sort medications within each group by time
+    Object.values(timeGroups).forEach(group => {
+      group.meds.sort((a, b) => {
+        return compareTimeStrings(a.time, b.time);
+      });
+    });
+    
+    // Group medications by time within each day part
+    const groupMedsByTime = (meds: { med: Medication, dose: MedicationDose, time: string }[]) => {
+      const timeMap: Record<string, { med: Medication, dose: MedicationDose, time: string }[]> = {};
+      
+      meds.forEach(item => {
+        if (!timeMap[item.time]) {
+          timeMap[item.time] = [];
+        }
+        timeMap[item.time].push(item);
+      });
+      
+      return Object.entries(timeMap).sort((a, b) => compareTimeStrings(a[0], b[0]));
+    };
+    
+    // Render medication card with hover details
+    const renderMedicationCard = (time: string, meds: { med: Medication, dose: MedicationDose, time: string }[]) => {
+      return (
+        <Card key={time} className="bg-white/10 hover:bg-white/15 transition-colors">
+          <CardContent className="p-4">
+            <div className="flex justify-between items-center mb-2">
+              <div className="bg-white/20 text-white px-2 py-1 rounded text-sm">
+                {time}
+              </div>
+              <div className="text-white/70 text-xs">
+                {meds.length} medication{meds.length !== 1 ? 's' : ''}
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              {meds.map((item, index) => {
+                return (
+                  <HoverCard key={`${item.med.id}-${index}`}>
+                    <HoverCardTrigger asChild>
+                      <div className="bg-white/10 p-2 rounded-md flex justify-between items-center cursor-pointer hover:bg-white/20 transition-colors">
+                        <div className="text-white font-medium truncate max-w-[80%]">
+                          {item.med.name}
+                        </div>
+                        <Info className="h-4 w-4 text-white/60" />
+                      </div>
+                    </HoverCardTrigger>
+                    <HoverCardContent className="w-80 bg-popover/95 backdrop-blur-sm border-white/20">
+                      <div className="space-y-2">
+                        <h4 className="text-lg font-medium text-white">{item.med.name} {item.med.strength}</h4>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="text-white/70 text-sm">Form:</div>
+                          <div className="text-white text-sm">{item.med.form || 'Unknown'}</div>
+                          
+                          <div className="text-white/70 text-sm">Dosage:</div>
+                          <div className="text-white text-sm">
+                            {item.dose.quantity} {item.med.form || 'pill'}{item.dose.quantity !== 1 ? 's' : ''}
+                          </div>
+                          
+                          <div className="text-white/70 text-sm">Time:</div>
+                          <div className="text-white text-sm">{item.time}</div>
+                          
+                          <div className="text-white/70 text-sm">Days:</div>
+                          <div className="text-white text-sm">{formatDays(item.dose.days)}</div>
+                          
+                          {item.med.asNeeded && (
+                            <>
+                              <div className="text-yellow-500 text-sm">As needed:</div>
+                              <div className="text-white text-sm">Max {item.med.asNeeded.maxPerDay} per day</div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </HoverCardContent>
+                  </HoverCard>
+                );
+              })}
+            </div>
+            
+            <Dialog>
+              <DialogTrigger asChild>
+                <button className="w-full mt-3 py-1 text-xs text-white/60 bg-white/5 rounded hover:bg-white/10 transition-colors">
+                  View all medications
+                </button>
+              </DialogTrigger>
+              <DialogContent className="bg-background/95 backdrop-blur-sm text-white border-white/20 max-w-lg">
+                <DialogHeader>
+                  <DialogTitle className="text-white">{time} Medications</DialogTitle>
+                </DialogHeader>
+                <div className="mt-4 space-y-4">
+                  {meds.map((item, index) => (
+                    <div key={`dialog-${item.med.id}-${index}`} className="bg-white/10 p-4 rounded-lg">
+                      <h4 className="text-lg font-medium text-white">{item.med.name} {item.med.strength}</h4>
+                      <div className="grid grid-cols-2 gap-2 mt-2">
+                        <div className="text-white/70 text-sm">Form:</div>
+                        <div className="text-white text-sm">{item.med.form || 'Unknown'}</div>
+                        
+                        <div className="text-white/70 text-sm">Dosage:</div>
+                        <div className="text-white text-sm">
+                          {item.dose.quantity} {item.med.form || 'pill'}{item.dose.quantity !== 1 ? 's' : ''}
+                        </div>
+                        
+                        <div className="text-white/70 text-sm">Time:</div>
+                        <div className="text-white text-sm">{item.time}</div>
+                        
+                        <div className="text-white/70 text-sm">Days:</div>
+                        <div className="text-white text-sm">{formatDays(item.dose.days)}</div>
+                        
+                        {item.med.asNeeded && (
+                          <>
+                            <div className="text-yellow-500 text-sm">As needed:</div>
+                            <div className="text-white text-sm">Max {item.med.asNeeded.maxPerDay} per day</div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </DialogContent>
+            </Dialog>
+          </CardContent>
+        </Card>
+      );
+    };
+    
+    return (
+      <div className="space-y-6 my-4">
+        {Object.entries(timeGroups).map(([key, group]) => (
+          <div key={key} className="bg-white/5 p-4 rounded-lg">
+            <div className="flex items-center gap-3 mb-4">
+              {group.icon}
+              <div className="text-lg font-medium text-white">{group.label}</div>
+              <div className="text-white/70 text-sm">
+                {group.meds.length} medication{group.meds.length !== 1 ? 's' : ''}
+              </div>
+            </div>
+            
+            {group.meds.length > 0 ? (
+              <div className="space-y-4 ml-10">
+                {groupMedsByTime(group.meds).map(([time, medsAtTime]) => (
+                  renderMedicationCard(time, medsAtTime)
+                ))}
+              </div>
+            ) : (
+              <div className="text-white/30 text-sm ml-10">No medications scheduled</div>
+            )}
+          </div>
+        ))}
+        
+        {/* As needed medications */}
+        <div className="bg-white/5 p-4 rounded-lg">
+          <div className="text-yellow-500 font-medium mb-4">As Needed</div>
+          <div className="space-y-3 ml-10">
+            {medications
+              .filter(med => 
+                med.asNeeded || 
+                med.doses.some(dose => dose.times.some(time => time.toLowerCase() === "as needed"))
+              )
+              .map(med => (
+                <HoverCard key={med.id}>
+                  <HoverCardTrigger asChild>
+                    <div className="bg-white/10 p-3 rounded-lg flex justify-between items-center cursor-pointer hover:bg-white/20 transition-colors">
+                      <div>
+                        <div className="font-medium text-white">{med.name}</div>
+                        {med.asNeeded && (
+                          <div className="text-white/70 text-xs">
+                            Max {med.asNeeded.maxPerDay} per day
+                          </div>
+                        )}
+                      </div>
+                      <Info className="h-4 w-4 text-white/60" />
+                    </div>
+                  </HoverCardTrigger>
+                  <HoverCardContent className="w-80 bg-popover/95 backdrop-blur-sm border-white/20">
+                    <div className="space-y-2">
+                      <h4 className="text-lg font-medium text-white">{med.name} {med.strength}</h4>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="text-white/70 text-sm">Form:</div>
+                        <div className="text-white text-sm">{med.form || 'Unknown'}</div>
+                        
+                        {med.asNeeded && (
+                          <>
+                            <div className="text-yellow-500 text-sm">As needed:</div>
+                            <div className="text-white text-sm">Max {med.asNeeded.maxPerDay} per day</div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
+              ))}
+            {!medications.some(med => 
+              med.asNeeded || 
+              med.doses.some(dose => dose.times.some(time => time.toLowerCase() === "as needed"))
+            ) && (
+              <div className="text-white/30 text-sm">No as-needed medications</div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderTableView = () => {
+    // Get all unique days across all medications
+    const allDays = new Set<string>();
+    medications.forEach(med => {
+      med.doses.forEach(dose => {
+        dose.days.forEach(day => {
+          allDays.add(day);
+        });
+      });
+    });
+    
+    // Convert to array and sort days of week
+    const daysOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'everyday'];
+    const sortedDays = Array.from(allDays).sort((a, b) => {
+      if (a === 'everyday') return 1;
+      if (b === 'everyday') return -1;
+      return daysOrder.indexOf(a) - daysOrder.indexOf(b);
+    });
+
+    return (
+      <div className="my-4 rounded-lg overflow-hidden">
+        <Table className="w-full">
+          <TableHeader className="bg-white/10">
+            <TableRow>
+              <TableHead className="text-white">Medication</TableHead>
+              <TableHead className="text-white">Form/Strength</TableHead>
+              <TableHead className="text-white">Schedule</TableHead>
+              <TableHead className="text-white">Dosage</TableHead>
+              <TableHead className="text-white">Special</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {medications.map(med => (
+              <TableRow key={med.id} className="border-b border-white/10">
+                <TableCell className="text-white font-medium">{med.name}</TableCell>
+                <TableCell className="text-white/70">
+                  {med.form}{med.strength ? `, ${med.strength}` : ''}
+                </TableCell>
+                <TableCell>
+                  {med.doses.map(dose => (
+                    <div key={dose.id} className="mb-1 last:mb-0">
+                      <div className="text-white/80">
+                        {dose.days.includes('everyday') ? 'Daily' : dose.days.map(d => d.substring(0, 3)).join(', ')}
+                      </div>
+                      <div className="text-white/70 text-xs">
+                        {dose.times.join(', ')}
+                      </div>
+                    </div>
+                  ))}
+                </TableCell>
+                <TableCell>
+                  {med.doses.map(dose => (
+                    <div key={dose.id} className="text-white mb-1 last:mb-0">
+                      {dose.quantity} {med.form || 'pill'}{dose.quantity !== 1 ? 's' : ''}
+                    </div>
+                  ))}
+                </TableCell>
+                <TableCell>
+                  {med.asNeeded ? (
+                    <div className="bg-yellow-500/20 text-yellow-500 px-2 py-1 rounded text-xs inline-block">
+                      As needed (max {med.asNeeded.maxPerDay}/day)
+                    </div>
+                  ) : (
+                    <span className="text-white/30">-</span>
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    );
+  };
+
   const getTimeGroup = (timeStr: string): "morning" | "day" | "night" => {
     const [time, meridiem] = timeStr.split(' ');
     let [hours, minutes] = time.split(':').map(Number);
@@ -464,7 +899,6 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
     return "night";
   };
 
-  // Helper function to compare time strings
   const compareTimeStrings = (a: string, b: string): number => {
     const parseTime = (timeStr: string) => {
       const [time, meridiem] = timeStr.split(' ');
@@ -477,7 +911,6 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
     return parseTime(a) - parseTime(b);
   };
 
-  // Helper function to format days
   const formatDays = (days: string[]): string => {
     if (days.includes('everyday')) return 'Every day';
     return days.map(day => day.substring(0, 3)).join(', ');
@@ -500,6 +933,10 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
             <Sun className="h-4 w-4 mr-2" />
             Day Parts
           </TabsTrigger>
+          <TabsTrigger value="interactive" className="data-[state=active]:bg-white/20">
+            <Info className="h-4 w-4 mr-2" />
+            Interactive
+          </TabsTrigger>
           <TabsTrigger value="table" className="data-[state=active]:bg-white/20">
             <LayoutGrid className="h-4 w-4 mr-2" />
             Table
@@ -516,6 +953,10 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
         
         <TabsContent value="simple" className="mt-0">
           {renderSimpleTimelineView()}
+        </TabsContent>
+        
+        <TabsContent value="interactive" className="mt-0">
+          {renderInteractiveDayPartsView()}
         </TabsContent>
         
         <TabsContent value="table" className="mt-0">

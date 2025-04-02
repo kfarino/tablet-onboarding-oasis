@@ -15,11 +15,11 @@ const Header: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full bg-black text-white py-3 px-6 flex justify-between items-center">
+    <div className="w-full bg-black text-white py-3 px-6 flex justify-between items-center relative">
       <div className="text-2xl font-medium">
         {format(currentTime, 'EEE, MMM d')}
       </div>
-      <div className="text-2xl font-medium">
+      <div className="text-2xl font-medium absolute left-1/2 transform -translate-x-1/2">
         {format(currentTime, 'h:mm a')}
       </div>
       <div>

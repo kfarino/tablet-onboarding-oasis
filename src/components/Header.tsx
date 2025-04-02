@@ -20,7 +20,7 @@ const Header: React.FC<HeaderProps> = ({ currentStep }) => {
   }, []);
 
   const getStepTitle = () => {
-    if (!currentStep) return "";
+    if (currentStep === undefined) return "";
     
     switch (currentStep) {
       case OnboardingStep.Welcome:

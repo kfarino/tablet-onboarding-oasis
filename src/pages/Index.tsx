@@ -1,12 +1,27 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { OnboardingProvider } from '@/contexts/OnboardingContext';
+import OnboardingContainer from '@/components/onboarding/OnboardingContainer';
+import { useEffect } from 'react';
 
 const Index = () => {
+  // Set up viewport meta tag for tablet display
+  useEffect(() => {
+    // Add viewport meta tag optimized for 7" tablet (1024x600)
+    const meta = document.createElement('meta');
+    meta.name = 'viewport';
+    meta.content = 'width=1024, height=600, initial-scale=1';
+    document.head.appendChild(meta);
+
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-charcoal">
+      <OnboardingProvider>
+        <OnboardingContainer />
+      </OnboardingProvider>
     </div>
   );
 };

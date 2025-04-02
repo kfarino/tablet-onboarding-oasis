@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,80 +14,26 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 16 87% 59%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 16 87% 59% / 30%;
+    --input: 16 87% 59% / 30%;
+    --ring: 16 87% 59%;
 
     --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 
@@ -96,6 +43,67 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-charcoal text-white;
+  }
+}
+
+@layer components {
+  .onboarding-container {
+    @apply fixed inset-0 flex flex-col items-center justify-between p-8 overflow-hidden;
+    max-width: 1024px;
+    max-height: 600px;
+    margin: 0 auto;
+  }
+
+  .onboarding-content {
+    @apply w-full max-h-full flex-1 overflow-y-auto py-4;
+  }
+
+  .onboarding-header {
+    @apply w-full mb-6 flex items-center justify-between;
+  }
+
+  .onboarding-footer {
+    @apply w-full mt-6 flex items-center justify-between;
+  }
+
+  .onboarding-title {
+    @apply text-2xl font-bold text-white;
+  }
+
+  .onboarding-subtitle {
+    @apply text-lg text-white/70 mb-6;
+  }
+
+  .form-group {
+    @apply mb-6;
+  }
+
+  .input-label {
+    @apply block text-sm font-medium text-white/80 mb-2;
+  }
+
+  .medication-card {
+    @apply p-4 rounded-lg border border-white/10 bg-white/5 mb-4;
+  }
+
+  .medication-dose {
+    @apply ml-4 p-3 rounded-md border border-white/10 bg-white/5 my-2;
+  }
+
+  .pill-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-highlight text-white mr-2 mb-2;
+  }
+
+  .progress-indicator {
+    @apply flex items-center justify-center gap-2 my-4;
+  }
+  
+  .progress-dot {
+    @apply w-2 h-2 rounded-full bg-white/30;
+  }
+  
+  .progress-dot-active {
+    @apply w-2 h-2 rounded-full bg-highlight;
   }
 }

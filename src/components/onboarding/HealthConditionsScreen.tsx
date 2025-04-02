@@ -18,8 +18,7 @@ const HealthConditionsScreen: React.FC = () => {
 
   return (
     <div className="animate-fade-in flex flex-col h-full px-8">
-      <div className="flex justify-between items-center mb-3">
-        <p className="text-white/70">Please speak any health conditions you have</p>
+      <div className="flex justify-end items-center mb-3">
         <Badge 
           className="cursor-pointer bg-highlight hover:bg-highlight/90" 
           onClick={toggleExample}

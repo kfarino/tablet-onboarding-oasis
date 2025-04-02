@@ -58,8 +58,7 @@ const ReviewScreen: React.FC = () => {
 
   return (
     <div className="animate-fade-in px-8">
-      <div className="flex justify-between items-center mb-6">
-        <p className="onboarding-subtitle">Please review the following information</p>
+      <div className="flex justify-end items-center mb-6">
         <Badge 
           className="cursor-pointer bg-highlight hover:bg-highlight/90" 
           onClick={toggleExample}

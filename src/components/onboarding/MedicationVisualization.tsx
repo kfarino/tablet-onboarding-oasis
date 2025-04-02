@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Calendar, List, LayoutGrid } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -108,13 +107,8 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
                   // Find medications that should be taken on this day at this time
                   const relevantMeds = meds.filter(({ med, dose }) => {
                     // Check if this medication should be taken on this day
-                    const takesToday = dose.days.includes('everyday') || 
-                                      dose.days.includes(day.fullDayName);
-                    
-                    // Ensure the time matches one of the dose times
-                    const takesAtThisTime = dose.times.includes(time);
-                    
-                    return takesToday && takesAtThisTime;
+                    return dose.days.includes('everyday') || 
+                           dose.days.includes(day.fullDayName);
                   });
                   
                   return (

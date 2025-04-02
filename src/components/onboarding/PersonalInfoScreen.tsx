@@ -8,9 +8,10 @@ import { USER_ROLES, UserRole, RELATIONSHIP_OPTIONS, ALERT_PREFERENCES, AlertPre
 
 interface PersonalInfoScreenProps {
   showExample?: boolean;
+  previewRole?: UserRole;
 }
 
-const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = false }) => {
+const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = false, previewRole }) => {
   const { userProfile, updateUserProfile } = useOnboarding();
 
   // Example data for populated view
@@ -31,9 +32,8 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
     phoneNumber: "(555) 987-6543",
   };
 
-  const handleRoleChange = (value: string) => {
-    updateUserProfile('role', value);
-  };
+  // Determine which role to display
+  const displayRole = previewRole || userProfile.role || UserRole.PrimaryUser;
 
   return (
     <div className="animate-fade-in flex flex-col h-full px-10 py-6">
@@ -45,7 +45,7 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
               <p className="text-white/70 text-lg mb-1">Full Name</p>
               <p className="text-2xl text-white">
                 {showExample 
-                  ? userProfile.role === UserRole.Caregiver
+                  ? displayRole === UserRole.Caregiver
                     ? `${exampleProfile.firstName} ${exampleProfile.lastName}`
                     : `${examplePrimaryUser.firstName} ${examplePrimaryUser.lastName}`
                   : userProfile.firstName || userProfile.lastName 
@@ -59,30 +59,14 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
             <User className="text-highlight h-6 w-6" />
             <div className="flex-1">
               <p className="text-white/70 text-lg mb-1">Role</p>
-              {showExample ? (
-                <p className="text-2xl text-white">
-                  {userProfile.role === UserRole.Caregiver ? 'Caregiver' : 'Primary User'}
-                </p>
-              ) : (
-                <Select 
-                  value={userProfile.role} 
-                  onValueChange={handleRoleChange}
-                >
-                  <SelectTrigger className="w-full bg-transparent border-white/20 text-white text-2xl h-auto p-0">
-                    <SelectValue placeholder="Select role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {USER_ROLES.map((role) => (
-                      <SelectItem key={role.value} value={role.value}>{role.label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
+              <p className="text-2xl text-white">
+                {displayRole === UserRole.Caregiver ? 'Caregiver' : 'Primary User'}
+              </p>
             </div>
           </div>
 
           {/* Date of Birth for Primary Users only */}
-          {(userProfile.role === UserRole.PrimaryUser || (showExample && examplePrimaryUser.role === UserRole.PrimaryUser)) && (
+          {(displayRole === UserRole.PrimaryUser) && (
             <div className="voice-display-card p-5 h-32">
               <Calendar className="text-highlight h-6 w-6" />
               <div className="flex-1">
@@ -97,7 +81,7 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
           )}
 
           {/* Relationship shown as voice captured for Caregivers */}
-          {(userProfile.role === UserRole.Caregiver || (showExample && exampleProfile.role === UserRole.Caregiver)) && (
+          {(displayRole === UserRole.Caregiver) && (
             <div className="voice-display-card p-5 h-32">
               <User className="text-highlight h-6 w-6" />
               <div className="flex-1">
@@ -120,7 +104,7 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
               <p className="text-white/70 text-lg mb-1">Phone Number</p>
               <p className="text-2xl text-white">
                 {showExample 
-                  ? userProfile.role === UserRole.Caregiver
+                  ? displayRole === UserRole.Caregiver
                     ? exampleProfile.phoneNumber 
                     : examplePrimaryUser.phoneNumber
                   : userProfile.phoneNumber || "Listening..."}

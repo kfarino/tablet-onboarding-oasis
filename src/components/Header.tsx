@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Wifi, ArrowLeft, ArrowRight, Eye } from 'lucide-react';
 import { format } from 'date-fns';
-import { OnboardingStep } from '@/types/onboarding';
+import { OnboardingStep, UserRole } from '@/types/onboarding';
 import { Button } from '@/components/ui/button';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 
@@ -11,9 +11,18 @@ interface HeaderProps {
   onBack?: () => void;
   toggleExample?: () => void;
   showExample?: boolean;
+  onTogglePreviewRole?: () => void;
+  previewRole?: UserRole | null;
 }
 
-const Header: React.FC<HeaderProps> = ({ currentStep, onBack, toggleExample, showExample }) => {
+const Header: React.FC<HeaderProps> = ({ 
+  currentStep, 
+  onBack, 
+  toggleExample, 
+  showExample,
+  onTogglePreviewRole,
+  previewRole
+}) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const { nextStep } = useOnboarding();
 
@@ -59,6 +68,19 @@ const Header: React.FC<HeaderProps> = ({ currentStep, onBack, toggleExample, sho
     currentStep !== OnboardingStep.Complete && 
     toggleExample !== undefined;
 
+  // Preview button label based on current state
+  const getPreviewButtonLabel = () => {
+    if (!showExample) return null;
+    
+    if (previewRole === UserRole.PrimaryUser) {
+      return "P";
+    } else if (previewRole === UserRole.Caregiver) {
+      return "C";
+    } else {
+      return "?";
+    }
+  };
+
   return (
     <div className="w-full bg-charcoal text-white py-4 px-8 flex flex-col relative">
       <div className="flex justify-between items-center">
@@ -89,21 +111,38 @@ const Header: React.FC<HeaderProps> = ({ currentStep, onBack, toggleExample, sho
         {showPreviewButton && toggleExample && (
           <Button
             variant="ghost"
-            size="icon"
+            size="icon-circle"
             onClick={toggleExample}
-            className="absolute right-20 bg-white/10 text-white hover:bg-white/20 hover:text-white rounded-full h-14 w-14"
+            className={`absolute right-20 ${showExample ? 'bg-white/20' : 'bg-white/10'} text-white hover:bg-white/20 hover:text-white flex items-center justify-center`}
             aria-label="Toggle preview"
           >
             <Eye className="h-7 w-7" />
+            {getPreviewButtonLabel() && (
+              <span className="absolute text-sm font-bold">{getPreviewButtonLabel()}</span>
+            )}
+          </Button>
+        )}
+        
+        {onTogglePreviewRole && showExample && (
+          <Button
+            variant="ghost"
+            size="icon-circle"
+            onClick={onTogglePreviewRole}
+            className="absolute right-36 bg-white/10 text-white hover:bg-white/20 hover:text-white"
+            aria-label="Toggle role"
+          >
+            <span className="text-sm font-bold">
+              {previewRole === UserRole.PrimaryUser ? 'P' : previewRole === UserRole.Caregiver ? 'C' : '?'}
+            </span>
           </Button>
         )}
         
         {showNextButton && (
           <Button
             variant="ghost"
-            size="icon"
+            size="icon-circle"
             onClick={nextStep}
-            className="absolute right-0 bg-white/10 text-white hover:bg-white/20 hover:text-white rounded-full h-14 w-14"
+            className="absolute right-0 bg-white/10 text-white hover:bg-white/20 hover:text-white"
             aria-label="Continue"
           >
             <ArrowRight className="h-7 w-7" />

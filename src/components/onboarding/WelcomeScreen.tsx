@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
+import { ArrowRight } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 const WelcomeScreen: React.FC = () => {
@@ -15,15 +16,13 @@ const WelcomeScreen: React.FC = () => {
         </p>
       </div>
       
-      <button
+      <Button 
         onClick={nextStep}
-        className="w-64 h-64 rounded-full bg-highlight text-white flex flex-col items-center justify-center shadow-lg hover:bg-highlight/90 transition-colors focus:outline-none focus:ring-2 focus:ring-highlight/50"
+        className="bg-highlight hover:bg-highlight/90 text-white w-full max-w-xs rounded-full py-6 flex items-center justify-center"
       >
-        <div className="text-center">
-          <p className="text-2xl font-light">Tap to</p>
-          <p className="text-5xl font-semibold">Connect</p>
-        </div>
-      </button>
+        <span className="text-xl font-medium">Get Started</span>
+        <ArrowRight className="ml-2 h-6 w-6" />
+      </Button>
     </div>
   );
 };

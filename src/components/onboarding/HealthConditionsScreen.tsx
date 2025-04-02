@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Heart } from 'lucide-react';
@@ -10,7 +11,7 @@ interface HealthConditionsScreenProps {
 const HealthConditionsScreen: React.FC<HealthConditionsScreenProps> = ({ showExample = false }) => {
   const { userProfile } = useOnboarding();
 
-  // Example data for populated view
+  // Example data for populated view - consistent with ReviewScreen
   const exampleConditions = ["Diabetes Type 2", "Hypertension", "Arthritis"];
 
   const displayConditions = showExample ? exampleConditions : userProfile.healthConditions;

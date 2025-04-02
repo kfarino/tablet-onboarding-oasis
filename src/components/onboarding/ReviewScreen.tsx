@@ -3,7 +3,6 @@ import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, Pill, User, Phone, Heart, AlertCircle, Eye } from 'lucide-react';
-import { v4 as uuidv4 } from 'uuid';
 import { getDayAbbreviation } from '@/utils/dateUtils';
 import { ALERT_PREFERENCES, RELATIONSHIP_OPTIONS, UserRole, Medication } from '@/types/onboarding';
 import { Button } from '@/components/ui/button';
@@ -23,45 +22,48 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({
 }) => {
   const { userProfile } = useOnboarding();
 
+  // Example health conditions and medications - same for all roles
+  const exampleHealthConditions = ["Diabetes Type 2", "Hypertension", "Arthritis"];
+  
   // Example data for populated view - updated for caregiver flow with relationship
   const exampleProfile = {
     firstName: "Jane",
     lastName: "Smith",
     role: UserRole.Caregiver,
-    relationship: "child", // Added relationship for caregiver
-    dateOfBirth: "", // Empty for caregivers
+    relationship: "child",
+    dateOfBirth: "",
     phoneNumber: "(555) 123-4567",
-    alertPreference: null, // No alert preference for caregivers
-    healthConditions: [], // Caregivers don't have health conditions
-    medications: [], // Caregivers don't have medications
+    alertPreference: null,
+    healthConditions: exampleHealthConditions,
+    medications: exampleMedications,
     lovedOne: {
       firstName: "Robert",
       lastName: "Smith",
       dateOfBirth: "06/12/1940",
       phoneNumber: "(555) 678-9012",
       alertPreference: "phone_call",
-      healthConditions: ["Diabetes Type 2", "Hypertension", "Arthritis"],
-      medications: exampleMedications.slice(0, 2) // Use just the first two example medications
+      healthConditions: exampleHealthConditions,
+      medications: exampleMedications
     }
   };
 
-  // Example for primary user - updated to remove alert preference
+  // Example for primary user - updated to have same health conditions and medications
   const examplePrimaryUser = {
     firstName: "Robert",
     lastName: "Johnson",
     role: UserRole.PrimaryUser,
-    relationship: "", // Empty for primary users
+    relationship: "",
     dateOfBirth: "05/12/1945",
     phoneNumber: "(555) 987-6543",
-    alertPreference: null, // Removed alert preference for primary user
-    healthConditions: ["Hypertension", "Glaucoma"],
-    medications: exampleMedications, // Use all example medications for primary user
+    alertPreference: null,
+    healthConditions: exampleHealthConditions,
+    medications: exampleMedications,
     lovedOne: {
       firstName: "",
       lastName: "",
       dateOfBirth: "",
       phoneNumber: "",
-      alertPreference: "app_notification" // Added alert preference for loved one
+      alertPreference: "app_notification"
     }
   };
 
@@ -69,24 +71,15 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({
     ? userProfile.role === UserRole.Caregiver ? exampleProfile : examplePrimaryUser
     : userProfile;
 
-  const getDisplayData = () => {
-    if (displayProfile.role === UserRole.Caregiver) {
-      return {
-        healthConditions: showExample 
-          ? exampleProfile.lovedOne.healthConditions 
-          : userProfile.lovedOne.healthConditions || [],
-        medications: showExample 
-          ? exampleProfile.lovedOne.medications 
-          : userProfile.lovedOne.medications || []
-      };
-    }
-    return {
-      healthConditions: displayProfile.healthConditions,
-      medications: displayProfile.medications
-    };
+  // Simplified - always use the primary profile's health conditions and medications
+  const displayData = {
+    healthConditions: showExample 
+      ? exampleHealthConditions 
+      : userProfile.healthConditions,
+    medications: showExample 
+      ? exampleMedications 
+      : userProfile.medications
   };
-
-  const displayData = getDisplayData();
 
   const formatDays = (days: string[]) => {
     if (days.includes('everyday')) return 'Everyday';
@@ -184,7 +177,6 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({
           <h3 className="text-xl font-medium text-white/90 mb-4 flex items-center">
             <Heart className="h-6 w-6 mr-3 text-highlight" />
             Health Conditions
-            {displayProfile.role === UserRole.Caregiver && <span className="ml-2 text-white/50">(Loved One)</span>}
           </h3>
           {displayData.healthConditions.length === 0 ? (
             <p className="text-white/40 text-lg">No health conditions added</p>
@@ -208,7 +200,6 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({
             <h3 className="text-xl font-medium text-white/90 flex items-center">
               <Pill className="h-6 w-6 mr-3 text-highlight" />
               Medications
-              {displayProfile.role === UserRole.Caregiver && <span className="ml-2 text-white/50">(Loved One)</span>}
             </h3>
             {displayData.medications.length > 0 && (
               <Button 

@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { Heart, Info, ArrowRight } from 'lucide-react';
+import { Heart, ArrowRight } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -63,22 +63,15 @@ const HealthConditionsScreen: React.FC = () => {
         </div>
       </div>
 
-      <div className="voice-instruction p-3 rounded-lg border border-white/10 bg-white/5 mb-3">
-        <p className="text-white mb-2 font-medium">You can say:</p>
-        <div className="grid grid-cols-2 gap-2">
-          <p className="text-white/70">"I have diabetes"</p>
-          <p className="text-white/70">"Add hypertension"</p>
-          <p className="text-white/70">"No health conditions"</p>
-          <p className="text-white/70">"Remove [condition name]"</p>
-        </div>
-      </div>
-
-      <div className="mt-auto">
-        <Button 
+      <div className="mt-auto flex justify-end mb-6">
+        <Button
           onClick={nextStep}
-          className="bg-highlight hover:bg-highlight/90 text-white py-2 px-8 rounded-full w-full max-w-xs mx-auto block"
+          variant="ghost"
+          size="icon"
+          className="bg-white/10 text-white hover:bg-white/20 hover:text-white rounded-full h-12 w-12"
+          aria-label="Continue"
         >
-          Continue <ArrowRight className="ml-2" />
+          <ArrowRight className="h-6 w-6" />
         </Button>
       </div>
     </div>

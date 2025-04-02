@@ -112,22 +112,15 @@ const MedicationsScreen: React.FC = () => {
         </div>
       )}
 
-      <div className="voice-instruction mt-6 p-4 rounded-lg border border-white/10 bg-white/5">
-        <p className="text-white mb-2 font-medium">You can say:</p>
-        <ul className="text-white/70 space-y-1 text-sm">
-          <li>"Add Lipitor 50mg tablet"</li>
-          <li>"Take it everyday at 8am and 9pm"</li>
-          <li>"2 pills per dose"</li>
-          <li>"Add another dose on Monday and Wednesday at 11am"</li>
-        </ul>
-      </div>
-
-      <div className="mt-6 text-center">
-        <Button 
+      <div className="mt-6 flex justify-end mb-6">
+        <Button
           onClick={nextStep}
-          className="bg-highlight hover:bg-highlight/90 text-white px-8 py-2 rounded-full"
+          variant="ghost"
+          size="icon"
+          className="bg-white/10 text-white hover:bg-white/20 hover:text-white rounded-full h-12 w-12"
+          aria-label="Continue"
         >
-          Continue <ArrowRight className="ml-2" />
+          <ArrowRight className="h-6 w-6" />
         </Button>
       </div>
     </div>

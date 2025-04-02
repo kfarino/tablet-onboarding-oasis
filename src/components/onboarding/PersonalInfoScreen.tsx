@@ -85,12 +85,15 @@ const PersonalInfoScreen: React.FC = () => {
         </div>
       </div>
 
-      <div className="mt-auto">
-        <Button 
+      <div className="mt-auto flex justify-end mb-6">
+        <Button
           onClick={nextStep}
-          className="bg-highlight hover:bg-highlight/90 text-white py-2 px-8 rounded-full w-full max-w-xs mx-auto"
+          variant="ghost"
+          size="icon"
+          className="bg-white/10 text-white hover:bg-white/20 hover:text-white rounded-full h-12 w-12"
+          aria-label="Continue"
         >
-          Continue <ArrowRight className="ml-2" />
+          <ArrowRight className="h-6 w-6" />
         </Button>
       </div>
     </div>

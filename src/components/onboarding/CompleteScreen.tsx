@@ -27,12 +27,17 @@ const CompleteScreen: React.FC = () => {
           You can now access your medication schedule and reminders in the main dashboard.
         </p>
         
-        <Button 
-          onClick={goToDashboard}
-          className="bg-highlight hover:bg-highlight/90 text-white w-full rounded-full py-4 flex items-center justify-center"
-        >
-          Go to Dashboard <ArrowRight className="ml-2 h-5 w-5" />
-        </Button>
+        <div className="flex justify-end w-full">
+          <Button 
+            onClick={goToDashboard}
+            variant="ghost"
+            size="icon"
+            className="bg-white/10 text-white hover:bg-white/20 hover:text-white rounded-full h-12 w-12"
+            aria-label="Go to Dashboard"
+          >
+            <ArrowRight className="h-6 w-6" />
+          </Button>
+        </div>
       </div>
     </div>
   );

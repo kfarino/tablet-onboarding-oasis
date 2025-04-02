@@ -160,12 +160,15 @@ const ReviewScreen: React.FC = () => {
         </div>
       </div>
 
-      <div className="mt-6 pb-6">
-        <Button 
+      <div className="mt-6 flex justify-end mb-6">
+        <Button
           onClick={nextStep}
-          className="bg-highlight hover:bg-highlight/90 text-white w-full rounded-full py-3 flex items-center justify-center"
+          variant="ghost"
+          size="icon" 
+          className="bg-white/10 text-white hover:bg-white/20 hover:text-white rounded-full h-12 w-12"
+          aria-label="Complete Setup"
         >
-          Complete Setup <ArrowRight className="ml-1 h-4 w-4" />
+          <ArrowRight className="h-6 w-6" />
         </Button>
       </div>
     </div>

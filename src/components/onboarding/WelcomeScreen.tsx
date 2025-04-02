@@ -1,27 +1,22 @@
 
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { ArrowRight } from 'lucide-react';
-import { Button } from "@/components/ui/button";
 
 const WelcomeScreen: React.FC = () => {
   const { nextStep } = useOnboarding();
 
   return (
-    <div className="flex flex-col items-center justify-center h-full animate-fade-in overflow-hidden px-8">
-      <div className="text-center mb-8">
-        <p className="text-white/70 text-xl">
-          Let's set up your medication schedule and reminders
-        </p>
-      </div>
-      
-      <Button 
+    <div className="flex flex-col items-center justify-center h-full animate-fade-in overflow-hidden">
+      <button
         onClick={nextStep}
-        className="bg-highlight hover:bg-highlight/90 text-white w-full max-w-xs rounded-full py-6 flex items-center justify-center"
+        className="w-64 h-64 rounded-full bg-highlight text-white flex flex-col items-center justify-center shadow-lg hover:bg-highlight/90 transition-colors focus:outline-none focus:ring-4 focus:ring-highlight/50"
       >
-        <span className="text-xl font-medium">Get Started</span>
-        <ArrowRight className="ml-2 h-6 w-6" />
-      </Button>
+        {/* Button text */}
+        <div className="text-center">
+          <p className="text-2xl font-light">Tap to</p>
+          <p className="text-5xl font-semibold">Connect</p>
+        </div>
+      </button>
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Pill, Clock, Calendar, Info } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { v4 as uuidv4 } from 'uuid';
+import { getDayAbbreviation } from '@/utils/dateUtils';
 
 const MedicationsScreen: React.FC = () => {
   const { userProfile } = useOnboarding();
@@ -47,6 +48,12 @@ const MedicationsScreen: React.FC = () => {
 
   const displayMedications = showExample ? exampleMedications : userProfile.medications;
 
+  const formatDays = (days: string[]) => {
+    if (days.includes('everyday')) return 'Everyday';
+    
+    return days.map(day => getDayAbbreviation(day)).join(', ');
+  };
+
   return (
     <div className="animate-fade-in px-8">
       <div className="flex justify-end items-center mb-4">
@@ -87,7 +94,7 @@ const MedicationsScreen: React.FC = () => {
                     <Calendar className="h-4 w-4 text-white/80" />
                     <span className="text-base text-white">
                       {dose.days.length > 0 
-                        ? dose.days.map(d => d === 'everyday' ? 'Everyday' : d).join(', ')
+                        ? formatDays(dose.days)
                         : 'No days selected'}
                     </span>
                   </div>

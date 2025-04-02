@@ -33,7 +33,7 @@ const OnboardingContainer: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full h-full flex flex-col p-10">
       <div className="w-full mb-4">
         {currentStep !== OnboardingStep.Welcome && currentStep !== OnboardingStep.Complete && (
           <ProgressIndicator />

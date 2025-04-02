@@ -7,6 +7,7 @@ import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/h
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+import { Badge } from '@/components/ui/badge';
 
 interface MedicationDose {
   id: string;
@@ -252,7 +253,7 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
     );
   };
 
-  const renderSimpleTimelineView = () => {
+  const renderInteractiveDayPartsView = () => {
     const timeGroups = {
       morning: { 
         label: "Morning", 
@@ -325,9 +326,9 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
             
             <div className="flex flex-wrap gap-1 mb-2">
               {sortedFrequencies.map(freq => (
-                <div key={freq} className="bg-white/20 px-2 py-0.5 rounded-full text-xs text-white/90">
+                <Badge key={freq} variant="outline" className="bg-white/20 text-white/90 border-none">
                   {freq}
-                </div>
+                </Badge>
               ))}
             </div>
             
@@ -393,7 +394,7 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
             </div>
             
             {group.meds.length > 0 ? (
-              <div className="grid grid-cols-4 gap-2 ml-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 ml-8">
                 {groupMedsByTime(group.meds).map(([time, medsAtTime]) => (
                   renderMedicationTimeCard(time, medsAtTime)
                 ))}
@@ -406,7 +407,7 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
         
         <div className="bg-white/5 p-3 rounded-lg">
           <div className="text-yellow-500 font-medium mb-3">As Needed</div>
-          <div className="grid grid-cols-4 gap-2 ml-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 ml-8">
             {medications
               .filter(med => 
                 med.asNeeded || 

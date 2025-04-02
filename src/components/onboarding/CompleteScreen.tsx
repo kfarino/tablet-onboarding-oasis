@@ -1,8 +1,7 @@
 
 import React from 'react';
-import { Button } from "@/components/ui/button";
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, Mic } from 'lucide-react';
 
 const CompleteScreen: React.FC = () => {
   const { userProfile } = useOnboarding();
@@ -17,11 +16,17 @@ const CompleteScreen: React.FC = () => {
       <p className="text-white/70 mb-8 max-w-md">
         You can now access your medication schedule and reminders in the main dashboard.
       </p>
-      <Button 
-        className="bg-highlight hover:bg-highlight/90 text-white min-w-[200px]"
-      >
-        Go to Dashboard
-      </Button>
+      
+      <div className="voice-listening-indicator mt-4">
+        <div className="flex flex-col items-center">
+          <div className="bg-white/10 rounded-full p-4 mb-4 pulse-animation">
+            <Mic className="text-highlight h-6 w-6" />
+          </div>
+          <p className="text-white/70 text-center">
+            Say "Go to dashboard" to continue
+          </p>
+        </div>
+      </div>
     </div>
   );
 };

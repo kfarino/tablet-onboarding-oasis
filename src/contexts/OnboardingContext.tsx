@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState } from 'react';
 import { UserProfile, Medication, Dose, OnboardingStep } from '../types/onboarding';
 import { v4 as uuidv4 } from 'uuid';
@@ -18,6 +17,7 @@ interface OnboardingContextType {
   removeDose: (medicationId: string, doseId: string) => void;
   addHealthCondition: (condition: string) => void;
   removeHealthCondition: (index: number) => void;
+  processVoiceInput: (text: string) => void;
 }
 
 const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
@@ -150,6 +150,10 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     updateUserProfile('healthConditions', updatedConditions);
   };
 
+  const processVoiceInput = (text: string) => {
+    console.log('Processing voice input:', text);
+  };
+
   const value = {
     currentStep,
     userProfile,
@@ -164,7 +168,8 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     updateDose,
     removeDose,
     addHealthCondition,
-    removeHealthCondition
+    removeHealthCondition,
+    processVoiceInput
   };
 
   return (

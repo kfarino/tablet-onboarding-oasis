@@ -1,32 +1,23 @@
 
 import React from 'react';
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { ArrowLeft, ArrowRight, Edit, Calendar, Clock, Pill } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
+import { Mic, Calendar, Clock, Pill, User, Phone, Heart } from 'lucide-react';
 
 const ReviewScreen: React.FC = () => {
-  const { userProfile, nextStep, prevStep, setCurrentStep } = useOnboarding();
-  const { OnboardingStep } = require('@/types/onboarding');
+  const { userProfile } = useOnboarding();
 
   return (
     <div className="animate-fade-in">
       <h2 className="onboarding-title">Review Your Information</h2>
-      <p className="onboarding-subtitle">Please review the following information before proceeding</p>
+      <p className="onboarding-subtitle">Please review the following information</p>
 
       <div className="space-y-6">
         <div className="p-4 rounded-lg border border-white/10 bg-white/5">
-          <div className="flex justify-between items-center mb-2">
-            <h3 className="text-sm font-medium text-white/70">Personal Information</h3>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setCurrentStep(OnboardingStep.PersonalInfo)}
-              className="h-8 text-highlight hover:text-highlight hover:bg-white/5"
-            >
-              <Edit className="h-3 w-3 mr-1" /> Edit
-            </Button>
-          </div>
+          <h3 className="text-sm font-medium text-white/70 mb-3 flex items-center">
+            <User className="h-4 w-4 mr-2 text-highlight" />
+            Personal Information
+          </h3>
           <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-white">
             <div>
               <p className="text-xs text-white/50">Full Name</p>
@@ -48,17 +39,10 @@ const ReviewScreen: React.FC = () => {
         </div>
 
         <div className="p-4 rounded-lg border border-white/10 bg-white/5">
-          <div className="flex justify-between items-center mb-2">
-            <h3 className="text-sm font-medium text-white/70">Health Conditions</h3>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setCurrentStep(OnboardingStep.HealthConditions)}
-              className="h-8 text-highlight hover:text-highlight hover:bg-white/5"
-            >
-              <Edit className="h-3 w-3 mr-1" /> Edit
-            </Button>
-          </div>
+          <h3 className="text-sm font-medium text-white/70 mb-3 flex items-center">
+            <Heart className="h-4 w-4 mr-2 text-highlight" />
+            Health Conditions
+          </h3>
           {userProfile.healthConditions.length === 0 ? (
             <p className="text-white/40 text-sm">No health conditions added</p>
           ) : (
@@ -76,17 +60,10 @@ const ReviewScreen: React.FC = () => {
         </div>
 
         <div className="p-4 rounded-lg border border-white/10 bg-white/5">
-          <div className="flex justify-between items-center mb-2">
-            <h3 className="text-sm font-medium text-white/70">Medications</h3>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setCurrentStep(OnboardingStep.Medications)}
-              className="h-8 text-highlight hover:text-highlight hover:bg-white/5"
-            >
-              <Edit className="h-3 w-3 mr-1" /> Edit
-            </Button>
-          </div>
+          <h3 className="text-sm font-medium text-white/70 mb-3 flex items-center">
+            <Pill className="h-4 w-4 mr-2 text-highlight" />
+            Medications
+          </h3>
           {userProfile.medications.length === 0 ? (
             <p className="text-white/40 text-sm">No medications added</p>
           ) : (
@@ -128,20 +105,15 @@ const ReviewScreen: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex justify-between mt-8">
-        <Button 
-          onClick={prevStep} 
-          variant="outline" 
-          className="bg-transparent text-white border-white/30 hover:bg-white/5"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" /> Back
-        </Button>
-        <Button 
-          onClick={nextStep} 
-          className="bg-highlight hover:bg-highlight/90 text-white"
-        >
-          Complete Setup <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
+      <div className="voice-listening-indicator mt-8">
+        <div className="flex flex-col items-center">
+          <div className="bg-white/10 rounded-full p-4 mb-4 pulse-animation">
+            <Mic className="text-highlight h-6 w-6" />
+          </div>
+          <p className="text-white/70 text-center">
+            Say "Complete" to finish setup or "Go back" to make changes
+          </p>
+        </div>
       </div>
     </div>
   );

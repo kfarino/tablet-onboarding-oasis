@@ -106,4 +106,40 @@
   .progress-dot-active {
     @apply w-2 h-2 rounded-full bg-highlight;
   }
+
+  /* New voice-based UI classes */
+  .voice-display-card {
+    @apply flex items-start gap-3 p-4 rounded-lg border border-white/10 bg-white/5 mb-4;
+  }
+
+  .voice-listening-indicator {
+    @apply flex justify-center mt-6;
+  }
+
+  .voice-instruction {
+    @apply text-white/70 mb-4;
+  }
+
+  /* Pulse animation for microphone */
+  .pulse-animation {
+    @apply relative;
+  }
+
+  .pulse-animation::before {
+    content: '';
+    @apply absolute inset-0 rounded-full bg-highlight/20 animate-ping;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

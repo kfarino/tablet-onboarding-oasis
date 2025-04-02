@@ -28,7 +28,7 @@ const HealthConditionsScreen: React.FC = () => {
         </Badge>
       </div>
 
-      <div className="voice-display-card p-3 h-28 mb-3">
+      <div className="voice-display-card p-3 h-32 mb-3">
         <Heart className="text-highlight h-5 w-5" />
         <div className="flex-1">
           <p className="text-white/70 text-sm">Your Health Conditions</p>
@@ -40,12 +40,12 @@ const HealthConditionsScreen: React.FC = () => {
               <p className="text-white/40">None added yet</p>
             </div>
           ) : (
-            <div className="flex flex-wrap gap-2 mt-2 max-h-16 overflow-y-auto">
+            <div className="flex flex-wrap gap-3 mt-3 max-h-20 overflow-y-auto">
               {showExample ? 
                 exampleConditions.map((condition, index) => (
                   <Badge 
                     key={index} 
-                    className="bg-white/10 text-white"
+                    className="bg-white/10 text-white text-base px-4 py-1.5 font-medium"
                   >
                     {condition}
                   </Badge>
@@ -53,7 +53,7 @@ const HealthConditionsScreen: React.FC = () => {
                 userProfile.healthConditions.map((condition, index) => (
                   <Badge 
                     key={index} 
-                    className="bg-white/10 text-white"
+                    className="bg-white/10 text-white text-base px-4 py-1.5 font-medium"
                   >
                     {condition}
                   </Badge>

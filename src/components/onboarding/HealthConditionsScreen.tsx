@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { Heart, ArrowRight } from 'lucide-react';
+import { Heart, ArrowRight, Info } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 

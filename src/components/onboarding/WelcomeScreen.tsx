@@ -22,7 +22,14 @@ const WelcomeScreen: React.FC = () => {
           <div className="bg-white/10 rounded-full p-4 mb-4 pulse-animation">
             <Mic className="text-highlight h-8 w-8" />
           </div>
-          <p className="text-white/70">Say "Begin" or "Start" to continue</p>
+          <p className="text-white/70 mb-6">Say "Begin" or "Start" to continue</p>
+          
+          <Button 
+            onClick={nextStep}
+            className="bg-highlight hover:bg-highlight/90 text-white"
+          >
+            Begin <ArrowRight className="ml-2" />
+          </Button>
         </div>
       </div>
     </div>

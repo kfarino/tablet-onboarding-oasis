@@ -9,10 +9,17 @@ const WelcomeScreen: React.FC = () => {
     <div className="flex flex-col items-center justify-center h-full animate-fade-in">
       <button
         onClick={nextStep}
-        className="w-64 h-64 rounded-full bg-highlight text-white flex flex-col items-center justify-center shadow-lg hover:bg-highlight/90 transition-colors focus:outline-none focus:ring-4 focus:ring-highlight/50"
+        className="w-64 h-64 rounded-full bg-highlight text-white flex flex-col items-center justify-center shadow-lg hover:bg-highlight/90 transition-colors focus:outline-none focus:ring-4 focus:ring-highlight/50 relative"
       >
-        <p className="text-2xl font-light">Tap to</p>
-        <p className="text-5xl font-semibold mt-1">Connect</p>
+        {/* Glow effect */}
+        <div className="absolute w-full h-full rounded-full bg-highlight/40 blur-xl -z-10"></div>
+        <div className="absolute w-full h-full rounded-full animate-pulse bg-highlight/20 blur-md -z-10"></div>
+        
+        {/* Button text */}
+        <div className="text-center">
+          <p className="text-2xl font-light">Tap to</p>
+          <p className="text-5xl font-semibold">Connect</p>
+        </div>
       </button>
     </div>
   );

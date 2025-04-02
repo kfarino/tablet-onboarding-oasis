@@ -61,6 +61,7 @@ const Header: React.FC<HeaderProps> = ({
     currentStep !== OnboardingStep.Complete;
     
   const showNextButton = currentStep !== undefined && 
+    currentStep !== OnboardingStep.Welcome && 
     currentStep !== OnboardingStep.Complete;
     
   const showPreviewButton = currentStep !== OnboardingStep.Welcome && 

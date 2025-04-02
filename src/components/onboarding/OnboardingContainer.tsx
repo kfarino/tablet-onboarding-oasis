@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { OnboardingStep, UserRole } from '@/types/onboarding';
@@ -12,6 +11,9 @@ import CompleteScreen from './CompleteScreen';
 import ProgressIndicator from './ProgressIndicator';
 import Header from '../Header';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import MedicationVisualization from './MedicationVisualization';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft } from 'lucide-react';
 
 interface OnboardingContainerProps {
   showMedicationSchedule?: boolean;
@@ -22,18 +24,16 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
   showMedicationSchedule = false,
   setShowMedicationSchedule = () => {}
 }) => {
-  const { currentStep, prevStep, updateUserProfile } = useOnboarding();
+  const { currentStep, prevStep, updateUserProfile, userProfile } = useOnboarding();
   const [showExample, setShowExample] = useState(false);
   const [previewRole, setPreviewRole] = useState<UserRole | null>(null);
 
   const toggleExample = () => {
     if (showExample) {
-      // If turning off examples, also reset preview role
       setShowExample(false);
       setPreviewRole(null);
     } else {
       setShowExample(true);
-      // Default to Primary User when enabling examples
       setPreviewRole(UserRole.PrimaryUser);
     }
   };
@@ -45,7 +45,6 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
       setPreviewRole(UserRole.Caregiver);
     }
     
-    // Also update the actual role in the user profile
     updateUserProfile('role', previewRole === UserRole.PrimaryUser ? UserRole.Caregiver : UserRole.PrimaryUser);
   };
 
@@ -83,24 +82,30 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
   };
 
   if (showMedicationSchedule) {
-    // Render medication schedule in tablet-sized view
+    const exampleMedications = [
+      // This would typically be your example medications data
+      // For now, we'll use what's available in the userProfile
+    ];
+    
+    const medications = showExample ? exampleMedications : userProfile.medications;
+    
     return (
-      <div className="w-full h-full flex flex-col">
-        <div className="p-4 bg-charcoal flex justify-between items-center">
-          <h2 className="text-xl font-semibold">Medication Schedule</h2>
-          <button 
-            onClick={() => setShowMedicationSchedule(false)}
-            className="bg-highlight text-white px-4 py-2 rounded-full"
-          >
-            Back to Onboarding
-          </button>
-        </div>
-        <div className="flex-1 p-4">
-          {/* This div will be filled by MedicationVisualization component */}
-          <div className="bg-charcoal w-full h-full rounded-lg p-4">
-            {/* The medication visualization component will be rendered inside MedicationsScreen or ReviewScreen */}
-            {renderStep()}
+      <div className="w-full h-full flex flex-col bg-charcoal">
+        <div className="p-4 flex justify-between items-center border-b border-white/10">
+          <div className="flex items-center gap-2">
+            <Button 
+              onClick={() => setShowMedicationSchedule(false)}
+              variant="ghost"
+              size="icon"
+              className="text-white hover:bg-white/10"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <h2 className="text-xl font-semibold text-white">Medication Schedule</h2>
           </div>
+        </div>
+        <div className="flex-1 p-4 overflow-hidden">
+          <MedicationVisualization medications={medications} />
         </div>
       </div>
     );

@@ -887,8 +887,8 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
   return (
     <div className="animate-fade-in bg-white/5 rounded-lg p-4 h-full overflow-auto">
       <h3 className="text-xl font-bold text-white mb-4">Medication Schedule</h3>
-      <Tabs defaultValue="calendar">
-        <TabsList className="bg-white/10 mb-4 grid grid-cols-4 w-full">
+      <Tabs defaultValue="calendar" className="w-full">
+        <TabsList className="bg-white/10 mb-4 w-full grid grid-cols-4">
           <TabsTrigger value="calendar" className="data-[state=active]:bg-white/20">
             <Calendar className="h-4 w-4 mr-2" />
             Calendar

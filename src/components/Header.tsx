@@ -109,7 +109,6 @@ const Header: React.FC<HeaderProps> = ({
             aria-label="Toggle preview"
           >
             <Eye className="h-7 w-7" />
-            {getPreviewButtonLabel()}
           </Button>
         )}
         

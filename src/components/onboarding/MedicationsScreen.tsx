@@ -1,6 +1,6 @@
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { Pill, Clock, Calendar } from 'lucide-react';
+import { Pill, Clock, Calendar, AlertCircle } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { getDayAbbreviation } from '@/utils/dateUtils';
 
@@ -25,7 +25,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = tru
           times: ["8:00 AM", "8:00 PM"],
           quantity: 1
         }
-      ]
+      ],
+      asNeeded: { maxPerDay: 2 }
     },
     {
       id: uuidv4(),
@@ -53,7 +54,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = tru
           times: ["9:00 AM"],
           quantity: 1
         }
-      ]
+      ],
+      asNeeded: { maxPerDay: 1 }
     },
     {
       id: uuidv4(),
@@ -293,6 +295,15 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = tru
                   </div>
                 </div>
               ))}
+              
+              {medication.asNeeded && (
+                <div className="ml-6 mt-3 flex items-center gap-2 bg-white/5 p-2 rounded-md border-l-2 border-yellow-500/50">
+                  <AlertCircle className="h-4 w-4 text-yellow-500/90" />
+                  <span className="text-white/90 text-sm">
+                    As needed: max {medication.asNeeded.maxPerDay} per day
+                  </span>
+                </div>
+              )}
             </div>
           ))}
         </div>

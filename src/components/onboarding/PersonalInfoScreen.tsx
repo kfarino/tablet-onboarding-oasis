@@ -60,7 +60,11 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
             <div className="flex-1">
               <p className="text-white/70 text-lg mb-1">Role</p>
               <p className="text-2xl text-white">
-                {displayRole === UserRole.Caregiver ? 'Caregiver' : 'Primary User'}
+                {showExample 
+                  ? (displayRole === UserRole.Caregiver ? 'Caregiver' : 'Primary User')
+                  : userProfile.role 
+                    ? (userProfile.role === UserRole.Caregiver ? 'Caregiver' : 'Primary User')
+                    : "Listening..."}
               </p>
             </div>
           </div>

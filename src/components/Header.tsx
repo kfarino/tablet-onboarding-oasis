@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Wifi, ArrowLeft, ArrowRight, Eye } from 'lucide-react';
 import { format } from 'date-fns';
@@ -68,17 +67,10 @@ const Header: React.FC<HeaderProps> = ({
     currentStep !== OnboardingStep.Complete && 
     toggleExample !== undefined;
 
-  // Preview button label based on current state
+  // Keep the eye icon button separate
   const getPreviewButtonLabel = () => {
     if (!showExample) return null;
-    
-    if (previewRole === UserRole.PrimaryUser) {
-      return "P";
-    } else if (previewRole === UserRole.Caregiver) {
-      return "C";
-    } else {
-      return "?";
-    }
+    return null; // Just show the Eye icon with no label
   };
 
   return (
@@ -117,9 +109,7 @@ const Header: React.FC<HeaderProps> = ({
             aria-label="Toggle preview"
           >
             <Eye className="h-7 w-7" />
-            {getPreviewButtonLabel() && (
-              <span className="absolute text-sm font-bold">{getPreviewButtonLabel()}</span>
-            )}
+            {getPreviewButtonLabel()}
           </Button>
         )}
         

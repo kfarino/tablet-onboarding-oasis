@@ -73,10 +73,9 @@ const MedicationsScreen: React.FC = () => {
                 <Pill className="h-5 w-5 text-highlight" />
                 <div>
                   <h3 className="text-lg font-medium text-white">
-                    {medication.name || "New Medication"}
+                    {medication.name || "New Medication"}{medication.strength ? ` ${medication.strength}` : ""}
                   </h3>
                   <div className="flex items-center gap-2 text-white/70 text-sm mt-1">
-                    {medication.strength && <span className="bg-white/10 px-2 py-0.5 rounded">{medication.strength}</span>}
                     {medication.form && <span className="bg-white/10 px-2 py-0.5 rounded">{medication.form}</span>}
                   </div>
                 </div>
@@ -100,7 +99,7 @@ const MedicationsScreen: React.FC = () => {
                         : 'No times selected'}
                     </span>
                   </div>
-                  <div className="ml-6 text-sm text-white/80 bg-white/10 px-3 py-1 rounded-full inline-block mt-1">
+                  <div className="ml-6 text-sm text-white/80">
                     <span>{dose.quantity} pill{dose.quantity !== 1 ? 's' : ''} per dose</span>
                   </div>
                 </div>

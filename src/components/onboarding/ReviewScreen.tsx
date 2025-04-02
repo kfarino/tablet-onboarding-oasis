@@ -126,15 +126,12 @@ const ReviewScreen: React.FC = () => {
                 <div key={medication.id} className="p-3 border border-white/20 bg-white/5 rounded-md hover:bg-white/10 transition-colors">
                   <div className="flex items-center gap-2 mb-2">
                     <Pill className="h-4 w-4 text-highlight" />
-                    <h4 className="font-medium text-white text-base">{medication.name}</h4>
+                    <h4 className="font-medium text-white text-base">
+                      {medication.name}{medication.strength ? ` ${medication.strength}` : ""}
+                    </h4>
                   </div>
                   
                   <div className="flex flex-wrap gap-2 mb-3 ml-6">
-                    {medication.strength && (
-                      <span className="text-sm text-white/80 bg-white/10 px-2 py-0.5 rounded">
-                        {medication.strength}
-                      </span>
-                    )}
                     {medication.form && (
                       <span className="text-sm text-white/80 bg-white/10 px-2 py-0.5 rounded">
                         {medication.form}
@@ -160,7 +157,7 @@ const ReviewScreen: React.FC = () => {
                             : 'No times selected'}
                         </span>
                       </div>
-                      <div className="ml-6 text-xs text-white/80 bg-white/10 px-2 py-0.5 rounded-full inline-block mt-1">
+                      <div className="text-xs text-white/80 mt-1">
                         {dose.quantity} pill{dose.quantity !== 1 ? 's' : ''} per dose
                       </div>
                     </div>

@@ -1,17 +1,23 @@
-
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, Pill, User, Phone, Heart, AlertCircle } from 'lucide-react';
+import { Calendar, Clock, Pill, User, Phone, Heart, AlertCircle, Eye } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { getDayAbbreviation } from '@/utils/dateUtils';
 import { ALERT_PREFERENCES, RELATIONSHIP_OPTIONS, UserRole } from '@/types/onboarding';
+import { Button } from '@/components/ui/button';
 
 interface ReviewScreenProps {
   showExample?: boolean;
+  showMedicationSchedule?: boolean;
+  setShowMedicationSchedule?: (show: boolean) => void;
 }
 
-const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
+const ReviewScreen: React.FC<ReviewScreenProps> = ({ 
+  showExample = false,
+  showMedicationSchedule = false,
+  setShowMedicationSchedule = () => {}
+}) => {
   const { userProfile } = useOnboarding();
 
   // Example data for populated view - updated for caregiver flow with relationship
@@ -378,6 +384,10 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
     return relationship ? relationship.label : "—";
   };
 
+  const toggleVisualization = () => {
+    setShowMedicationSchedule(true);
+  };
+
   return (
     <div className="animate-fade-in px-10 py-6 pb-10">
       <div className="space-y-6">
@@ -447,8 +457,6 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
           </div>
         )}
 
-        {/* Removed the Alert Preference section for Primary Users as it's not applicable */}
-
         {/* Health Conditions Section */}
         <div className="p-5 rounded-lg border border-white/10 bg-white/5">
           <h3 className="text-xl font-medium text-white/90 mb-4 flex items-center">
@@ -474,11 +482,24 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
 
         {/* Medications Section */}
         <div className="p-5 rounded-lg border border-white/10 bg-white/5">
-          <h3 className="text-xl font-medium text-white/90 mb-4 flex items-center">
-            <Pill className="h-6 w-6 mr-3 text-highlight" />
-            Medications
-            {displayProfile.role === UserRole.Caregiver && <span className="ml-2 text-white/50">(Loved One)</span>}
-          </h3>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-xl font-medium text-white/90 flex items-center">
+              <Pill className="h-6 w-6 mr-3 text-highlight" />
+              Medications
+              {displayProfile.role === UserRole.Caregiver && <span className="ml-2 text-white/50">(Loved One)</span>}
+            </h3>
+            {displayData.medications.length > 0 && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={toggleVisualization}
+                className="text-white bg-white/10 hover:bg-white/20"
+              >
+                <Eye className="h-4 w-4 mr-2" />
+                View Schedule
+              </Button>
+            )}
+          </div>
           {displayData.medications.length === 0 ? (
             <p className="text-white/40 text-lg">No medications added</p>
           ) : (

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Pill, Clock, Calendar, AlertCircle, Eye, X } from 'lucide-react';
@@ -8,9 +9,15 @@ import MedicationVisualization from './MedicationVisualization';
 
 interface MedicationsScreenProps {
   showExample?: boolean;
+  showMedicationSchedule?: boolean;
+  setShowMedicationSchedule?: (show: boolean) => void;
 }
 
-const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = true }) => {
+const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ 
+  showExample = true,
+  showMedicationSchedule = false,
+  setShowMedicationSchedule = () => {}
+}) => {
   const { userProfile } = useOnboarding();
   const [showVisualization, setShowVisualization] = useState(false);
 
@@ -273,9 +280,10 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = tru
   };
 
   const toggleVisualization = () => {
-    setShowVisualization(!showVisualization);
+    setShowMedicationSchedule(true);
   };
 
+  // Remove local visualization since we're using the container's full-screen approach
   if (showVisualization) {
     return (
       <div className="fixed inset-0 z-50 bg-charcoal animate-in fade-in">
@@ -285,7 +293,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = tru
             <Button 
               variant="ghost" 
               size="icon" 
-              onClick={toggleVisualization}
+              onClick={() => setShowVisualization(false)}
               className="text-white hover:bg-white/10"
             >
               <X className="h-5 w-5" />

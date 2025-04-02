@@ -58,6 +58,7 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
       firstName: "Robert",
       lastName: "Smith",
       dateOfBirth: "06/12/1940",
+      phoneNumber: "(555) 678-9012",
       alertPreference: "phone_call"
     }
   };
@@ -92,6 +93,7 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
       firstName: "",
       lastName: "",
       dateOfBirth: "",
+      phoneNumber: "",
       alertPreference: null
     }
   };
@@ -173,6 +175,10 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
               <div>
                 <p className="text-sm text-white/50 uppercase tracking-wider mb-1">Date of Birth</p>
                 <p className="text-xl font-medium">{displayProfile.lovedOne.dateOfBirth || "—"}</p>
+              </div>
+              <div>
+                <p className="text-sm text-white/50 uppercase tracking-wider mb-1">Phone Number</p>
+                <p className="text-xl font-medium">{displayProfile.lovedOne.phoneNumber || "—"}</p>
               </div>
               <div>
                 <p className="text-sm text-white/50 uppercase tracking-wider mb-1">Alert Preference</p>

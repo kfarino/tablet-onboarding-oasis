@@ -16,6 +16,7 @@ export interface LovedOneProfile {
   firstName: string;
   lastName: string;
   dateOfBirth: string;
+  phoneNumber: string;
   alertPreference: AlertPreference | null;
 }
 

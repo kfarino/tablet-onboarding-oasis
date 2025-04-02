@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { User, Calendar, BellRing } from 'lucide-react';
+import { User, Calendar, BellRing, Phone } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ALERT_PREFERENCES, AlertPreference } from '@/types/onboarding';
 
@@ -17,6 +17,7 @@ const LovedOneInfoScreen: React.FC<LovedOneInfoScreenProps> = ({ showExample = f
     firstName: "Robert",
     lastName: "Smith",
     dateOfBirth: "06/12/1940",
+    phoneNumber: "(555) 678-9012",
     alertPreference: AlertPreference.PhoneCall
   };
 
@@ -67,6 +68,18 @@ const LovedOneInfoScreen: React.FC<LovedOneInfoScreenProps> = ({ showExample = f
                 {showExample 
                   ? exampleLovedOne.dateOfBirth 
                   : userProfile.lovedOne.dateOfBirth || "Listening..."}
+              </p>
+            </div>
+          </div>
+
+          <div className="voice-display-card p-5 h-32">
+            <Phone className="text-highlight h-6 w-6" />
+            <div className="flex-1">
+              <p className="text-white/70 text-lg mb-1">Phone Number</p>
+              <p className="text-2xl text-white">
+                {showExample 
+                  ? exampleLovedOne.phoneNumber 
+                  : userProfile.lovedOne.phoneNumber || "Listening..."}
               </p>
             </div>
           </div>

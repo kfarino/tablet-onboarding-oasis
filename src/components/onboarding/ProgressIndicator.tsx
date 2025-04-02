@@ -44,11 +44,7 @@ const ProgressIndicator: React.FC = () => {
             title={step.label}
             aria-current={currentStep === step.id ? 'step' : undefined}
           />
-          <span className={`text-xs mt-1 transition-all duration-300 ${
-            currentStep === step.id ? 'text-highlight' : 'text-white/40'
-          }`}>
-            {step.label}
-          </span>
+          {/* Removed the text label span that was here */}
         </div>
       ))}
     </div>

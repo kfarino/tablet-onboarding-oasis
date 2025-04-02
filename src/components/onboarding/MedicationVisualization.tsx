@@ -533,78 +533,6 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
     );
   };
 
-  const renderTableView = () => {
-    const allDays = new Set<string>();
-    medications.forEach(med => {
-      med.doses.forEach(dose => {
-        dose.days.forEach(day => {
-          allDays.add(day);
-        });
-      });
-    });
-    
-    const daysOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'everyday'];
-    const sortedDays = Array.from(allDays).sort((a, b) => {
-      if (a === 'everyday') return 1;
-      if (b === 'everyday') return -1;
-      return daysOrder.indexOf(a) - daysOrder.indexOf(b);
-    });
-
-    return (
-      <div className="my-4 rounded-lg overflow-hidden">
-        <Table className="w-full">
-          <TableHeader className="bg-white/10">
-            <TableRow>
-              <TableHead className="text-white">Medication</TableHead>
-              <TableHead className="text-white">Form/Strength</TableHead>
-              <TableHead className="text-white">Schedule</TableHead>
-              <TableHead className="text-white">Dosage</TableHead>
-              <TableHead className="text-white">Special</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {medications.map(med => (
-              <TableRow key={med.id} className="border-b border-white/10">
-                <TableCell className="text-white font-medium">{med.name}</TableCell>
-                <TableCell className="text-white/70">
-                  {med.form}{med.strength ? `, ${med.strength}` : ''}
-                </TableCell>
-                <TableCell>
-                  {med.doses.map(dose => (
-                    <div key={dose.id} className="mb-1 last:mb-0">
-                      <div className="text-white/80">
-                        {dose.days.includes('everyday') ? 'Daily' : dose.days.map(d => d.substring(0, 3)).join(', ')}
-                      </div>
-                      <div className="text-white/70 text-xs">
-                        {dose.times.join(', ')}
-                      </div>
-                    </div>
-                  ))}
-                </TableCell>
-                <TableCell>
-                  {med.doses.map(dose => (
-                    <div key={dose.id} className="text-white mb-1 last:mb-0">
-                      {dose.quantity} {med.form || 'pill'}{dose.quantity !== 1 ? 's' : ''}
-                    </div>
-                  ))}
-                </TableCell>
-                <TableCell>
-                  {med.asNeeded ? (
-                    <div className="bg-yellow-500/20 text-yellow-500 px-2 py-1 rounded text-xs inline-block">
-                      As needed (max {med.asNeeded.maxPerDay}/day)
-                    </div>
-                  ) : (
-                    <span className="text-white/30">-</span>
-                  )}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    );
-  };
-
   const renderInteractiveDayPartsView = () => {
     const timeGroups = {
       morning: { 
@@ -658,32 +586,37 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
       return (
         <Card key={time} className="bg-white/10 hover:bg-white/15 transition-colors">
           <CardContent className="p-3">
-            <div className="flex justify-between items-center mb-2">
-              <div className="bg-white/20 text-white px-2 py-1 rounded text-sm font-semibold">
-                {time}
-              </div>
-              <div className="text-white/70 text-xs">
-                {meds.length} dose{meds.length !== 1 ? 's' : ''}
+            <div className="flex justify-between items-center mb-3">
+              <div className="flex items-center gap-2">
+                <div className="bg-highlight rounded-md px-2 py-1 text-charcoal font-medium text-sm">
+                  {time}
+                </div>
+                <div className="text-white/90 text-sm font-medium">
+                  {meds.length} {meds.length === 1 ? 'medication' : 'medications'}
+                </div>
               </div>
             </div>
             
-            <div className="space-y-1">
+            <div className="grid grid-cols-3 gap-2">
               {meds.map((item, index) => (
                 <Popover key={`${item.med.id}-${index}`}>
                   <PopoverTrigger asChild>
-                    <div className="bg-white/10 p-2 rounded-md flex justify-between items-center cursor-pointer hover:bg-white/20 transition-colors">
-                      <div className="text-white font-medium truncate max-w-[60%]">
+                    <div className="bg-white/10 px-2 py-1.5 rounded-md flex flex-col cursor-pointer hover:bg-white/20 transition-colors">
+                      <div className="text-white font-medium truncate text-sm">
                         {item.med.name}
                       </div>
-                      <div className="flex items-center gap-1 text-white/70 text-xs">
+                      <div className="flex items-center gap-1 text-white/60 text-xs">
                         <span>{formatFrequency(item.dose.days)}</span>
-                        <Info className="h-3.5 w-3.5 text-white/60" />
                       </div>
                     </div>
                   </PopoverTrigger>
-                  <PopoverContent className="w-72 p-3">
-                    <div className="space-y-2">
-                      <h4 className="text-base font-semibold text-white">{item.med.name}</h4>
+                  <PopoverContent className="w-72">
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2">
+                        <Pill className="h-5 w-5 text-highlight" />
+                        <h4 className="text-base font-semibold">{item.med.name}</h4>
+                      </div>
+                      
                       {item.med.strength && (
                         <div className="bg-white/10 px-2 py-1 rounded text-xs inline-block text-white/90">
                           {item.med.strength}
@@ -718,12 +651,12 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
             <Dialog>
               <DialogTrigger asChild>
                 <button className="w-full mt-2 py-1 text-xs text-white/70 bg-white/5 rounded hover:bg-white/10 transition-colors">
-                  View all medications
+                  View all {meds.length} medications
                 </button>
               </DialogTrigger>
-              <DialogContent className="border-white/30 max-w-lg">
+              <DialogContent className="max-w-lg">
                 <DialogHeader>
-                  <DialogTitle className="text-xl">{time} Medications</DialogTitle>
+                  <DialogTitle>{time} Medications</DialogTitle>
                 </DialogHeader>
                 <div className="mt-4 space-y-3">
                   {meds.map((item, index) => (
@@ -808,7 +741,7 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
                       )}
                     </div>
                   </PopoverTrigger>
-                  <PopoverContent className="w-72 p-3">
+                  <PopoverContent className="w-72">
                     <div className="space-y-2">
                       <h4 className="text-base font-semibold text-white">{med.name}</h4>
                       {med.strength && (
@@ -840,6 +773,78 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
             )}
           </div>
         </div>
+      </div>
+    );
+  };
+
+  const renderTableView = () => {
+    const allDays = new Set<string>();
+    medications.forEach(med => {
+      med.doses.forEach(dose => {
+        dose.days.forEach(day => {
+          allDays.add(day);
+        });
+      });
+    });
+    
+    const daysOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'everyday'];
+    const sortedDays = Array.from(allDays).sort((a, b) => {
+      if (a === 'everyday') return 1;
+      if (b === 'everyday') return -1;
+      return daysOrder.indexOf(a) - daysOrder.indexOf(b);
+    });
+
+    return (
+      <div className="my-4 rounded-lg overflow-hidden">
+        <Table className="w-full">
+          <TableHeader className="bg-white/10">
+            <TableRow>
+              <TableHead className="text-white">Medication</TableHead>
+              <TableHead className="text-white">Form/Strength</TableHead>
+              <TableHead className="text-white">Schedule</TableHead>
+              <TableHead className="text-white">Dosage</TableHead>
+              <TableHead className="text-white">Special</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {medications.map(med => (
+              <TableRow key={med.id} className="border-b border-white/10">
+                <TableCell className="text-white font-medium">{med.name}</TableCell>
+                <TableCell className="text-white/70">
+                  {med.form}{med.strength ? `, ${med.strength}` : ''}
+                </TableCell>
+                <TableCell>
+                  {med.doses.map(dose => (
+                    <div key={dose.id} className="mb-1 last:mb-0">
+                      <div className="text-white/80">
+                        {dose.days.includes('everyday') ? 'Daily' : dose.days.map(d => d.substring(0, 3)).join(', ')}
+                      </div>
+                      <div className="text-white/70 text-xs">
+                        {dose.times.join(', ')}
+                      </div>
+                    </div>
+                  ))}
+                </TableCell>
+                <TableCell>
+                  {med.doses.map(dose => (
+                    <div key={dose.id} className="text-white mb-1 last:mb-0">
+                      {dose.quantity} {med.form || 'pill'}{dose.quantity !== 1 ? 's' : ''}
+                    </div>
+                  ))}
+                </TableCell>
+                <TableCell>
+                  {med.asNeeded ? (
+                    <div className="bg-yellow-500/20 text-yellow-500 px-2 py-1 rounded text-xs inline-block">
+                      As needed (max {med.asNeeded.maxPerDay}/day)
+                    </div>
+                  ) : (
+                    <span className="text-white/30">-</span>
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     );
   };
@@ -892,10 +897,6 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
             <List className="h-4 w-4 mr-2" />
             Timeline
           </TabsTrigger>
-          <TabsTrigger value="simple" className="data-[state=active]:bg-white/20">
-            <Sun className="h-4 w-4 mr-2" />
-            Day Parts
-          </TabsTrigger>
           <TabsTrigger value="interactive" className="data-[state=active]:bg-white/20">
             <Info className="h-4 w-4 mr-2" />
             Interactive
@@ -912,10 +913,6 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
         
         <TabsContent value="timeline" className="mt-0">
           {renderTimelineView()}
-        </TabsContent>
-        
-        <TabsContent value="simple" className="mt-0">
-          {renderSimpleTimelineView()}
         </TabsContent>
         
         <TabsContent value="interactive" className="mt-0">

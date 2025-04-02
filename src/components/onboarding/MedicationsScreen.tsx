@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { Pill, Clock, Calendar, AlertCircle, Eye } from 'lucide-react';
+import { Pill, Clock, Calendar, AlertCircle, Eye, X } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { getDayAbbreviation } from '@/utils/dateUtils';
 import { Button } from '@/components/ui/button';
@@ -13,6 +14,7 @@ interface MedicationsScreenProps {
 const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = true }) => {
   const { userProfile } = useOnboarding();
   const [showVisualization, setShowVisualization] = useState(false);
+  const [fullscreenMode, setFullscreenMode] = useState(false);
 
   // Example data for populated view - expanded to 15 medications with various scenarios
   // Swapped first and second row (first 6 items rearranged)
@@ -272,20 +274,68 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = tru
     return days.map(day => getDayAbbreviation(day)).join(', ');
   };
 
+  const toggleVisualization = () => {
+    setShowVisualization(!showVisualization);
+    setFullscreenMode(false);
+  };
+
+  const toggleFullscreen = () => {
+    setFullscreenMode(!fullscreenMode);
+    if (!showVisualization) {
+      setShowVisualization(true);
+    }
+  };
+
+  if (fullscreenMode && showVisualization) {
+    return (
+      <div className="fixed inset-0 z-50 bg-black/95 animate-in fade-in">
+        <div className="p-4 h-full flex flex-col">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold text-white">Medication Schedule</h2>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={toggleFullscreen}
+              className="text-white hover:bg-white/10"
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
+          <div className="flex-1 overflow-auto">
+            <MedicationVisualization medications={displayMedications} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="animate-fade-in px-8 pb-10">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold text-white">Your Medications</h2>
         {displayMedications.length > 0 && (
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={() => setShowVisualization(!showVisualization)}
-            className="text-white bg-white/10 hover:bg-white/20"
-          >
-            <Eye className="h-4 w-4 mr-2" />
-            {showVisualization ? 'Hide Schedule' : 'View Schedule'}
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={toggleVisualization}
+              className="text-white bg-white/10 hover:bg-white/20"
+            >
+              <Eye className="h-4 w-4 mr-2" />
+              {showVisualization ? 'Hide Schedule' : 'View Schedule'}
+            </Button>
+            {showVisualization && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={toggleFullscreen}
+                className="text-white bg-white/10 hover:bg-white/20"
+              >
+                <Calendar className="h-4 w-4 mr-2" />
+                Fullscreen
+              </Button>
+            )}
+          </div>
         )}
       </div>
 

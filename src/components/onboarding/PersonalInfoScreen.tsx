@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { Mic, User, Calendar, Phone, ArrowRight } from 'lucide-react';
+import { User, Calendar, Phone, ArrowRight } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 const PersonalInfoScreen: React.FC = () => {
@@ -49,19 +49,10 @@ const PersonalInfoScreen: React.FC = () => {
         </div>
       </div>
 
-      <div className="mt-auto flex flex-col items-center">
-        <div className="bg-white/10 rounded-full p-4 mb-3 pulse-animation">
-          <Mic className="text-highlight h-6 w-6" />
-        </div>
-        <p className="text-white/70 text-center mb-3">
-          {userProfile.firstName && userProfile.lastName && userProfile.role && userProfile.dateOfBirth && userProfile.phoneNumber
-            ? "Say \"Next\" to continue"
-            : "I'm listening..."}
-        </p>
-        
+      <div className="mt-auto">
         <Button 
           onClick={nextStep}
-          className="bg-highlight hover:bg-highlight/90 text-white py-2 px-8 rounded-full w-full max-w-xs"
+          className="bg-highlight hover:bg-highlight/90 text-white py-2 px-8 rounded-full w-full max-w-xs mx-auto"
         >
           Continue <ArrowRight className="ml-2" />
         </Button>

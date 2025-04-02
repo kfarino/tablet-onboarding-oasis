@@ -446,23 +446,7 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
           </div>
         )}
 
-        {/* Alert Preference for Loved One of Primary Users */}
-        {displayProfile.role === UserRole.PrimaryUser && (
-          <div className="p-5 rounded-lg border border-white/10 bg-white/5">
-            <h3 className="text-xl font-medium text-white/90 mb-4 flex items-center">
-              <BellRing className="h-6 w-6 mr-3 text-highlight" />
-              Alert Preferences
-            </h3>
-            <div className="grid grid-cols-1 gap-4 text-white">
-              <div>
-                <p className="text-sm text-white/50 uppercase tracking-wider mb-1">Medication Reminders</p>
-                <p className="text-xl font-medium">
-                  {getAlertPreferenceLabel(displayProfile.lovedOne.alertPreference)}
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Removed the Alert Preference section for Primary Users as it's not applicable */}
 
         {/* Health Conditions Section */}
         <div className="p-5 rounded-lg border border-white/10 bg-white/5">

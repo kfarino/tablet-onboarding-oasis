@@ -107,7 +107,20 @@
     @apply w-2 h-2 rounded-full bg-highlight;
   }
 
-  /* New voice-based UI classes */
+  /* Header styling based on design system */
+  .header-bar {
+    @apply flex items-center justify-center w-full h-16 bg-charcoal relative;
+  }
+  
+  .header-title {
+    @apply text-white text-xl font-medium text-center;
+  }
+  
+  .header-button {
+    @apply absolute left-4 flex items-center justify-center w-10 h-10 rounded-full bg-white/10;
+  }
+
+  /* Voice-based UI classes */
   .voice-display-card {
     @apply flex items-start gap-3 p-4 rounded-lg border border-white/10 bg-white/5 mb-4;
   }
@@ -120,26 +133,34 @@
     @apply text-white/70 mb-4;
   }
 
+  /* List item styling based on design system */
+  .list-item {
+    @apply w-full p-4 border border-white/10 bg-white/5 rounded-lg mb-3;
+  }
+
+  /* Button styling based on design system */
+  .primary-button {
+    @apply bg-highlight text-white rounded-full py-3 px-6 w-full max-w-xs flex items-center justify-center hover:bg-highlight/90 transition-colors;
+  }
+
   /* Pulse animation for microphone */
   .pulse-animation {
-    @apply relative;
-  }
-
-  .pulse-animation::before {
-    content: '';
-    @apply absolute inset-0 rounded-full bg-highlight/20 animate-ping;
+    @apply relative animate-pulse;
   }
 }
 
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
+/* Remove browser outline on focus for buttons that match our design system */
+button:focus {
+  outline: none;
 }
 
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+/* Custom spacing utility classes */
+.px-10 {
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.py-10 {
+  padding-top: 40px;
+  padding-bottom: 40px;
 }

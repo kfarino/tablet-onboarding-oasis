@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { User, Calendar, Phone, BellRing } from 'lucide-react';
@@ -42,14 +41,14 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
   };
 
   return (
-    <div className="animate-fade-in flex flex-col h-full px-6 py-2">
-      <div className="space-y-2">
-        <div className="grid grid-cols-2 gap-3">
-          <div className="voice-display-card p-3 h-24">
-            <User className="text-highlight h-5 w-5" />
+    <div className="animate-fade-in flex flex-col h-full px-10 py-6">
+      <div className="space-y-6">
+        <div className="grid grid-cols-2 gap-5 mb-4">
+          <div className="voice-display-card p-5 h-32">
+            <User className="text-highlight h-6 w-6" />
             <div className="flex-1">
-              <p className="text-white/70 text-base mb-0.5">Full Name</p>
-              <p className="text-xl text-white">
+              <p className="text-white/70 text-lg mb-1">Full Name</p>
+              <p className="text-2xl text-white">
                 {showExample 
                   ? displayRole === UserRole.Caregiver
                     ? `${exampleProfile.firstName} ${exampleProfile.lastName}`
@@ -61,11 +60,11 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
             </div>
           </div>
 
-          <div className="voice-display-card p-3 h-24">
-            <User className="text-highlight h-5 w-5" />
+          <div className="voice-display-card p-5 h-32">
+            <User className="text-highlight h-6 w-6" />
             <div className="flex-1">
-              <p className="text-white/70 text-base mb-0.5">Role</p>
-              <p className="text-xl text-white">
+              <p className="text-white/70 text-lg mb-1">Role</p>
+              <p className="text-2xl text-white">
                 {showExample 
                   ? (displayRole === UserRole.Caregiver ? 'Caregiver' : 'Primary User')
                   : userProfile.role 
@@ -77,11 +76,11 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
 
           {/* Date of Birth for Primary Users only */}
           {(displayRole === UserRole.PrimaryUser) && (
-            <div className="voice-display-card p-3 h-24">
-              <Calendar className="text-highlight h-5 w-5" />
+            <div className="voice-display-card p-5 h-32">
+              <Calendar className="text-highlight h-6 w-6" />
               <div className="flex-1">
-                <p className="text-white/70 text-base mb-0.5">Date of Birth</p>
-                <p className="text-xl text-white">
+                <p className="text-white/70 text-lg mb-1">Date of Birth</p>
+                <p className="text-2xl text-white">
                   {showExample 
                     ? examplePrimaryUser.dateOfBirth 
                     : userProfile.dateOfBirth || "Listening..."}
@@ -92,11 +91,11 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
 
           {/* Relationship shown as voice captured for Caregivers */}
           {(displayRole === UserRole.Caregiver) && (
-            <div className="voice-display-card p-3 h-24">
-              <User className="text-highlight h-5 w-5" />
+            <div className="voice-display-card p-5 h-32">
+              <User className="text-highlight h-6 w-6" />
               <div className="flex-1">
-                <p className="text-white/70 text-base mb-0.5">Relationship to Loved One</p>
-                <p className="text-xl text-white">
+                <p className="text-white/70 text-lg mb-1">Relationship to Loved One</p>
+                <p className="text-2xl text-white">
                   {showExample 
                     ? RELATIONSHIP_OPTIONS.find(r => r.value === exampleProfile.relationship)?.label || 'Child'
                     : userProfile.relationship
@@ -108,11 +107,11 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
           )}
 
           {/* Phone number is needed for both roles */}
-          <div className="voice-display-card p-3 h-24">
-            <Phone className="text-highlight h-5 w-5" />
+          <div className="voice-display-card p-5 h-32">
+            <Phone className="text-highlight h-6 w-6" />
             <div className="flex-1">
-              <p className="text-white/70 text-base mb-0.5">Phone Number</p>
-              <p className="text-xl text-white">
+              <p className="text-white/70 text-lg mb-1">Phone Number</p>
+              <p className="text-2xl text-white">
                 {showExample 
                   ? displayRole === UserRole.Caregiver
                     ? exampleProfile.phoneNumber 

@@ -42,10 +42,7 @@ const OnboardingContainer: React.FC = () => {
   };
 
   const needsScrollArea = () => {
-    // Only use ScrollArea for more complex screens with more content
-    return currentStep === OnboardingStep.HealthConditions || 
-           currentStep === OnboardingStep.Medications || 
-           currentStep === OnboardingStep.Review;
+    return currentStep !== OnboardingStep.Welcome && currentStep !== OnboardingStep.Complete;
   };
 
   const renderStep = () => {

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { OnboardingStep } from '@/types/onboarding';
 import WelcomeScreen from './WelcomeScreen';
@@ -14,6 +14,11 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 
 const OnboardingContainer: React.FC = () => {
   const { currentStep, prevStep } = useOnboarding();
+  const [showExample, setShowExample] = useState(false);
+
+  const toggleExample = () => {
+    setShowExample(!showExample);
+  };
 
   const renderStep = () => {
     switch (currentStep) {

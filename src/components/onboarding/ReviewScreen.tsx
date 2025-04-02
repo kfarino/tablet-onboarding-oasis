@@ -2,9 +2,10 @@
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, Pill, User, Phone, Heart } from 'lucide-react';
+import { Calendar, Clock, Pill, User, Phone, Heart, Eye } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { getDayAbbreviation } from '@/utils/dateUtils';
+import { Button } from '@/components/ui/button';
 
 const ReviewScreen: React.FC = () => {
   const { userProfile } = useOnboarding();
@@ -64,15 +65,6 @@ const ReviewScreen: React.FC = () => {
 
   return (
     <div className="animate-fade-in px-10 py-6">
-      <div className="flex justify-end items-center mb-6">
-        <Badge 
-          className="cursor-pointer bg-highlight hover:bg-highlight/90 text-base py-1.5 px-4" 
-          onClick={toggleExample}
-        >
-          {showExample ? "Show Empty View" : "Show Populated View"}
-        </Badge>
-      </div>
-
       <div className="space-y-6">
         <div className="p-5 rounded-lg border border-white/10 bg-white/5">
           <h3 className="text-xl font-medium text-white/90 mb-4 flex items-center">

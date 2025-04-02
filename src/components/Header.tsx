@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Wifi, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Wifi, ArrowLeft, ArrowRight, Eye } from 'lucide-react';
 import { format } from 'date-fns';
 import { OnboardingStep } from '@/types/onboarding';
 import { Button } from '@/components/ui/button';
@@ -14,6 +14,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ currentStep, onBack }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const { nextStep } = useOnboarding();
+  const [showExample, setShowExample] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -22,6 +23,10 @@ const Header: React.FC<HeaderProps> = ({ currentStep, onBack }) => {
     
     return () => clearInterval(interval);
   }, []);
+
+  const toggleExample = () => {
+    setShowExample(!showExample);
+  };
 
   const getStepTitle = () => {
     if (currentStep === undefined) return "";
@@ -50,6 +55,8 @@ const Header: React.FC<HeaderProps> = ({ currentStep, onBack }) => {
     
   const showNextButton = currentStep !== undefined && 
     currentStep !== OnboardingStep.Complete;
+    
+  const showPreviewButton = currentStep === OnboardingStep.Review;
 
   return (
     <div className="w-full bg-charcoal text-white py-4 px-8 flex flex-col relative">
@@ -77,6 +84,19 @@ const Header: React.FC<HeaderProps> = ({ currentStep, onBack }) => {
             <ArrowLeft size={28} />
           </Button>
         )}
+        
+        {showPreviewButton && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleExample}
+            className="absolute right-20 bg-white/10 text-white hover:bg-white/20 hover:text-white rounded-full h-14 w-14"
+            aria-label="Toggle preview"
+          >
+            <Eye className="h-7 w-7" />
+          </Button>
+        )}
+        
         {showNextButton && (
           <Button
             variant="ghost"
@@ -88,6 +108,7 @@ const Header: React.FC<HeaderProps> = ({ currentStep, onBack }) => {
             <ArrowRight className="h-7 w-7" />
           </Button>
         )}
+        
         {getStepTitle() && (
           <div className="text-[44px] font-bold">
             {getStepTitle()}

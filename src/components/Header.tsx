@@ -19,9 +19,6 @@ const Header: React.FC = () => {
       <div className="text-2xl font-medium">
         {format(currentTime, 'EEE, MMM d')}
       </div>
-      <div className="text-2xl font-medium text-center absolute left-1/2 transform -translate-x-1/2">
-        Oasis Health
-      </div>
       <div className="text-2xl font-medium">
         {format(currentTime, 'h:mm a')}
       </div>

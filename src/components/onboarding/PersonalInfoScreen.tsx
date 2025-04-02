@@ -8,10 +8,10 @@ const PersonalInfoScreen: React.FC = () => {
   const { userProfile, nextStep } = useOnboarding();
 
   return (
-    <div className="animate-fade-in">
-      <p className="onboarding-subtitle mb-6">Please speak your information clearly when prompted</p>
+    <div className="animate-fade-in flex flex-col h-full">
+      <p className="text-white/70 mb-4">Please speak your information clearly when prompted</p>
       
-      <div className="space-y-8">
+      <div className="grid grid-cols-2 gap-4">
         <div className="voice-display-card">
           <User className="text-highlight h-5 w-5" />
           <div className="flex-1">
@@ -49,12 +49,12 @@ const PersonalInfoScreen: React.FC = () => {
         </div>
       </div>
 
-      <div className="voice-listening-indicator mt-8">
+      <div className="voice-listening-indicator mt-auto">
         <div className="flex flex-col items-center">
           <div className="bg-white/10 rounded-full p-4 mb-4 pulse-animation">
             <Mic className="text-highlight h-6 w-6" />
           </div>
-          <p className="text-white/70 text-center mb-6">
+          <p className="text-white/70 text-center mb-4">
             {userProfile.firstName && userProfile.lastName && userProfile.role && userProfile.dateOfBirth && userProfile.phoneNumber
               ? "Say \"Next\" to continue"
               : "I'm listening..."}
@@ -62,7 +62,7 @@ const PersonalInfoScreen: React.FC = () => {
           
           <Button 
             onClick={nextStep}
-            className="bg-highlight hover:bg-highlight/90 text-white"
+            className="bg-highlight hover:bg-highlight/90 text-white py-3 px-8 rounded-full"
           >
             Continue <ArrowRight className="ml-2" />
           </Button>

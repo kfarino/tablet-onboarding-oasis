@@ -27,6 +27,8 @@ const Header: React.FC<HeaderProps> = ({ currentStep, onBack }) => {
     switch (currentStep) {
       case OnboardingStep.Welcome:
         return "Welcome";
+      case OnboardingStep.Examples:
+        return "Examples";
       case OnboardingStep.PersonalInfo:
         return "Personal Information";
       case OnboardingStep.HealthConditions:
@@ -73,7 +75,7 @@ const Header: React.FC<HeaderProps> = ({ currentStep, onBack }) => {
           </Button>
         )}
         {getStepTitle() && (
-          <div className="text-3xl font-bold">
+          <div className="text-[40px] font-bold">
             {getStepTitle()}
           </div>
         )}

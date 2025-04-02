@@ -25,7 +25,7 @@ const WelcomeScreen: React.FC = () => {
           
           <Button 
             onClick={nextStep}
-            className="bg-highlight hover:bg-highlight/90 text-white"
+            className="bg-highlight hover:bg-highlight/90 text-white py-4 px-8 rounded-full"
           >
             Begin <ArrowRight className="ml-2" />
           </Button>

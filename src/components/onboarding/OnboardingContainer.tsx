@@ -13,7 +13,15 @@ import ProgressIndicator from './ProgressIndicator';
 import Header from '../Header';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
-const OnboardingContainer: React.FC = () => {
+interface OnboardingContainerProps {
+  showMedicationSchedule?: boolean;
+  setShowMedicationSchedule?: (show: boolean) => void;
+}
+
+const OnboardingContainer: React.FC<OnboardingContainerProps> = ({ 
+  showMedicationSchedule = false,
+  setShowMedicationSchedule = () => {}
+}) => {
   const { currentStep, prevStep, updateUserProfile } = useOnboarding();
   const [showExample, setShowExample] = useState(false);
   const [previewRole, setPreviewRole] = useState<UserRole | null>(null);
@@ -56,15 +64,47 @@ const OnboardingContainer: React.FC = () => {
       case OnboardingStep.HealthConditions:
         return <HealthConditionsScreen showExample={showExample} />;
       case OnboardingStep.Medications:
-        return <MedicationsScreen showExample={showExample} />;
+        return <MedicationsScreen 
+                 showExample={showExample} 
+                 showMedicationSchedule={showMedicationSchedule}
+                 setShowMedicationSchedule={setShowMedicationSchedule}
+               />;
       case OnboardingStep.Review:
-        return <ReviewScreen showExample={showExample} />;
+        return <ReviewScreen 
+                 showExample={showExample} 
+                 showMedicationSchedule={showMedicationSchedule}
+                 setShowMedicationSchedule={setShowMedicationSchedule}
+               />;
       case OnboardingStep.Complete:
         return <CompleteScreen />;
       default:
         return <WelcomeScreen />;
     }
   };
+
+  if (showMedicationSchedule) {
+    // Render medication schedule in tablet-sized view
+    return (
+      <div className="w-full h-full flex flex-col">
+        <div className="p-4 bg-charcoal flex justify-between items-center">
+          <h2 className="text-xl font-semibold">Medication Schedule</h2>
+          <button 
+            onClick={() => setShowMedicationSchedule(false)}
+            className="bg-highlight text-white px-4 py-2 rounded-full"
+          >
+            Back to Onboarding
+          </button>
+        </div>
+        <div className="flex-1 p-4">
+          {/* This div will be filled by MedicationVisualization component */}
+          <div className="bg-charcoal w-full h-full rounded-lg p-4">
+            {/* The medication visualization component will be rendered inside MedicationsScreen or ReviewScreen */}
+            {renderStep()}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-full flex flex-col overflow-hidden">

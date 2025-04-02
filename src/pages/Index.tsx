@@ -1,9 +1,11 @@
 
 import { OnboardingProvider } from '@/contexts/OnboardingContext';
 import OnboardingContainer from '@/components/onboarding/OnboardingContainer';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const Index = () => {
+  const [showMedicationSchedule, setShowMedicationSchedule] = useState(false);
+
   // Set up viewport meta tag for tablet display
   useEffect(() => {
     // Add viewport meta tag optimized for 7" tablet (1024x600)
@@ -21,7 +23,10 @@ const Index = () => {
     <div className="min-h-screen bg-charcoal flex items-center justify-center p-4">
       <div className="w-[1024px] h-[600px] border-2 border-white/30 overflow-hidden relative">
         <OnboardingProvider>
-          <OnboardingContainer />
+          <OnboardingContainer 
+            showMedicationSchedule={showMedicationSchedule}
+            setShowMedicationSchedule={setShowMedicationSchedule}
+          />
         </OnboardingProvider>
       </div>
     </div>

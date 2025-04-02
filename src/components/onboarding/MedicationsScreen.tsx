@@ -8,9 +8,9 @@ import { getDayAbbreviation } from '@/utils/dateUtils';
 
 const MedicationsScreen: React.FC = () => {
   const { userProfile } = useOnboarding();
-  const [showExample, setShowExample] = useState(false);
+  const [showExample, setShowExample] = useState(true); // Set to true by default to show examples
 
-  // Example data for populated view
+  // Example data for populated view - expanded to 15 medications with various scenarios
   const exampleMedications = [
     {
       id: uuidv4(),
@@ -37,6 +37,200 @@ const MedicationsScreen: React.FC = () => {
           days: ["Monday", "Wednesday", "Friday"],
           times: ["12:00 PM"],
           quantity: 2
+        }
+      ]
+    },
+    {
+      id: uuidv4(),
+      name: "Lisinopril",
+      strength: "10mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["9:00 AM"],
+          quantity: 1
+        }
+      ]
+    },
+    {
+      id: uuidv4(),
+      name: "Levothyroxine",
+      strength: "75mcg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["7:00 AM"],
+          quantity: 1
+        }
+      ]
+    },
+    {
+      id: uuidv4(),
+      name: "Aspirin",
+      strength: "81mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["10:00 AM"],
+          quantity: 1
+        }
+      ]
+    },
+    {
+      id: uuidv4(),
+      name: "Omeprazole",
+      strength: "20mg",
+      form: "capsule",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          times: ["7:30 AM"],
+          quantity: 1
+        }
+      ]
+    },
+    {
+      id: uuidv4(),
+      name: "Albuterol",
+      strength: "90mcg",
+      form: "inhaler",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["as needed"],
+          quantity: 2
+        }
+      ]
+    },
+    {
+      id: uuidv4(),
+      name: "Amlodipine",
+      strength: "5mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["9:00 PM"],
+          quantity: 1
+        }
+      ]
+    },
+    {
+      id: uuidv4(),
+      name: "Furosemide",
+      strength: "40mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["Monday", "Wednesday", "Friday"],
+          times: ["9:00 AM"],
+          quantity: 1
+        },
+        {
+          id: uuidv4(),
+          days: ["Tuesday", "Thursday"],
+          times: ["10:00 AM"],
+          quantity: 2
+        }
+      ]
+    },
+    {
+      id: uuidv4(),
+      name: "Januvia",
+      strength: "100mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["8:00 AM", "8:00 PM"],
+          quantity: 1
+        }
+      ]
+    },
+    {
+      id: uuidv4(),
+      name: "Prednisone",
+      strength: "5mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          times: ["10:30 AM"],
+          quantity: 1
+        }
+      ]
+    },
+    {
+      id: uuidv4(),
+      name: "Warfarin",
+      strength: "2.5mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["Monday", "Wednesday", "Friday", "Sunday"],
+          times: ["5:00 PM"],
+          quantity: 1
+        },
+        {
+          id: uuidv4(),
+          days: ["Tuesday", "Thursday", "Saturday"],
+          times: ["5:00 PM"],
+          quantity: 2
+        }
+      ]
+    },
+    {
+      id: uuidv4(),
+      name: "Hydrochlorothiazide",
+      strength: "25mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["10:00 AM"],
+          quantity: 1
+        }
+      ]
+    },
+    {
+      id: uuidv4(),
+      name: "Insulin Glargine",
+      strength: "100 units/mL",
+      form: "injection",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["9:00 PM"],
+          quantity: 20
+        }
+      ]
+    },
+    {
+      id: uuidv4(),
+      name: "Fentanyl",
+      strength: "50mcg/hr",
+      form: "patch",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["Monday"],
+          times: ["8:00 AM"],
+          quantity: 1
         }
       ]
     }

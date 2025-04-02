@@ -21,6 +21,10 @@ const OnboardingContainer: React.FC = () => {
     setShowExample(!showExample);
   };
 
+  const needsScrollArea = () => {
+    return currentStep !== OnboardingStep.Welcome && currentStep !== OnboardingStep.Complete;
+  };
+
   const renderStep = () => {
     switch (currentStep) {
       case OnboardingStep.Welcome:
@@ -57,9 +61,13 @@ const OnboardingContainer: React.FC = () => {
           )}
         </div>
         <div className="h-[calc(100%-40px)] overflow-hidden">
-          <ScrollArea className="h-full">
-            {renderStep()}
-          </ScrollArea>
+          {needsScrollArea() ? (
+            <ScrollArea className="h-full">
+              {renderStep()}
+            </ScrollArea>
+          ) : (
+            renderStep()
+          )}
         </div>
       </div>
     </div>

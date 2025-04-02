@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Badge } from "@/components/ui/badge";
@@ -18,7 +19,7 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
     firstName: "Jane",
     lastName: "Smith",
     role: UserRole.Caregiver,
-    relationship: "child",
+    relationship: "Child",
     dateOfBirth: "", // Empty for caregivers
     phoneNumber: "(555) 123-4567",
     alertPreference: null, // No alert preference for caregivers
@@ -342,15 +343,13 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
 
   const getDisplayData = () => {
     if (displayProfile.role === UserRole.Caregiver) {
-      if (showExample) {
-        return {
-          healthConditions: exampleProfile.lovedOne.healthConditions,
-          medications: exampleProfile.lovedOne.medications
-        };
-      }
       return {
-        healthConditions: displayProfile.healthConditions,
-        medications: displayProfile.medications
+        healthConditions: showExample 
+          ? exampleProfile.lovedOne.healthConditions 
+          : userProfile.lovedOne.healthConditions || [],
+        medications: showExample 
+          ? exampleProfile.lovedOne.medications 
+          : userProfile.lovedOne.medications || []
       };
     }
     return {
@@ -382,10 +381,11 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
   return (
     <div className="animate-fade-in px-10 py-6 pb-10">
       <div className="space-y-6">
+        {/* Primary User Section */}
         <div className="p-5 rounded-lg border border-white/10 bg-white/5">
           <h3 className="text-xl font-medium text-white/90 mb-4 flex items-center">
             <User className="h-6 w-6 mr-3 text-highlight" />
-            Personal Information
+            {displayProfile.role === UserRole.Caregiver ? 'Caregiver Information' : 'Personal Information'}
           </h3>
           <div className="grid grid-cols-2 gap-x-8 gap-y-4 text-white">
             <div>
@@ -401,28 +401,21 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
               <p className="text-xl font-medium">{displayProfile.phoneNumber || "—"}</p>
             </div>
             {displayProfile.role === UserRole.PrimaryUser && (
-              <>
-                <div>
-                  <p className="text-sm text-white/50 uppercase tracking-wider mb-1">Date of Birth</p>
-                  <p className="text-xl font-medium">{displayProfile.dateOfBirth || "—"}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-white/50 uppercase tracking-wider mb-1">Alert Preference</p>
-                  <p className="text-xl font-medium">
-                    {getAlertPreferenceLabel(displayProfile.alertPreference)}
-                  </p>
-                </div>
-              </>
+              <div>
+                <p className="text-sm text-white/50 uppercase tracking-wider mb-1">Date of Birth</p>
+                <p className="text-xl font-medium">{displayProfile.dateOfBirth || "—"}</p>
+              </div>
             )}
             {displayProfile.role === UserRole.Caregiver && (
               <div>
-                <p className="text-sm text-white/50 uppercase tracking-wider mb-1">Relationship</p>
-                <p className="text-xl font-medium">{displayProfile.relationship || "—"}</p>
+                <p className="text-sm text-white/50 uppercase tracking-wider mb-1">Relationship to Loved One</p>
+                <p className="text-xl font-medium">{getRelationshipLabel(displayProfile.relationship)}</p>
               </div>
             )}
           </div>
         </div>
 
+        {/* Loved One Section for Caregivers */}
         {displayProfile.role === UserRole.Caregiver && (
           <div className="p-5 rounded-lg border border-white/10 bg-white/5">
             <h3 className="text-xl font-medium text-white/90 mb-4 flex items-center">
@@ -454,6 +447,25 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
           </div>
         )}
 
+        {/* Alert Preference for Primary Users */}
+        {displayProfile.role === UserRole.PrimaryUser && (
+          <div className="p-5 rounded-lg border border-white/10 bg-white/5">
+            <h3 className="text-xl font-medium text-white/90 mb-4 flex items-center">
+              <BellRing className="h-6 w-6 mr-3 text-highlight" />
+              Alert Preferences
+            </h3>
+            <div className="grid grid-cols-1 gap-4 text-white">
+              <div>
+                <p className="text-sm text-white/50 uppercase tracking-wider mb-1">Medication Reminders</p>
+                <p className="text-xl font-medium">
+                  {getAlertPreferenceLabel(displayProfile.alertPreference)}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Health Conditions Section */}
         <div className="p-5 rounded-lg border border-white/10 bg-white/5">
           <h3 className="text-xl font-medium text-white/90 mb-4 flex items-center">
             <Heart className="h-6 w-6 mr-3 text-highlight" />
@@ -476,6 +488,7 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
           )}
         </div>
 
+        {/* Medications Section */}
         <div className="p-5 rounded-lg border border-white/10 bg-white/5">
           <h3 className="text-xl font-medium text-white/90 mb-4 flex items-center">
             <Pill className="h-6 w-6 mr-3 text-highlight" />
@@ -546,3 +559,4 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
 };
 
 export default ReviewScreen;
+

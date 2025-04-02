@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Calendar, List, LayoutGrid, Sun, Moon, Info } from 'lucide-react';
+import { Calendar, List, LayoutGrid, Sun, Moon, Info, Clock, Calendar as CalendarIcon, Pill, AlertCircle } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { format, startOfWeek, addDays } from 'date-fns';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
@@ -347,28 +346,43 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
                         <Info className="h-4 w-4 text-white/60" />
                       </div>
                     </HoverCardTrigger>
-                    <HoverCardContent className="w-80 bg-popover/95 backdrop-blur-sm border-white/20">
-                      <div className="space-y-2">
+                    <HoverCardContent className="w-80 border-white/30">
+                      <div className="space-y-3">
                         <h4 className="text-lg font-medium text-white">{item.med.name} {item.med.strength}</h4>
-                        <div className="grid grid-cols-2 gap-2">
-                          <div className="text-white/70 text-sm">Form:</div>
-                          <div className="text-white text-sm">{item.med.form || 'Unknown'}</div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="flex items-center gap-2">
+                            <Pill className="h-4 w-4 text-white/70" />
+                            <span className="text-white/70 text-sm">Form:</span>
+                          </div>
+                          <div className="text-white text-sm font-medium">{item.med.form || 'Unknown'}</div>
                           
-                          <div className="text-white/70 text-sm">Dosage:</div>
-                          <div className="text-white text-sm">
+                          <div className="flex items-center gap-2">
+                            <Pill className="h-4 w-4 text-white/70" />
+                            <span className="text-white/70 text-sm">Dosage:</span>
+                          </div>
+                          <div className="text-white text-sm font-medium">
                             {item.dose.quantity} {item.med.form || 'pill'}{item.dose.quantity !== 1 ? 's' : ''}
                           </div>
                           
-                          <div className="text-white/70 text-sm">Time:</div>
-                          <div className="text-white text-sm">{item.time}</div>
+                          <div className="flex items-center gap-2">
+                            <Clock className="h-4 w-4 text-white/70" />
+                            <span className="text-white/70 text-sm">Time:</span>
+                          </div>
+                          <div className="text-white text-sm font-medium">{item.time}</div>
                           
-                          <div className="text-white/70 text-sm">Days:</div>
-                          <div className="text-white text-sm">{formatDays(item.dose.days)}</div>
+                          <div className="flex items-center gap-2">
+                            <CalendarIcon className="h-4 w-4 text-white/70" />
+                            <span className="text-white/70 text-sm">Days:</span>
+                          </div>
+                          <div className="text-white text-sm font-medium">{formatDays(item.dose.days)}</div>
                           
                           {item.med.asNeeded && (
                             <>
-                              <div className="text-yellow-500 text-sm">As needed:</div>
-                              <div className="text-white text-sm">Max {item.med.asNeeded.maxPerDay} per day</div>
+                              <div className="flex items-center gap-2">
+                                <AlertCircle className="h-4 w-4 text-yellow-500" />
+                                <span className="text-yellow-500 text-sm">As needed:</span>
+                              </div>
+                              <div className="text-white text-sm font-medium">Max {item.med.asNeeded.maxPerDay} per day</div>
                             </>
                           )}
                         </div>
@@ -381,37 +395,65 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
             
             <Dialog>
               <DialogTrigger asChild>
-                <button className="w-full mt-3 py-1 text-xs text-white/60 bg-white/5 rounded hover:bg-white/10 transition-colors">
+                <button className="w-full mt-3 py-1.5 text-sm text-white/80 bg-white/10 rounded hover:bg-white/20 transition-colors">
                   View all medications
                 </button>
               </DialogTrigger>
-              <DialogContent className="bg-background/95 backdrop-blur-sm text-white border-white/20 max-w-lg">
+              <DialogContent className="text-white border-white/30 max-w-lg">
                 <DialogHeader>
-                  <DialogTitle className="text-white">{time} Medications</DialogTitle>
+                  <DialogTitle className="text-white text-xl">{time} Medications</DialogTitle>
                 </DialogHeader>
-                <div className="mt-4 space-y-4">
+                <div className="mt-6 space-y-6">
                   {meds.map((item, index) => (
-                    <div key={`dialog-${item.med.id}-${index}`} className="bg-white/10 p-4 rounded-lg">
-                      <h4 className="text-lg font-medium text-white">{item.med.name} {item.med.strength}</h4>
-                      <div className="grid grid-cols-2 gap-2 mt-2">
-                        <div className="text-white/70 text-sm">Form:</div>
-                        <div className="text-white text-sm">{item.med.form || 'Unknown'}</div>
+                    <div key={`dialog-${item.med.id}-${index}`} className="bg-white/10 p-5 rounded-lg">
+                      <h4 className="text-lg font-medium text-white flex items-center gap-2 mb-4">
+                        <Pill className="h-5 w-5 text-highlight" />
+                        {item.med.name} {item.med.strength}
+                      </h4>
+                      <div className="grid grid-cols-2 gap-y-4 gap-x-2">
+                        <div className="flex items-center gap-2">
+                          <div className="bg-white/20 h-6 w-6 rounded-full flex items-center justify-center flex-shrink-0">
+                            <Pill className="h-3 w-3 text-white" />
+                          </div>
+                          {item.med.name}
+                        </div>
+                        <div className="text-white text-md font-medium">{item.med.form || 'Unknown'}</div>
                         
-                        <div className="text-white/70 text-sm">Dosage:</div>
-                        <div className="text-white text-sm">
+                        <div className="flex items-center gap-2">
+                          <div className="bg-white/20 h-6 w-6 rounded-full flex items-center justify-center">
+                            <span className="text-xs font-bold">{item.dose.quantity}</span>
+                          </div>
+                          <span className="text-white/70">Dosage:</span>
+                        </div>
+                        <div className="text-white text-md font-medium">
                           {item.dose.quantity} {item.med.form || 'pill'}{item.dose.quantity !== 1 ? 's' : ''}
                         </div>
                         
-                        <div className="text-white/70 text-sm">Time:</div>
-                        <div className="text-white text-sm">{item.time}</div>
+                        <div className="flex items-center gap-2">
+                          <div className="bg-white/20 h-6 w-6 rounded-full flex items-center justify-center">
+                            <Clock className="h-3 w-3 text-white" />
+                          </div>
+                          <span className="text-white/70">Time:</span>
+                        </div>
+                        <div className="text-white text-md font-medium">{item.time}</div>
                         
-                        <div className="text-white/70 text-sm">Days:</div>
-                        <div className="text-white text-sm">{formatDays(item.dose.days)}</div>
+                        <div className="flex items-center gap-2">
+                          <div className="bg-white/20 h-6 w-6 rounded-full flex items-center justify-center">
+                            <CalendarIcon className="h-3 w-3 text-white" />
+                          </div>
+                          <span className="text-white/70">Days:</span>
+                        </div>
+                        <div className="text-white text-md font-medium">{formatDays(item.dose.days)}</div>
                         
                         {item.med.asNeeded && (
                           <>
-                            <div className="text-yellow-500 text-sm">As needed:</div>
-                            <div className="text-white text-sm">Max {item.med.asNeeded.maxPerDay} per day</div>
+                            <div className="flex items-center gap-2">
+                              <div className="bg-yellow-500/30 h-6 w-6 rounded-full flex items-center justify-center">
+                                <AlertCircle className="h-3 w-3 text-yellow-500" />
+                              </div>
+                              <span className="text-yellow-500">As needed:</span>
+                            </div>
+                            <div className="text-white text-md font-medium">Max {item.med.asNeeded.maxPerDay} per day</div>
                           </>
                         )}
                       </div>
@@ -636,11 +678,11 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
       return (
         <Card key={time} className="bg-white/10 hover:bg-white/15 transition-colors">
           <CardContent className="p-4">
-            <div className="flex justify-between items-center mb-2">
-              <div className="bg-white/20 text-white px-2 py-1 rounded text-sm">
+            <div className="flex justify-between items-center mb-3">
+              <div className="bg-white/20 text-white px-3 py-1.5 rounded text-sm font-medium">
                 {time}
               </div>
-              <div className="text-white/70 text-xs">
+              <div className="text-white/70 text-sm">
                 {meds.length} medication{meds.length !== 1 ? 's' : ''}
               </div>
             </div>
@@ -650,35 +692,53 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
                 return (
                   <HoverCard key={`${item.med.id}-${index}`}>
                     <HoverCardTrigger asChild>
-                      <div className="bg-white/10 p-2 rounded-md flex justify-between items-center cursor-pointer hover:bg-white/20 transition-colors">
-                        <div className="text-white font-medium truncate max-w-[80%]">
+                      <div className="bg-white/10 p-3 rounded-md flex justify-between items-center cursor-pointer hover:bg-white/20 transition-colors">
+                        <div className="text-white font-medium truncate max-w-[80%] flex items-center gap-2">
+                          <div className="bg-white/20 h-6 w-6 rounded-full flex items-center justify-center flex-shrink-0">
+                            <Pill className="h-3 w-3 text-white" />
+                          </div>
                           {item.med.name}
                         </div>
-                        <Info className="h-4 w-4 text-white/60" />
+                        <Info className="h-5 w-5 text-white/60" />
                       </div>
                     </HoverCardTrigger>
-                    <HoverCardContent className="w-80 bg-popover/95 backdrop-blur-sm border-white/20">
-                      <div className="space-y-2">
+                    <HoverCardContent className="w-80 border-white/30">
+                      <div className="space-y-3">
                         <h4 className="text-lg font-medium text-white">{item.med.name} {item.med.strength}</h4>
-                        <div className="grid grid-cols-2 gap-2">
-                          <div className="text-white/70 text-sm">Form:</div>
-                          <div className="text-white text-sm">{item.med.form || 'Unknown'}</div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="flex items-center gap-2">
+                            <Pill className="h-4 w-4 text-white/70" />
+                            <span className="text-white/70 text-sm">Form:</span>
+                          </div>
+                          <div className="text-white text-sm font-medium">{item.med.form || 'Unknown'}</div>
                           
-                          <div className="text-white/70 text-sm">Dosage:</div>
-                          <div className="text-white text-sm">
+                          <div className="flex items-center gap-2">
+                            <Pill className="h-4 w-4 text-white/70" />
+                            <span className="text-white/70 text-sm">Dosage:</span>
+                          </div>
+                          <div className="text-white text-sm font-medium">
                             {item.dose.quantity} {item.med.form || 'pill'}{item.dose.quantity !== 1 ? 's' : ''}
                           </div>
                           
-                          <div className="text-white/70 text-sm">Time:</div>
-                          <div className="text-white text-sm">{item.time}</div>
+                          <div className="flex items-center gap-2">
+                            <Clock className="h-4 w-4 text-white/70" />
+                            <span className="text-white/70 text-sm">Time:</span>
+                          </div>
+                          <div className="text-white text-sm font-medium">{item.time}</div>
                           
-                          <div className="text-white/70 text-sm">Days:</div>
-                          <div className="text-white text-sm">{formatDays(item.dose.days)}</div>
+                          <div className="flex items-center gap-2">
+                            <CalendarIcon className="h-4 w-4 text-white/70" />
+                            <span className="text-white/70 text-sm">Days:</span>
+                          </div>
+                          <div className="text-white text-sm font-medium">{formatDays(item.dose.days)}</div>
                           
                           {item.med.asNeeded && (
                             <>
-                              <div className="text-yellow-500 text-sm">As needed:</div>
-                              <div className="text-white text-sm">Max {item.med.asNeeded.maxPerDay} per day</div>
+                              <div className="flex items-center gap-2">
+                                <AlertCircle className="h-4 w-4 text-yellow-500" />
+                                <span className="text-yellow-500 text-sm">As needed:</span>
+                              </div>
+                              <div className="text-white text-sm font-medium">Max {item.med.asNeeded.maxPerDay} per day</div>
                             </>
                           )}
                         </div>
@@ -691,37 +751,65 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
             
             <Dialog>
               <DialogTrigger asChild>
-                <button className="w-full mt-3 py-1 text-xs text-white/60 bg-white/5 rounded hover:bg-white/10 transition-colors">
+                <button className="w-full mt-4 py-2 text-sm text-white/80 bg-white/10 rounded hover:bg-white/20 transition-colors font-medium">
                   View all medications
                 </button>
               </DialogTrigger>
-              <DialogContent className="bg-background/95 backdrop-blur-sm text-white border-white/20 max-w-lg">
+              <DialogContent className="text-white border-white/30 max-w-lg">
                 <DialogHeader>
-                  <DialogTitle className="text-white">{time} Medications</DialogTitle>
+                  <DialogTitle className="text-white text-xl">{time} Medications</DialogTitle>
                 </DialogHeader>
-                <div className="mt-4 space-y-4">
+                <div className="mt-6 space-y-6">
                   {meds.map((item, index) => (
-                    <div key={`dialog-${item.med.id}-${index}`} className="bg-white/10 p-4 rounded-lg">
-                      <h4 className="text-lg font-medium text-white">{item.med.name} {item.med.strength}</h4>
-                      <div className="grid grid-cols-2 gap-2 mt-2">
-                        <div className="text-white/70 text-sm">Form:</div>
-                        <div className="text-white text-sm">{item.med.form || 'Unknown'}</div>
+                    <div key={`dialog-${item.med.id}-${index}`} className="bg-white/10 p-5 rounded-lg">
+                      <h4 className="text-lg font-medium text-white flex items-center gap-2 mb-4">
+                        <Pill className="h-5 w-5 text-highlight" />
+                        {item.med.name} {item.med.strength}
+                      </h4>
+                      <div className="grid grid-cols-2 gap-y-4 gap-x-2">
+                        <div className="flex items-center gap-2">
+                          <div className="bg-white/20 h-6 w-6 rounded-full flex items-center justify-center">
+                            <Pill className="h-3 w-3 text-white" />
+                          </div>
+                          <span className="text-white/70">Form:</span>
+                        </div>
+                        <div className="text-white text-md font-medium">{item.med.form || 'Unknown'}</div>
                         
-                        <div className="text-white/70 text-sm">Dosage:</div>
-                        <div className="text-white text-sm">
+                        <div className="flex items-center gap-2">
+                          <div className="bg-white/20 h-6 w-6 rounded-full flex items-center justify-center">
+                            <span className="text-xs font-bold">{item.dose.quantity}</span>
+                          </div>
+                          <span className="text-white/70">Dosage:</span>
+                        </div>
+                        <div className="text-white text-md font-medium">
                           {item.dose.quantity} {item.med.form || 'pill'}{item.dose.quantity !== 1 ? 's' : ''}
                         </div>
                         
-                        <div className="text-white/70 text-sm">Time:</div>
-                        <div className="text-white text-sm">{item.time}</div>
+                        <div className="flex items-center gap-2">
+                          <div className="bg-white/20 h-6 w-6 rounded-full flex items-center justify-center">
+                            <Clock className="h-3 w-3 text-white" />
+                          </div>
+                          <span className="text-white/70">Time:</span>
+                        </div>
+                        <div className="text-white text-md font-medium">{item.time}</div>
                         
-                        <div className="text-white/70 text-sm">Days:</div>
-                        <div className="text-white text-sm">{formatDays(item.dose.days)}</div>
+                        <div className="flex items-center gap-2">
+                          <div className="bg-white/20 h-6 w-6 rounded-full flex items-center justify-center">
+                            <CalendarIcon className="h-3 w-3 text-white" />
+                          </div>
+                          <span className="text-white/70">Days:</span>
+                        </div>
+                        <div className="text-white text-md font-medium">{formatDays(item.dose.days)}</div>
                         
                         {item.med.asNeeded && (
                           <>
-                            <div className="text-yellow-500 text-sm">As needed:</div>
-                            <div className="text-white text-sm">Max {item.med.asNeeded.maxPerDay} per day</div>
+                            <div className="flex items-center gap-2">
+                              <div className="bg-yellow-500/30 h-6 w-6 rounded-full flex items-center justify-center">
+                                <AlertCircle className="h-3 w-3 text-yellow-500" />
+                              </div>
+                              <span className="text-yellow-500">As needed:</span>
+                            </div>
+                            <div className="text-white text-md font-medium">Max {item.med.asNeeded.maxPerDay} per day</div>
                           </>
                         )}
                       </div>

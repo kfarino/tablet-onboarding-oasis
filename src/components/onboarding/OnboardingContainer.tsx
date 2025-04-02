@@ -11,6 +11,7 @@ import ReviewScreen from './ReviewScreen';
 import CompleteScreen from './CompleteScreen';
 import ProgressIndicator from './ProgressIndicator';
 import Header from '../Header';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const OnboardingContainer: React.FC = () => {
   const { currentStep, prevStep } = useOnboarding();
@@ -37,16 +38,18 @@ const OnboardingContainer: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full h-full flex flex-col overflow-hidden">
       <Header currentStep={currentStep} onBack={prevStep} />
-      <div className="flex-1 overflow-y-auto p-4">
+      <div className="flex-1 overflow-hidden">
         <div className="w-full mb-3">
           {currentStep !== OnboardingStep.Welcome && currentStep !== OnboardingStep.Complete && (
             <ProgressIndicator />
           )}
         </div>
-        <div className="flex-1">
-          {renderStep()}
+        <div className="h-[calc(100%-40px)] overflow-hidden">
+          <ScrollArea className="h-full">
+            {renderStep()}
+          </ScrollArea>
         </div>
       </div>
     </div>

@@ -6,7 +6,7 @@ const WelcomeScreen: React.FC = () => {
   const { nextStep } = useOnboarding();
 
   return (
-    <div className="flex flex-col items-center justify-center h-full animate-fade-in">
+    <div className="flex flex-col items-center justify-center h-full animate-fade-in overflow-hidden">
       <button
         onClick={nextStep}
         className="w-64 h-64 rounded-full bg-highlight text-white flex flex-col items-center justify-center shadow-lg hover:bg-highlight/90 transition-colors focus:outline-none focus:ring-4 focus:ring-highlight/50 relative"

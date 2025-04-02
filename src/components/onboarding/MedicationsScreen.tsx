@@ -10,8 +10,7 @@ const MedicationsScreen: React.FC = () => {
 
   return (
     <div className="animate-fade-in">
-      <h2 className="onboarding-title">Medications</h2>
-      <p className="onboarding-subtitle">Please speak your medication details</p>
+      <p className="onboarding-subtitle mb-6">Please speak your medication details</p>
 
       {userProfile.medications.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-8 border border-dashed border-white/20 rounded-lg">

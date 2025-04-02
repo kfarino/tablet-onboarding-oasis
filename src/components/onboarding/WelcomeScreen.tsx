@@ -13,7 +13,6 @@ const WelcomeScreen: React.FC = () => {
         <div className="w-16 h-16 rounded-full bg-highlight flex items-center justify-center mx-auto mb-6">
           <Mic className="text-white h-8 w-8" />
         </div>
-        <h1 className="text-3xl font-bold mb-4">Welcome to MedTracker</h1>
         <p className="text-white/70 mb-8">
           I'm your voice assistant. I'll help set up your profile and medication schedule. 
           Please speak clearly when prompted, and I'll guide you through the process.

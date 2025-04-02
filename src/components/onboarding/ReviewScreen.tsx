@@ -10,7 +10,6 @@ const ReviewScreen: React.FC = () => {
 
   return (
     <div className="animate-fade-in px-8">
-      <h2 className="onboarding-title mb-2">Review Your Information</h2>
       <p className="onboarding-subtitle mb-6">Please review the following information</p>
 
       <div className="space-y-4">

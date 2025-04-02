@@ -10,8 +10,7 @@ const HealthConditionsScreen: React.FC = () => {
 
   return (
     <div className="animate-fade-in">
-      <h2 className="onboarding-title">Health Conditions</h2>
-      <p className="onboarding-subtitle">Please speak any health conditions you have</p>
+      <p className="onboarding-subtitle mb-6">Please speak any health conditions you have</p>
 
       <div className="voice-display-card">
         <Heart className="text-highlight h-5 w-5" />

@@ -9,8 +9,7 @@ const PersonalInfoScreen: React.FC = () => {
 
   return (
     <div className="animate-fade-in">
-      <h2 className="onboarding-title">Personal Information</h2>
-      <p className="onboarding-subtitle">Please speak your information clearly when prompted</p>
+      <p className="onboarding-subtitle mb-6">Please speak your information clearly when prompted</p>
       
       <div className="space-y-8">
         <div className="voice-display-card">

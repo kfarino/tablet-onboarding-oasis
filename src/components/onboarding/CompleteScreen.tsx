@@ -16,11 +16,6 @@ const CompleteScreen: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center px-8 py-8 h-full animate-fade-in">
-      {/* Header with 40px centered title */}
-      <div className="w-full flex items-center justify-center mb-8">
-        <h2 className="text-[40px] font-bold text-center">Setup Complete</h2>
-      </div>
-      
       <div className="flex flex-col items-center justify-center max-w-md text-center">
         <CheckCircle2 className="text-highlight h-16 w-16 mb-6" />
         

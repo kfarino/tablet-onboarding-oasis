@@ -1,10 +1,11 @@
+
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, Pill, User, Phone, Heart, BellRing, AlertCircle } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { getDayAbbreviation } from '@/utils/dateUtils';
-import { ALERT_PREFERENCES, UserRole } from '@/types/onboarding';
+import { ALERT_PREFERENCES, RELATIONSHIP_OPTIONS, UserRole } from '@/types/onboarding';
 
 interface ReviewScreenProps {
   showExample?: boolean;
@@ -311,6 +312,12 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
     if (!value) return "—";
     const preference = ALERT_PREFERENCES.find(p => p.value === value);
     return preference ? preference.label : "—";
+  };
+
+  const getRelationshipLabel = (value: string | null) => {
+    if (!value) return "—";
+    const relationship = RELATIONSHIP_OPTIONS.find(r => r.value === value);
+    return relationship ? relationship.label : "—";
   };
 
   return (

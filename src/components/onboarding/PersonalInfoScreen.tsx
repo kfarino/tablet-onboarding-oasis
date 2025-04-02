@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { User, Calendar, Phone, BellRing } from 'lucide-react';
@@ -34,6 +33,12 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
 
   // Determine which role to display
   const displayRole = previewRole || userProfile.role || UserRole.PrimaryUser;
+
+  const getRelationshipLabel = (value: string | null) => {
+    if (!value) return "";
+    const relationship = RELATIONSHIP_OPTIONS.find(r => r.value === value);
+    return relationship ? relationship.label : "";
+  };
 
   return (
     <div className="animate-fade-in flex flex-col h-full px-10 py-6">
@@ -94,7 +99,7 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
                   {showExample 
                     ? RELATIONSHIP_OPTIONS.find(r => r.value === exampleProfile.relationship)?.label || 'Child'
                     : userProfile.relationship
-                      ? RELATIONSHIP_OPTIONS.find(r => r.value === userProfile.relationship)?.label
+                      ? getRelationshipLabel(userProfile.relationship)
                       : "Listening..."}
                 </p>
               </div>

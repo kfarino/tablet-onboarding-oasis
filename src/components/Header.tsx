@@ -27,8 +27,6 @@ const Header: React.FC<HeaderProps> = ({ currentStep, onBack }) => {
     switch (currentStep) {
       case OnboardingStep.Welcome:
         return "Welcome";
-      case OnboardingStep.Examples:
-        return "Examples";
       case OnboardingStep.PersonalInfo:
         return "Personal Information";
       case OnboardingStep.HealthConditions:

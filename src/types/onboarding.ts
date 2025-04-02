@@ -1,3 +1,4 @@
+
 export interface UserProfile {
   firstName: string;
   lastName: string;
@@ -25,12 +26,11 @@ export interface Dose {
 
 export enum OnboardingStep {
   Welcome = 0,
-  Examples = 1,
-  PersonalInfo = 2,
-  HealthConditions = 3,
-  Medications = 4,
-  Review = 5,
-  Complete = 6
+  PersonalInfo = 1,
+  HealthConditions = 2,
+  Medications = 3,
+  Review = 4,
+  Complete = 5
 }
 
 export const DAYS_OPTIONS = [

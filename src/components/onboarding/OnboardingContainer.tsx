@@ -3,7 +3,6 @@ import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { OnboardingStep } from '@/types/onboarding';
 import WelcomeScreen from './WelcomeScreen';
-import ExamplesScreen from './ExamplesScreen';
 import PersonalInfoScreen from './PersonalInfoScreen';
 import HealthConditionsScreen from './HealthConditionsScreen';
 import MedicationsScreen from './MedicationsScreen';
@@ -20,8 +19,6 @@ const OnboardingContainer: React.FC = () => {
     switch (currentStep) {
       case OnboardingStep.Welcome:
         return <WelcomeScreen />;
-      case OnboardingStep.Examples:
-        return <ExamplesScreen />;
       case OnboardingStep.PersonalInfo:
         return <PersonalInfoScreen />;
       case OnboardingStep.HealthConditions:

@@ -8,7 +8,6 @@ const ProgressIndicator: React.FC = () => {
 
   const steps = [
     { id: OnboardingStep.Welcome, label: 'Welcome' },
-    { id: OnboardingStep.Examples, label: 'Examples' },
     { id: OnboardingStep.PersonalInfo, label: 'Personal Info' },
     { id: OnboardingStep.HealthConditions, label: 'Health Conditions' },
     { id: OnboardingStep.Medications, label: 'Medications' },

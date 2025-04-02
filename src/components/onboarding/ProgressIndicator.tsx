@@ -17,7 +17,7 @@ const ProgressIndicator: React.FC = () => {
   ];
 
   return (
-    <div className="flex justify-center items-center gap-2" role="navigation" aria-label="Onboarding progress">
+    <div className="flex justify-center items-center gap-2 mb-1" role="navigation" aria-label="Onboarding progress">
       {steps.map((step) => (
         <div 
           key={step.id}

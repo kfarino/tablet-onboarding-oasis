@@ -10,9 +10,9 @@ const HealthConditionsScreen: React.FC = () => {
 
   return (
     <div className="animate-fade-in flex flex-col h-full">
-      <p className="text-white/70 mb-4">Please speak any health conditions you have</p>
+      <p className="text-white/70 mb-3">Please speak any health conditions you have</p>
 
-      <div className="voice-display-card flex-grow-0">
+      <div className="voice-display-card p-3 h-28 mb-3">
         <Heart className="text-highlight h-5 w-5" />
         <div className="flex-1">
           <p className="text-white/70 text-sm">Your Health Conditions</p>
@@ -23,7 +23,7 @@ const HealthConditionsScreen: React.FC = () => {
               <p className="text-white/40">None added yet</p>
             </div>
           ) : (
-            <div className="flex flex-wrap gap-2 mt-2 max-h-[100px] overflow-y-auto">
+            <div className="flex flex-wrap gap-2 mt-2 max-h-16 overflow-y-auto">
               {userProfile.healthConditions.map((condition, index) => (
                 <Badge 
                   key={index} 
@@ -37,7 +37,7 @@ const HealthConditionsScreen: React.FC = () => {
         </div>
       </div>
 
-      <div className="voice-instruction mt-4 p-4 rounded-lg border border-white/10 bg-white/5">
+      <div className="voice-instruction p-3 rounded-lg border border-white/10 bg-white/5 mb-3">
         <p className="text-white mb-2 font-medium">You can say:</p>
         <div className="grid grid-cols-2 gap-2">
           <p className="text-white/70">"I have diabetes"</p>
@@ -47,22 +47,20 @@ const HealthConditionsScreen: React.FC = () => {
         </div>
       </div>
 
-      <div className="voice-listening-indicator mt-auto">
-        <div className="flex flex-col items-center">
-          <div className="bg-white/10 rounded-full p-4 mb-4 pulse-animation">
-            <Mic className="text-highlight h-6 w-6" />
-          </div>
-          <p className="text-white/70 text-center mb-4">
-            Say "Next" when you're finished adding conditions
-          </p>
-          
-          <Button 
-            onClick={nextStep}
-            className="bg-highlight hover:bg-highlight/90 text-white py-3 px-8 rounded-full"
-          >
-            Continue <ArrowRight className="ml-2" />
-          </Button>
+      <div className="mt-auto flex flex-col items-center">
+        <div className="bg-white/10 rounded-full p-4 mb-3 pulse-animation">
+          <Mic className="text-highlight h-6 w-6" />
         </div>
+        <p className="text-white/70 text-center mb-3">
+          Say "Next" when you're finished adding conditions
+        </p>
+        
+        <Button 
+          onClick={nextStep}
+          className="bg-highlight hover:bg-highlight/90 text-white py-2 px-8 rounded-full w-full max-w-xs"
+        >
+          Continue <ArrowRight className="ml-2" />
+        </Button>
       </div>
     </div>
   );

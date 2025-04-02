@@ -122,7 +122,7 @@ const ReviewScreen: React.FC = () => {
           {displayProfile.medications.length === 0 ? (
             <p className="text-white/40 text-sm">No medications added</p>
           ) : (
-            <div className="space-y-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
               {displayProfile.medications.map(medication => (
                 <div key={medication.id} className="p-2 border border-white/10 bg-white/5 rounded-md">
                   <div className="flex items-center gap-1 mb-1">

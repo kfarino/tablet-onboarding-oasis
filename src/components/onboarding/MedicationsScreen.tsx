@@ -67,7 +67,7 @@ const MedicationsScreen: React.FC = () => {
           <p className="text-white/70">Say "Add medication" to begin</p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {displayMedications.map(medication => (
             <div key={medication.id} className="p-3 border border-white/10 bg-white/5 rounded-lg">
               <div className="flex items-center gap-2 mb-2">

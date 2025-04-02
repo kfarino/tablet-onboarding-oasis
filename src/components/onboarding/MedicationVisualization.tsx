@@ -108,7 +108,9 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
                   const relevantMeds = meds.filter(({ med, dose }) => {
                     // Check if this medication should be taken on this day
                     return dose.days.includes('everyday') || 
-                           dose.days.includes(day.fullDayName);
+                           dose.days.some(doseDay => 
+                             doseDay.toLowerCase() === day.fullDayName.toLowerCase()
+                           );
                   });
                   
                   return (
@@ -326,7 +328,7 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
                       </div>
                       <div>
                         <div className="font-medium text-white">{item.med.name} {item.med.strength}</div>
-                        <div className="text-white/70 text-sm mt-1">
+                        <div className="text-white/70 text-xs mt-1">
                           {item.dose.quantity} {item.med.form || 'pill'}{item.dose.quantity !== 1 ? 's' : ''}
                         </div>
                         <div className="text-white/60 text-xs mt-1">

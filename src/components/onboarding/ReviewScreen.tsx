@@ -58,7 +58,7 @@ const ReviewScreen: React.FC = () => {
 
   return (
     <div className="animate-fade-in px-8">
-      <div className="flex justify-end items-center mb-6">
+      <div className="flex justify-end items-center mb-4">
         <Badge 
           className="cursor-pointer bg-highlight hover:bg-highlight/90" 
           onClick={toggleExample}
@@ -67,34 +67,34 @@ const ReviewScreen: React.FC = () => {
         </Badge>
       </div>
 
-      <div className="space-y-4">
-        <div className="p-4 rounded-lg border border-white/10 bg-white/5">
-          <h3 className="text-sm font-medium text-white/70 mb-3 flex items-center">
+      <div className="space-y-3">
+        <div className="p-3 rounded-lg border border-white/10 bg-white/5">
+          <h3 className="text-sm font-medium text-white/70 mb-2 flex items-center">
             <User className="h-4 w-4 mr-2 text-highlight" />
             Personal Information
           </h3>
-          <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-white">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-white">
             <div>
               <p className="text-xs text-white/50">Full Name</p>
-              <p>{displayProfile.firstName || "—"} {displayProfile.lastName || "—"}</p>
+              <p className="text-sm">{displayProfile.firstName || "—"} {displayProfile.lastName || "—"}</p>
             </div>
             <div>
               <p className="text-xs text-white/50">Role</p>
-              <p>{displayProfile.role || "—"}</p>
+              <p className="text-sm">{displayProfile.role || "—"}</p>
             </div>
             <div>
               <p className="text-xs text-white/50">Date of Birth</p>
-              <p>{displayProfile.dateOfBirth || "—"}</p>
+              <p className="text-sm">{displayProfile.dateOfBirth || "—"}</p>
             </div>
             <div>
               <p className="text-xs text-white/50">Phone Number</p>
-              <p>{displayProfile.phoneNumber || "—"}</p>
+              <p className="text-sm">{displayProfile.phoneNumber || "—"}</p>
             </div>
           </div>
         </div>
 
-        <div className="p-4 rounded-lg border border-white/10 bg-white/5">
-          <h3 className="text-sm font-medium text-white/70 mb-3 flex items-center">
+        <div className="p-3 rounded-lg border border-white/10 bg-white/5">
+          <h3 className="text-sm font-medium text-white/70 mb-2 flex items-center">
             <Heart className="h-4 w-4 mr-2 text-highlight" />
             Health Conditions
           </h3>
@@ -105,7 +105,7 @@ const ReviewScreen: React.FC = () => {
               {displayProfile.healthConditions.map((condition, index) => (
                 <Badge 
                   key={index} 
-                  className="bg-white/10 text-white"
+                  className="bg-white/10 text-white text-xs"
                 >
                   {condition}
                 </Badge>
@@ -114,42 +114,42 @@ const ReviewScreen: React.FC = () => {
           )}
         </div>
 
-        <div className="p-4 rounded-lg border border-white/10 bg-white/5">
-          <h3 className="text-sm font-medium text-white/70 mb-3 flex items-center">
+        <div className="p-3 rounded-lg border border-white/10 bg-white/5">
+          <h3 className="text-sm font-medium text-white/70 mb-2 flex items-center">
             <Pill className="h-4 w-4 mr-2 text-highlight" />
             Medications
           </h3>
           {displayProfile.medications.length === 0 ? (
             <p className="text-white/40 text-sm">No medications added</p>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-2">
               {displayProfile.medications.map(medication => (
-                <div key={medication.id} className="p-3 border border-white/10 bg-white/5 rounded-md">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Pill className="h-5 w-5 text-highlight" />
-                    <h4 className="font-medium text-white">{medication.name}</h4>
-                    <span className="text-sm text-white/60">{medication.strength} • {medication.form}</span>
+                <div key={medication.id} className="p-2 border border-white/10 bg-white/5 rounded-md">
+                  <div className="flex items-center gap-1 mb-1">
+                    <Pill className="h-3 w-3 text-highlight" />
+                    <h4 className="font-medium text-white text-sm">{medication.name}</h4>
+                    <span className="text-xs text-white/60">{medication.strength} • {medication.form}</span>
                   </div>
                   {medication.doses.map(dose => (
-                    <div key={dose.id} className="ml-7 mb-2">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Calendar className="h-4 w-4 text-white/60" />
-                        <span className="text-sm text-white/80">
+                    <div key={dose.id} className="ml-5 mb-1 border-l border-white/10 pl-2">
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-3 w-3 text-white/60" />
+                        <span className="text-xs text-white/80">
                           {dose.days.length > 0 
                             ? dose.days.map(d => d === 'everyday' ? 'Everyday' : d).join(', ')
                             : 'No days selected'}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <Clock className="h-4 w-4 text-white/60" />
-                        <span className="text-sm text-white/80">
+                      <div className="flex items-center gap-1">
+                        <Clock className="h-3 w-3 text-white/60" />
+                        <span className="text-xs text-white/80">
                           {dose.times.length > 0 
                             ? dose.times.join(', ')
                             : 'No times selected'}
                         </span>
                       </div>
-                      <div className="ml-6">
-                        <span className="text-sm text-white/80">{dose.quantity} pill{dose.quantity !== 1 ? 's' : ''} per dose</span>
+                      <div className="ml-3 text-xs text-white/70">
+                        {dose.quantity} pill{dose.quantity !== 1 ? 's' : ''} per dose
                       </div>
                     </div>
                   ))}
@@ -160,12 +160,12 @@ const ReviewScreen: React.FC = () => {
         </div>
       </div>
 
-      <div className="mt-8 pb-6">
+      <div className="mt-6 pb-6">
         <Button 
           onClick={nextStep}
-          className="bg-highlight hover:bg-highlight/90 text-white w-full rounded-full py-4 flex items-center justify-center"
+          className="bg-highlight hover:bg-highlight/90 text-white w-full rounded-full py-3 flex items-center justify-center"
         >
-          Complete Setup <ArrowRight className="ml-2 h-5 w-5" />
+          Complete Setup <ArrowRight className="ml-1 h-4 w-4" />
         </Button>
       </div>
     </div>

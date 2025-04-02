@@ -50,7 +50,7 @@ const MedicationsScreen: React.FC = () => {
 
   return (
     <div className="animate-fade-in px-8">
-      <div className="flex justify-end items-center mb-6">
+      <div className="flex justify-end items-center mb-4">
         <Badge 
           className="cursor-pointer bg-highlight hover:bg-highlight/90" 
           onClick={toggleExample}
@@ -67,16 +67,16 @@ const MedicationsScreen: React.FC = () => {
           <p className="text-white/70">Say "Add medication" to begin</p>
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-3">
           {displayMedications.map(medication => (
-            <div key={medication.id} className="medication-card">
-              <div className="flex items-start gap-3 mb-4">
-                <Pill className="h-5 w-5 text-highlight mt-1" />
+            <div key={medication.id} className="p-3 border border-white/10 bg-white/5 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <Pill className="h-4 w-4 text-highlight" />
                 <div>
-                  <h3 className="text-lg font-medium text-white">
+                  <h3 className="text-base font-medium text-white">
                     {medication.name || "New Medication"}
                   </h3>
-                  <div className="flex items-center gap-2 text-white/70 text-sm">
+                  <div className="flex items-center gap-1 text-white/70 text-xs">
                     <span>{medication.strength || "No strength"}</span>
                     {medication.strength && medication.form && <span>•</span>}
                     <span>{medication.form || "No form selected"}</span>
@@ -85,25 +85,25 @@ const MedicationsScreen: React.FC = () => {
               </div>
 
               {medication.doses.map(dose => (
-                <div key={dose.id} className="ml-8 mb-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Calendar className="h-4 w-4 text-white/60" />
-                    <span className="text-white/80">
+                <div key={dose.id} className="ml-6 mb-2 border-l-2 border-white/10 pl-3">
+                  <div className="flex items-center gap-1 mb-1">
+                    <Calendar className="h-3 w-3 text-white/60" />
+                    <span className="text-sm text-white/80">
                       {dose.days.length > 0 
                         ? dose.days.map(d => d === 'everyday' ? 'Everyday' : d).join(', ')
                         : 'No days selected'}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Clock className="h-4 w-4 text-white/60" />
-                    <span className="text-white/80">
+                  <div className="flex items-center gap-1 mb-1">
+                    <Clock className="h-3 w-3 text-white/60" />
+                    <span className="text-sm text-white/80">
                       {dose.times.length > 0 
                         ? dose.times.join(', ')
                         : 'No times selected'}
                     </span>
                   </div>
-                  <div className="ml-6">
-                    <span className="text-white/80">{dose.quantity} pill{dose.quantity !== 1 ? 's' : ''} per dose</span>
+                  <div className="ml-4 text-xs text-white/70">
+                    <span>{dose.quantity} pill{dose.quantity !== 1 ? 's' : ''} per dose</span>
                   </div>
                 </div>
               ))}
@@ -112,9 +112,9 @@ const MedicationsScreen: React.FC = () => {
         </div>
       )}
 
-      <div className="voice-instruction mt-8 p-4 rounded-lg border border-white/10 bg-white/5">
+      <div className="voice-instruction mt-6 p-4 rounded-lg border border-white/10 bg-white/5">
         <p className="text-white mb-2 font-medium">You can say:</p>
-        <ul className="text-white/70 space-y-2">
+        <ul className="text-white/70 space-y-1 text-sm">
           <li>"Add Lipitor 50mg tablet"</li>
           <li>"Take it everyday at 8am and 9pm"</li>
           <li>"2 pills per dose"</li>
@@ -122,7 +122,7 @@ const MedicationsScreen: React.FC = () => {
         </ul>
       </div>
 
-      <div className="mt-8 text-center">
+      <div className="mt-6 text-center">
         <Button 
           onClick={nextStep}
           className="bg-highlight hover:bg-highlight/90 text-white px-8 py-2 rounded-full"

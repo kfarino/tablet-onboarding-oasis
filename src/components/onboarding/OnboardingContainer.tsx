@@ -9,6 +9,7 @@ import MedicationsScreen from './MedicationsScreen';
 import ReviewScreen from './ReviewScreen';
 import CompleteScreen from './CompleteScreen';
 import ProgressIndicator from './ProgressIndicator';
+import Header from '../Header';
 
 const OnboardingContainer: React.FC = () => {
   const { currentStep } = useOnboarding();
@@ -33,14 +34,17 @@ const OnboardingContainer: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col p-10">
-      <div className="w-full mb-4">
-        {currentStep !== OnboardingStep.Welcome && currentStep !== OnboardingStep.Complete && (
-          <ProgressIndicator />
-        )}
-      </div>
-      <div className="flex-1 overflow-y-auto">
-        {renderStep()}
+    <div className="w-full h-full flex flex-col">
+      <Header />
+      <div className="flex-1 overflow-y-auto p-10">
+        <div className="w-full mb-4">
+          {currentStep !== OnboardingStep.Welcome && currentStep !== OnboardingStep.Complete && (
+            <ProgressIndicator />
+          )}
+        </div>
+        <div className="flex-1 overflow-y-auto">
+          {renderStep()}
+        </div>
       </div>
     </div>
   );

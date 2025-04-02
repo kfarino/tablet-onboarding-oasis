@@ -49,7 +49,9 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       lastName: '',
       dateOfBirth: '',
       phoneNumber: '',
-      alertPreference: null
+      alertPreference: null,
+      healthConditions: [],
+      medications: []
     }
   });
 

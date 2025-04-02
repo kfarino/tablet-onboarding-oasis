@@ -17,6 +17,8 @@ export interface LovedOneProfile {
   dateOfBirth: string;
   phoneNumber: string;
   alertPreference: AlertPreference | null;
+  healthConditions: string[];
+  medications: Medication[];
 }
 
 export interface Medication {

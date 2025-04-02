@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Pill, Clock, Calendar, AlertCircle, Eye } from 'lucide-react';
@@ -16,7 +15,55 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = tru
   const [showVisualization, setShowVisualization] = useState(false);
 
   // Example data for populated view - expanded to 15 medications with various scenarios
+  // Swapped first and second row (first 6 items rearranged)
   const exampleMedications = [
+    // Original medications 4-6 now in positions 1-3
+    {
+      id: uuidv4(),
+      name: "Levothyroxine",
+      strength: "75mcg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["7:00 AM"],
+          quantity: 1
+        }
+      ],
+      asNeeded: null
+    },
+    {
+      id: uuidv4(),
+      name: "Aspirin",
+      strength: "81mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["10:00 AM"],
+          quantity: 1
+        }
+      ],
+      asNeeded: null
+    },
+    {
+      id: uuidv4(),
+      name: "Omeprazole",
+      strength: "20mg",
+      form: "capsule",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          times: ["7:30 AM"],
+          quantity: 1
+        }
+      ],
+      asNeeded: { maxPerDay: 1 }
+    },
+    // Original medications 1-3 now in positions 4-6
     {
       id: uuidv4(),
       name: "Lipitor",
@@ -63,51 +110,6 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = tru
           id: uuidv4(),
           days: ["everyday"],
           times: ["9:00 AM"],
-          quantity: 1
-        }
-      ],
-      asNeeded: { maxPerDay: 1 }
-    },
-    {
-      id: uuidv4(),
-      name: "Levothyroxine",
-      strength: "75mcg",
-      form: "tablet",
-      doses: [
-        {
-          id: uuidv4(),
-          days: ["everyday"],
-          times: ["7:00 AM"],
-          quantity: 1
-        }
-      ],
-      asNeeded: null
-    },
-    {
-      id: uuidv4(),
-      name: "Aspirin",
-      strength: "81mg",
-      form: "tablet",
-      doses: [
-        {
-          id: uuidv4(),
-          days: ["everyday"],
-          times: ["10:00 AM"],
-          quantity: 1
-        }
-      ],
-      asNeeded: null
-    },
-    {
-      id: uuidv4(),
-      name: "Omeprazole",
-      strength: "20mg",
-      form: "capsule",
-      doses: [
-        {
-          id: uuidv4(),
-          days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-          times: ["7:30 AM"],
           quantity: 1
         }
       ],

@@ -108,59 +108,19 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
             </div>
           )}
 
-          {userProfile.role === UserRole.PrimaryUser || (showExample && exampleProfile.role === UserRole.PrimaryUser) ? (
-            <>
-              <div className="voice-display-card p-5 h-32">
-                <Calendar className="text-highlight h-6 w-6" />
-                <div className="flex-1">
-                  <p className="text-white/70 text-lg mb-1">Date of Birth</p>
-                  <p className="text-2xl text-white">
-                    {showExample 
-                      ? exampleProfile.dateOfBirth 
-                      : userProfile.dateOfBirth || "Listening..."}
-                  </p>
-                </div>
-              </div>
-
-              <div className="voice-display-card p-5 h-32">
-                <BellRing className="text-highlight h-6 w-6" />
-                <div className="flex-1">
-                  <p className="text-white/70 text-lg mb-1">Alert Preference</p>
-                  {showExample ? (
-                    <p className="text-2xl text-white">
-                      {ALERT_PREFERENCES.find(a => a.value === exampleProfile.alertPreference)?.label || 'Text Message'}
-                    </p>
-                  ) : (
-                    <Select 
-                      value={userProfile.alertPreference || ''} 
-                      onValueChange={handleAlertPreferenceChange}
-                    >
-                      <SelectTrigger className="w-full bg-transparent border-white/20 text-white text-2xl h-auto p-0">
-                        <SelectValue placeholder="Select alert preference" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {ALERT_PREFERENCES.map((pref) => (
-                          <SelectItem key={pref.value} value={pref.value}>{pref.label}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
-                </div>
-              </div>
-            </>
-          ) : (
-            <div className="voice-display-card p-5 h-32">
-              <Phone className="text-highlight h-6 w-6" />
-              <div className="flex-1">
-                <p className="text-white/70 text-lg mb-1">Phone Number</p>
-                <p className="text-2xl text-white">
-                  {showExample 
-                    ? exampleProfile.phoneNumber 
-                    : userProfile.phoneNumber || "Listening..."}
-                </p>
-              </div>
+          <div className="voice-display-card p-5 h-32">
+            <Phone className="text-highlight h-6 w-6" />
+            <div className="flex-1">
+              <p className="text-white/70 text-lg mb-1">Phone Number</p>
+              <p className="text-2xl text-white">
+                {showExample 
+                  ? exampleProfile.phoneNumber 
+                  : userProfile.phoneNumber || "Listening..."}
+              </p>
             </div>
-          )}
+          </div>
+
+          {/* Remove the alert preference from the caregiver's personal info screen */}
         </div>
       </div>
     </div>

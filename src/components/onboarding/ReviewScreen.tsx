@@ -2,9 +2,10 @@
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, Pill, User, Phone, Heart } from 'lucide-react';
+import { Calendar, Clock, Pill, User, Phone, Heart, BellRing } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { getDayAbbreviation } from '@/utils/dateUtils';
+import { ALERT_PREFERENCES } from '@/types/onboarding';
 
 interface ReviewScreenProps {
   showExample?: boolean;
@@ -50,7 +51,13 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
           }
         ]
       }
-    ]
+    ],
+    lovedOne: {
+      firstName: "Robert",
+      lastName: "Smith",
+      dateOfBirth: "06/12/1940",
+      alertPreference: "phone_call"
+    }
   };
 
   const displayProfile = showExample ? exampleProfile : userProfile;
@@ -59,6 +66,12 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
     if (days.includes('everyday')) return 'Everyday';
     
     return days.map(day => getDayAbbreviation(day)).join(', ');
+  };
+
+  const getAlertPreferenceLabel = (value: string | null) => {
+    if (!value) return "—";
+    const preference = ALERT_PREFERENCES.find(p => p.value === value);
+    return preference ? preference.label : "—";
   };
 
   return (
@@ -79,15 +92,45 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
               <p className="text-xl font-medium">{displayProfile.role || "—"}</p>
             </div>
             <div>
-              <p className="text-sm text-white/50 uppercase tracking-wider mb-1">Date of Birth</p>
-              <p className="text-xl font-medium">{displayProfile.dateOfBirth || "—"}</p>
-            </div>
-            <div>
               <p className="text-sm text-white/50 uppercase tracking-wider mb-1">Phone Number</p>
               <p className="text-xl font-medium">{displayProfile.phoneNumber || "—"}</p>
             </div>
+            {displayProfile.role === "caregiver" && (
+              <div>
+                <p className="text-sm text-white/50 uppercase tracking-wider mb-1">Relationship</p>
+                <p className="text-xl font-medium">{displayProfile.relationship || "—"}</p>
+              </div>
+            )}
           </div>
         </div>
+
+        {/* Show Loved One section for caregivers */}
+        {displayProfile.role === "caregiver" && (
+          <div className="p-5 rounded-lg border border-white/10 bg-white/5">
+            <h3 className="text-xl font-medium text-white/90 mb-4 flex items-center">
+              <User className="h-6 w-6 mr-3 text-highlight" />
+              Loved One Information
+            </h3>
+            <div className="grid grid-cols-2 gap-x-8 gap-y-4 text-white">
+              <div>
+                <p className="text-sm text-white/50 uppercase tracking-wider mb-1">Full Name</p>
+                <p className="text-xl font-medium">
+                  {displayProfile.lovedOne.firstName || "—"} {displayProfile.lovedOne.lastName || "—"}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-white/50 uppercase tracking-wider mb-1">Date of Birth</p>
+                <p className="text-xl font-medium">{displayProfile.lovedOne.dateOfBirth || "—"}</p>
+              </div>
+              <div>
+                <p className="text-sm text-white/50 uppercase tracking-wider mb-1">Alert Preference</p>
+                <p className="text-xl font-medium">
+                  {getAlertPreferenceLabel(displayProfile.lovedOne.alertPreference)}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="p-5 rounded-lg border border-white/10 bg-white/5">
           <h3 className="text-xl font-medium text-white/90 mb-4 flex items-center">

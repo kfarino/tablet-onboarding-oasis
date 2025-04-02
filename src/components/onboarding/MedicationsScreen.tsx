@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { Mic, Pill, Clock, Calendar, Info, ArrowRight } from 'lucide-react';
+import { Pill, Clock, Calendar, Info, ArrowRight } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { v4 as uuidv4 } from 'uuid';
@@ -123,22 +123,13 @@ const MedicationsScreen: React.FC = () => {
         </ul>
       </div>
 
-      <div className="voice-listening-indicator mt-8">
-        <div className="flex flex-col items-center">
-          <div className="bg-white/10 rounded-full p-4 mb-4 pulse-animation">
-            <Mic className="text-highlight h-6 w-6" />
-          </div>
-          <p className="text-white/70 text-center mb-6">
-            Say "Next" when you're finished adding medications
-          </p>
-          
-          <Button 
-            onClick={nextStep}
-            className="bg-highlight hover:bg-highlight/90 text-white"
-          >
-            Continue <ArrowRight className="ml-2" />
-          </Button>
-        </div>
+      <div className="mt-8 text-center">
+        <Button 
+          onClick={nextStep}
+          className="bg-highlight hover:bg-highlight/90 text-white px-8 py-2 rounded-full"
+        >
+          Continue <ArrowRight className="ml-2" />
+        </Button>
       </div>
     </div>
   );

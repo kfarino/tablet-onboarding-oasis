@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { CheckCircle2, Mic, ArrowRight } from 'lucide-react';
+import { CheckCircle2, ArrowRight } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 const CompleteScreen: React.FC = () => {
@@ -29,21 +29,10 @@ const CompleteScreen: React.FC = () => {
         
         <Button 
           onClick={goToDashboard}
-          className="bg-highlight hover:bg-highlight/90 text-white w-full rounded-full py-4 flex items-center justify-center mb-8"
+          className="bg-highlight hover:bg-highlight/90 text-white w-full rounded-full py-4 flex items-center justify-center"
         >
           Go to Dashboard <ArrowRight className="ml-2 h-5 w-5" />
         </Button>
-
-        <div className="voice-listening-indicator">
-          <div className="flex flex-col items-center">
-            <div className="bg-white/10 rounded-full p-4 mb-2 pulse-animation">
-              <Mic className="text-highlight h-6 w-6" />
-            </div>
-            <p className="text-white/70 text-center text-sm">
-              Say "Go to dashboard" to continue
-            </p>
-          </div>
-        </div>
       </div>
     </div>
   );

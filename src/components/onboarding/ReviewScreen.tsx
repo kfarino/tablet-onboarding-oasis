@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Badge } from "@/components/ui/badge";
-import { Mic, Calendar, Clock, Pill, User, Phone, Heart, ArrowRight } from 'lucide-react';
+import { Calendar, Clock, Pill, User, Phone, Heart, ArrowRight } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -168,17 +168,6 @@ const ReviewScreen: React.FC = () => {
         >
           Complete Setup <ArrowRight className="ml-2 h-5 w-5" />
         </Button>
-      </div>
-
-      <div className="voice-listening-indicator">
-        <div className="flex flex-col items-center">
-          <div className="bg-white/10 rounded-full p-4 mb-2 pulse-animation">
-            <Mic className="text-highlight h-6 w-6" />
-          </div>
-          <p className="text-white/70 text-center text-sm">
-            Say "Complete" to finish setup or "Go back" to make changes
-          </p>
-        </div>
       </div>
     </div>
   );

@@ -39,11 +39,6 @@ const LovedOneInfoScreen: React.FC<LovedOneInfoScreenProps> = ({ showExample = f
 
   return (
     <div className="animate-fade-in flex flex-col h-full px-10 py-6">
-      <div className="mb-6">
-        <h2 className="text-3xl font-bold text-white">Loved One Information</h2>
-        <p className="text-white/70">Please provide information about the person you're caring for</p>
-      </div>
-      
       <div className="space-y-6">
         <div className="grid grid-cols-2 gap-5 mb-4">
           <div className="voice-display-card p-5 h-32">

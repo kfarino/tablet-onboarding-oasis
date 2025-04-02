@@ -15,7 +15,7 @@ const Header: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full bg-black text-white py-3 px-6 flex justify-between items-center relative">
+    <div className="w-full bg-charcoal text-white py-3 px-6 flex justify-between items-center relative">
       <div className="text-2xl font-medium">
         {format(currentTime, 'EEE, MMM d')}
       </div>

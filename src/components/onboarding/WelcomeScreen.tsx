@@ -11,10 +11,12 @@ const WelcomeScreen: React.FC = () => {
         onClick={nextStep}
         className="w-64 h-64 rounded-full bg-highlight text-white flex flex-col items-center justify-center shadow-lg hover:bg-highlight/90 transition-colors focus:outline-none focus:ring-4 focus:ring-highlight/50 relative"
       >
-        {/* Enhanced glow effect with multiple layers */}
-        <div className="absolute w-[120%] h-[120%] rounded-full bg-highlight/40 blur-xl -z-10 left-[-10%] top-[-10%]"></div>
-        <div className="absolute w-[130%] h-[130%] rounded-full bg-highlight/20 blur-2xl -z-10 left-[-15%] top-[-15%]"></div>
-        <div className="absolute w-full h-full rounded-full animate-pulse bg-highlight/30 blur-md -z-10"></div>
+        {/* Super enhanced glow effect with multiple larger layers */}
+        <div className="absolute w-[200%] h-[200%] rounded-full bg-highlight/30 blur-3xl -z-10 left-[-50%] top-[-50%]"></div>
+        <div className="absolute w-[180%] h-[180%] rounded-full bg-highlight/40 blur-2xl -z-10 left-[-40%] top-[-40%]"></div>
+        <div className="absolute w-[160%] h-[160%] rounded-full bg-highlight/50 blur-xl -z-10 left-[-30%] top-[-30%]"></div>
+        <div className="absolute w-[140%] h-[140%] rounded-full bg-highlight/60 blur-lg -z-10 left-[-20%] top-[-20%]"></div>
+        <div className="absolute w-[120%] h-[120%] rounded-full animate-pulse bg-highlight/70 blur-md -z-10 left-[-10%] top-[-10%]"></div>
         
         {/* Button text */}
         <div className="text-center">

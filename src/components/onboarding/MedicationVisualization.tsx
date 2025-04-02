@@ -41,18 +41,33 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
       };
     });
 
-    // Group medications by time
-    const medicationsByTime: Record<string, { time: string, meds: { med: Medication, dose: MedicationDose }[] }> = {};
+    // Find all unique times across all medications
+    const allTimes = new Set<string>();
     
     medications.forEach(med => {
       med.doses.forEach(dose => {
         dose.times.forEach(time => {
           // Skip "as needed" which isn't a specific time
           if (time.toLowerCase() === "as needed") return;
-          
-          if (!medicationsByTime[time]) {
-            medicationsByTime[time] = { time, meds: [] };
-          }
+          allTimes.add(time);
+        });
+      });
+    });
+    
+    // Group medications by time
+    const medicationsByTime: Record<string, { time: string, meds: { med: Medication, dose: MedicationDose }[] }> = {};
+    
+    // Initialize all times with empty arrays
+    Array.from(allTimes).forEach(time => {
+      medicationsByTime[time] = { time, meds: [] };
+    });
+    
+    // Add medications to each time slot
+    medications.forEach(med => {
+      med.doses.forEach(dose => {
+        dose.times.forEach(time => {
+          // Skip "as needed" which isn't a specific time
+          if (time.toLowerCase() === "as needed") return;
           
           medicationsByTime[time].meds.push({ med, dose });
         });
@@ -90,9 +105,17 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
               <div className="text-highlight font-medium mb-2">{time}</div>
               <div className="grid grid-cols-7 gap-1">
                 {weekDays.map((day) => {
-                  const relevantMeds = meds.filter(({ med, dose }) => 
-                    dose.days.includes('everyday') || dose.days.includes(day.fullDayName)
-                  );
+                  // Find medications that should be taken on this day at this time
+                  const relevantMeds = meds.filter(({ med, dose }) => {
+                    // Check if this medication should be taken on this day
+                    const takesToday = dose.days.includes('everyday') || 
+                                      dose.days.includes(day.fullDayName);
+                    
+                    // Ensure the time matches one of the dose times
+                    const takesAtThisTime = dose.times.includes(time);
+                    
+                    return takesToday && takesAtThisTime;
+                  });
                   
                   return (
                     <div key={`${time}-${day.dayName}`} className="min-h-[60px] border border-white/10 rounded p-1">

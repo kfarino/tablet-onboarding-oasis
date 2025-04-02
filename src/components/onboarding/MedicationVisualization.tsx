@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Calendar, List, LayoutGrid, Sun, Moon, Info, Clock, Calendar as CalendarIcon, Pill, AlertCircle } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -586,71 +585,18 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
       return (
         <Card key={time} className="bg-white/10 hover:bg-white/15 transition-colors">
           <CardContent className="p-3">
-            <div className="flex justify-between items-center mb-3">
-              <div className="flex items-center gap-2">
-                <div className="bg-highlight rounded-md px-2 py-1 text-charcoal font-medium text-sm">
-                  {time}
-                </div>
-                <div className="text-white/90 text-sm font-medium">
-                  {meds.length} {meds.length === 1 ? 'medication' : 'medications'}
-                </div>
+            <div className="flex justify-between items-center mb-2">
+              <div className="bg-highlight rounded-md px-2 py-1 text-charcoal font-medium text-sm">
+                {time}
               </div>
-            </div>
-            
-            <div className="grid grid-cols-3 gap-2">
-              {meds.map((item, index) => (
-                <Popover key={`${item.med.id}-${index}`}>
-                  <PopoverTrigger asChild>
-                    <div className="bg-white/10 px-2 py-1.5 rounded-md flex flex-col cursor-pointer hover:bg-white/20 transition-colors">
-                      <div className="text-white font-medium truncate text-sm">
-                        {item.med.name}
-                      </div>
-                      <div className="flex items-center gap-1 text-white/60 text-xs">
-                        <span>{formatFrequency(item.dose.days)}</span>
-                      </div>
-                    </div>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-72">
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2">
-                        <Pill className="h-5 w-5 text-highlight" />
-                        <h4 className="text-base font-semibold">{item.med.name}</h4>
-                      </div>
-                      
-                      {item.med.strength && (
-                        <div className="bg-white/10 px-2 py-1 rounded text-xs inline-block text-white/90">
-                          {item.med.strength}
-                        </div>
-                      )}
-                      
-                      <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-2 items-center mt-2 text-sm">
-                        <Clock className="h-4 w-4 text-white/70" />
-                        <div className="text-white">{item.time}</div>
-                        
-                        <CalendarIcon className="h-4 w-4 text-white/70" />
-                        <div className="text-white">{formatDays(item.dose.days)}</div>
-                        
-                        <Pill className="h-4 w-4 text-white/70" />
-                        <div className="text-white">
-                          {item.dose.quantity} {item.med.form || 'dose'}{item.dose.quantity !== 1 ? 's' : ''}
-                        </div>
-                        
-                        {item.med.asNeeded && (
-                          <>
-                            <AlertCircle className="h-4 w-4 text-yellow-500" />
-                            <div className="text-yellow-500">Max {item.med.asNeeded.maxPerDay}/day</div>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </PopoverContent>
-                </Popover>
-              ))}
+              <div className="text-white/70 text-xs">
+                {meds.length} med{meds.length !== 1 ? 's' : ''}
+              </div>
             </div>
             
             <Dialog>
               <DialogTrigger asChild>
-                <button className="w-full mt-2 py-1 text-xs text-white/70 bg-white/5 rounded hover:bg-white/10 transition-colors">
+                <button className="w-full mt-1 py-1 text-xs text-white/70 bg-white/5 rounded hover:bg-white/10 transition-colors">
                   View all {meds.length} medications
                 </button>
               </DialogTrigger>
@@ -710,7 +656,7 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
             </div>
             
             {group.meds.length > 0 ? (
-              <div className="space-y-3 ml-8">
+              <div className="grid grid-cols-4 gap-2 ml-8">
                 {groupMedsByTime(group.meds).map(([time, medsAtTime]) => (
                   renderMedicationTimeCard(time, medsAtTime)
                 ))}
@@ -723,7 +669,7 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
         
         <div className="bg-white/5 p-3 rounded-lg">
           <div className="text-yellow-500 font-medium mb-3">As Needed</div>
-          <div className="space-y-2 ml-8">
+          <div className="grid grid-cols-4 gap-2 ml-8">
             {medications
               .filter(med => 
                 med.asNeeded || 
@@ -732,16 +678,16 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
               .map(med => (
                 <Popover key={med.id}>
                   <PopoverTrigger asChild>
-                    <div className="bg-white/10 p-2 rounded-lg flex justify-between items-center cursor-pointer hover:bg-white/20 transition-colors">
-                      <div className="font-medium text-white">{med.name}</div>
+                    <div className="bg-white/10 p-2 rounded-lg flex flex-col cursor-pointer hover:bg-white/20 transition-colors">
+                      <div className="font-medium text-white truncate">{med.name}</div>
                       {med.asNeeded && (
-                        <div className="text-yellow-500 text-xs px-1.5 py-0.5 bg-yellow-500/20 rounded">
+                        <div className="text-yellow-500 text-xs mt-1">
                           Max {med.asNeeded.maxPerDay}/day
                         </div>
                       )}
                     </div>
                   </PopoverTrigger>
-                  <PopoverContent className="w-72">
+                  <PopoverContent className="w-72 p-3">
                     <div className="space-y-2">
                       <h4 className="text-base font-semibold text-white">{med.name}</h4>
                       {med.strength && (

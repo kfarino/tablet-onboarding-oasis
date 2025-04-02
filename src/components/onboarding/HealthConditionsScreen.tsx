@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { Mic, Heart, Info, ArrowRight } from 'lucide-react';
+import { Heart, Info, ArrowRight } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -74,17 +74,10 @@ const HealthConditionsScreen: React.FC = () => {
         </div>
       </div>
 
-      <div className="mt-auto flex flex-col items-center">
-        <div className="bg-white/10 rounded-full p-4 mb-3 pulse-animation">
-          <Mic className="text-highlight h-6 w-6" />
-        </div>
-        <p className="text-white/70 text-center mb-3">
-          Say "Next" when you're finished adding conditions
-        </p>
-        
+      <div className="mt-auto">
         <Button 
           onClick={nextStep}
-          className="bg-highlight hover:bg-highlight/90 text-white py-2 px-8 rounded-full w-full max-w-xs"
+          className="bg-highlight hover:bg-highlight/90 text-white py-2 px-8 rounded-full w-full max-w-xs mx-auto block"
         >
           Continue <ArrowRight className="ml-2" />
         </Button>

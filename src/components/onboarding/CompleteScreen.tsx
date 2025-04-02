@@ -1,7 +1,8 @@
 
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, ArrowRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const CompleteScreen: React.FC = () => {
   const { userProfile } = useOnboarding();
@@ -16,9 +17,13 @@ const CompleteScreen: React.FC = () => {
   return (
     <div className="flex flex-col items-center px-8 py-8 h-full animate-fade-in">
       <div className="flex flex-col items-center justify-center max-w-md text-center">
-        <CheckCircle2 className="text-highlight h-16 w-16 mb-6" />
+        <CheckCircle2 className="text-highlight h-20 w-20 mb-8" />
         
-        <p className="text-white/70 mb-4">
+        <h2 className="text-2xl font-bold text-white mb-4">
+          Your health profile is ready!
+        </h2>
+        
+        <p className="text-white/80 text-lg mb-4">
           Thank you {userProfile.firstName}, your health profile and medication schedule have been successfully created.
         </p>
         
@@ -26,7 +31,12 @@ const CompleteScreen: React.FC = () => {
           You can now access your medication schedule and reminders in the main dashboard.
         </p>
         
-        {/* Button removed as the navigation is now handled in the Header component */}
+        <Button 
+          className="flex items-center gap-2 bg-highlight hover:bg-highlight/90 text-white px-6 py-3 rounded-full text-lg"
+          onClick={goToDashboard}
+        >
+          Go to Dashboard <ArrowRight className="h-5 w-5" />
+        </Button>
       </div>
     </div>
   );

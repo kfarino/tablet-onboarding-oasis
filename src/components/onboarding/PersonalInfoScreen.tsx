@@ -22,22 +22,22 @@ const PersonalInfoScreen: React.FC = () => {
   };
 
   return (
-    <div className="animate-fade-in flex flex-col h-full px-8">
-      <div className="flex justify-end items-center mb-4">
+    <div className="animate-fade-in flex flex-col h-full px-10 py-6">
+      <div className="flex justify-end items-center mb-6">
         <Badge 
-          className="cursor-pointer bg-highlight hover:bg-highlight/90" 
+          className="cursor-pointer bg-highlight hover:bg-highlight/90 text-base py-1.5 px-4" 
           onClick={toggleExample}
         >
           {showExample ? "Show Empty View" : "Show Populated View"}
         </Badge>
       </div>
       
-      <div className="grid grid-cols-2 gap-3 mb-3">
-        <div className="voice-display-card p-3 h-24">
-          <User className="text-highlight h-5 w-5" />
+      <div className="grid grid-cols-2 gap-5 mb-4">
+        <div className="voice-display-card p-5 h-32">
+          <User className="text-highlight h-6 w-6" />
           <div className="flex-1">
-            <p className="text-white/70 text-sm">Full Name</p>
-            <p className="text-xl text-white">
+            <p className="text-white/70 text-lg mb-1">Full Name</p>
+            <p className="text-2xl text-white">
               {showExample 
                 ? `${exampleProfile.firstName} ${exampleProfile.lastName}` 
                 : userProfile.firstName || userProfile.lastName 
@@ -47,11 +47,11 @@ const PersonalInfoScreen: React.FC = () => {
           </div>
         </div>
 
-        <div className="voice-display-card p-3 h-24">
-          <User className="text-highlight h-5 w-5" />
+        <div className="voice-display-card p-5 h-32">
+          <User className="text-highlight h-6 w-6" />
           <div className="flex-1">
-            <p className="text-white/70 text-sm">Role</p>
-            <p className="text-xl text-white">
+            <p className="text-white/70 text-lg mb-1">Role</p>
+            <p className="text-2xl text-white">
               {showExample 
                 ? exampleProfile.role 
                 : userProfile.role || "Listening..."}
@@ -59,11 +59,11 @@ const PersonalInfoScreen: React.FC = () => {
           </div>
         </div>
 
-        <div className="voice-display-card p-3 h-24">
-          <Calendar className="text-highlight h-5 w-5" />
+        <div className="voice-display-card p-5 h-32">
+          <Calendar className="text-highlight h-6 w-6" />
           <div className="flex-1">
-            <p className="text-white/70 text-sm">Date of Birth</p>
-            <p className="text-xl text-white">
+            <p className="text-white/70 text-lg mb-1">Date of Birth</p>
+            <p className="text-2xl text-white">
               {showExample 
                 ? exampleProfile.dateOfBirth 
                 : userProfile.dateOfBirth || "Listening..."}
@@ -71,11 +71,11 @@ const PersonalInfoScreen: React.FC = () => {
           </div>
         </div>
 
-        <div className="voice-display-card p-3 h-24">
-          <Phone className="text-highlight h-5 w-5" />
+        <div className="voice-display-card p-5 h-32">
+          <Phone className="text-highlight h-6 w-6" />
           <div className="flex-1">
-            <p className="text-white/70 text-sm">Phone Number</p>
-            <p className="text-xl text-white">
+            <p className="text-white/70 text-lg mb-1">Phone Number</p>
+            <p className="text-2xl text-white">
               {showExample 
                 ? exampleProfile.phoneNumber 
                 : userProfile.phoneNumber || "Listening..."}

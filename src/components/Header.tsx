@@ -52,20 +52,20 @@ const Header: React.FC<HeaderProps> = ({ currentStep, onBack }) => {
     currentStep !== OnboardingStep.Complete;
 
   return (
-    <div className="w-full bg-charcoal text-white py-3 px-6 flex flex-col relative">
+    <div className="w-full bg-charcoal text-white py-4 px-8 flex flex-col relative">
       <div className="flex justify-between items-center">
-        <div className="text-2xl font-medium">
+        <div className="text-3xl font-medium">
           {format(currentTime, 'EEE, MMM d')}
         </div>
-        <div className="text-2xl font-medium absolute left-1/2 transform -translate-x-1/2">
+        <div className="text-3xl font-medium absolute left-1/2 transform -translate-x-1/2">
           {format(currentTime, 'h:mm a')}
         </div>
         <div>
-          <Wifi size={24} />
+          <Wifi size={28} />
         </div>
       </div>
       
-      <div className="w-full flex items-center justify-center relative mt-6 mb-4">
+      <div className="w-full flex items-center justify-center relative mt-8 mb-5">
         {showBackButton && onBack && (
           <Button 
             variant="ghost" 
@@ -74,7 +74,7 @@ const Header: React.FC<HeaderProps> = ({ currentStep, onBack }) => {
             className="absolute left-0 text-white hover:bg-white/10 hover:text-white"
             aria-label="Go back"
           >
-            <ArrowLeft size={24} />
+            <ArrowLeft size={28} />
           </Button>
         )}
         {showNextButton && (
@@ -82,14 +82,14 @@ const Header: React.FC<HeaderProps> = ({ currentStep, onBack }) => {
             variant="ghost"
             size="icon"
             onClick={nextStep}
-            className="absolute right-0 bg-white/10 text-white hover:bg-white/20 hover:text-white rounded-full h-12 w-12"
+            className="absolute right-0 bg-white/10 text-white hover:bg-white/20 hover:text-white rounded-full h-14 w-14"
             aria-label="Continue"
           >
-            <ArrowRight className="h-6 w-6" />
+            <ArrowRight className="h-7 w-7" />
           </Button>
         )}
         {getStepTitle() && (
-          <div className="text-[40px] font-bold">
+          <div className="text-[44px] font-bold">
             {getStepTitle()}
           </div>
         )}

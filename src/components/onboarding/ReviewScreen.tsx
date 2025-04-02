@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Badge } from "@/components/ui/badge";
@@ -14,12 +13,12 @@ interface ReviewScreenProps {
 const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
   const { userProfile } = useOnboarding();
 
-  // Example data for populated view - updated for caregiver flow
+  // Example data for populated view - updated for caregiver flow with relationship
   const exampleProfile = {
     firstName: "Jane",
     lastName: "Smith",
     role: UserRole.Caregiver,
-    relationship: "Child",
+    relationship: "child", // Added relationship for caregiver
     dateOfBirth: "", // Empty for caregivers
     phoneNumber: "(555) 123-4567",
     alertPreference: null, // No alert preference for caregivers
@@ -73,7 +72,7 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
     }
   };
 
-  // Example for primary user - updated
+  // Example for primary user - updated to remove alert preference
   const examplePrimaryUser = {
     firstName: "Robert",
     lastName: "Johnson",
@@ -81,7 +80,7 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
     relationship: "", // Empty for primary users
     dateOfBirth: "05/12/1945",
     phoneNumber: "(555) 987-6543",
-    alertPreference: "app_notification",
+    alertPreference: null, // Removed alert preference for primary user
     healthConditions: ["Hypertension", "Glaucoma"],
     medications: [
       {
@@ -333,7 +332,7 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
       lastName: "",
       dateOfBirth: "",
       phoneNumber: "",
-      alertPreference: null
+      alertPreference: "app_notification" // Added alert preference for loved one
     }
   };
 
@@ -447,7 +446,7 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
           </div>
         )}
 
-        {/* Alert Preference for Primary Users */}
+        {/* Alert Preference for Loved One of Primary Users */}
         {displayProfile.role === UserRole.PrimaryUser && (
           <div className="p-5 rounded-lg border border-white/10 bg-white/5">
             <h3 className="text-xl font-medium text-white/90 mb-4 flex items-center">
@@ -458,7 +457,7 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
               <div>
                 <p className="text-sm text-white/50 uppercase tracking-wider mb-1">Medication Reminders</p>
                 <p className="text-xl font-medium">
-                  {getAlertPreferenceLabel(displayProfile.alertPreference)}
+                  {getAlertPreferenceLabel(displayProfile.lovedOne.alertPreference)}
                 </p>
               </div>
             </div>
@@ -559,4 +558,3 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
 };
 
 export default ReviewScreen;
-

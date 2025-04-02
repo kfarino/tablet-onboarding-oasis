@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, List, LayoutGrid } from 'lucide-react';
+import { Calendar, List, LayoutGrid, Sun, Moon } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { format, startOfWeek, addDays } from 'date-fns';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
@@ -261,6 +261,119 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
     );
   };
 
+  const renderSimpleTimelineView = () => {
+    // Group medications into morning (before 12), day (12-5), and night (after 5)
+    const timeGroups = {
+      morning: { 
+        label: "Morning", 
+        icon: <Sun className="h-5 w-5 text-yellow-400" />, 
+        meds: [] as { med: Medication, dose: MedicationDose, time: string }[] 
+      },
+      day: { 
+        label: "Day", 
+        icon: <Sun className="h-5 w-5 text-orange-400" />, 
+        meds: [] as { med: Medication, dose: MedicationDose, time: string }[] 
+      },
+      night: { 
+        label: "Night", 
+        icon: <Moon className="h-5 w-5 text-blue-400" />, 
+        meds: [] as { med: Medication, dose: MedicationDose, time: string }[] 
+      }
+    };
+    
+    // Sort medications into time groups
+    medications.forEach(med => {
+      med.doses.forEach(dose => {
+        dose.times.forEach(time => {
+          if (time.toLowerCase() === "as needed") return;
+          
+          // Parse the time to determine the group
+          const timeGroup = getTimeGroup(time);
+          timeGroups[timeGroup].meds.push({ med, dose, time });
+        });
+      });
+    });
+    
+    // Sort medications within each group by time
+    Object.values(timeGroups).forEach(group => {
+      group.meds.sort((a, b) => {
+        return compareTimeStrings(a.time, b.time);
+      });
+    });
+    
+    return (
+      <div className="space-y-6 my-4">
+        {Object.entries(timeGroups).map(([key, group]) => (
+          <div key={key} className="bg-white/5 p-4 rounded-lg">
+            <div className="flex items-center gap-3 mb-4">
+              {group.icon}
+              <div className="text-lg font-medium text-white">{group.label}</div>
+              <div className="text-white/70 text-sm">
+                {group.meds.length} medication{group.meds.length !== 1 ? 's' : ''}
+              </div>
+            </div>
+            
+            {group.meds.length > 0 ? (
+              <div className="space-y-3 ml-10">
+                {group.meds.map((item, index) => {
+                  // Create a unique key
+                  const itemKey = `${key}-${item.med.id}-${index}`;
+                  
+                  return (
+                    <div key={itemKey} className="bg-white/10 p-3 rounded-lg flex items-start gap-3">
+                      <div className="bg-white/20 text-white px-2 py-1 rounded text-sm min-w-16 text-center">
+                        {item.time}
+                      </div>
+                      <div>
+                        <div className="font-medium text-white">{item.med.name} {item.med.strength}</div>
+                        <div className="text-white/70 text-sm mt-1">
+                          {item.dose.quantity} {item.med.form || 'pill'}{item.dose.quantity !== 1 ? 's' : ''}
+                        </div>
+                        <div className="text-white/60 text-xs mt-1">
+                          {formatDays(item.dose.days)}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-white/30 text-sm ml-10">No medications scheduled</div>
+            )}
+          </div>
+        ))}
+        
+        {/* As needed medications */}
+        <div className="bg-white/5 p-4 rounded-lg">
+          <div className="text-yellow-500 font-medium mb-4">As Needed</div>
+          <div className="space-y-3 ml-10">
+            {medications
+              .filter(med => 
+                med.asNeeded || 
+                med.doses.some(dose => dose.times.some(time => time.toLowerCase() === "as needed"))
+              )
+              .map(med => (
+                <div key={med.id} className="bg-white/10 p-3 rounded-lg">
+                  <div className="font-medium text-white">{med.name} {med.strength}</div>
+                  {med.asNeeded && (
+                    <div className="text-white/70 text-sm mt-1">
+                      Max {med.asNeeded.maxPerDay} per day
+                    </div>
+                  )}
+                </div>
+              ))}
+            {!medications.some(med => 
+              med.asNeeded || 
+              med.doses.some(dose => dose.times.some(time => time.toLowerCase() === "as needed"))
+            ) && (
+              <div className="text-white/30 text-sm">No as-needed medications</div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderTableView = () => {
     // Get all unique days across all medications
     const allDays = new Set<string>();
@@ -335,6 +448,39 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
     );
   };
 
+  // Helper function to determine time group
+  const getTimeGroup = (timeStr: string): "morning" | "day" | "night" => {
+    const [time, meridiem] = timeStr.split(' ');
+    let [hours, minutes] = time.split(':').map(Number);
+    
+    // Convert to 24-hour format
+    if (meridiem === 'PM' && hours !== 12) hours += 12;
+    if (meridiem === 'AM' && hours === 12) hours = 0;
+    
+    if (hours < 12) return "morning";
+    if (hours < 17) return "day";
+    return "night";
+  };
+
+  // Helper function to compare time strings
+  const compareTimeStrings = (a: string, b: string): number => {
+    const parseTime = (timeStr: string) => {
+      const [time, meridiem] = timeStr.split(' ');
+      let [hours, minutes] = time.split(':').map(Number);
+      if (meridiem === 'PM' && hours !== 12) hours += 12;
+      if (meridiem === 'AM' && hours === 12) hours = 0;
+      return hours * 60 + minutes;
+    };
+    
+    return parseTime(a) - parseTime(b);
+  };
+
+  // Helper function to format days
+  const formatDays = (days: string[]): string => {
+    if (days.includes('everyday')) return 'Every day';
+    return days.map(day => day.substring(0, 3)).join(', ');
+  };
+
   return (
     <div className="animate-fade-in bg-white/5 rounded-lg p-4">
       <h3 className="text-xl font-bold text-white mb-4">Medication Schedule</h3>
@@ -348,6 +494,10 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
             <List className="h-4 w-4 mr-2" />
             Timeline
           </TabsTrigger>
+          <TabsTrigger value="simple" className="data-[state=active]:bg-white/20">
+            <Sun className="h-4 w-4 mr-2" />
+            Day Parts
+          </TabsTrigger>
           <TabsTrigger value="table" className="data-[state=active]:bg-white/20">
             <LayoutGrid className="h-4 w-4 mr-2" />
             Table
@@ -360,6 +510,10 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
         
         <TabsContent value="timeline" className="mt-0">
           {renderTimelineView()}
+        </TabsContent>
+        
+        <TabsContent value="simple" className="mt-0">
+          {renderSimpleTimelineView()}
         </TabsContent>
         
         <TabsContent value="table" className="mt-0">

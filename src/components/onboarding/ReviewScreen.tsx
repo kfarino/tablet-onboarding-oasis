@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, Pill, User, Phone, Heart, BellRing, AlertCircle } from 'lucide-react';
+import { Calendar, Clock, Pill, User, Phone, Heart, AlertCircle } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { getDayAbbreviation } from '@/utils/dateUtils';
 import { ALERT_PREFERENCES, RELATIONSHIP_OPTIONS, UserRole } from '@/types/onboarding';
@@ -518,7 +519,7 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
                         </span>
                       </div>
                       <div className="text-sm text-white/80 mt-2">
-                        {dose.quantity} pill{dose.quantity !== 1 ? 's' : ''} per dose
+                        {dose.quantity} {medication.form || 'pill'}{dose.quantity !== 1 ? 's' : ''} per dose
                       </div>
                     </div>
                   ))}

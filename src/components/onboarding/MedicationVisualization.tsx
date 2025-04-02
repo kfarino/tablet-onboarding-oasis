@@ -19,7 +19,7 @@ interface Medication {
   strength?: string;
   form?: string;
   doses: MedicationDose[];
-  asNeeded?: { maxPerDay: number };
+  asNeeded?: { maxPerDay: number } | null;
 }
 
 interface MedicationVisualizationProps {
@@ -121,7 +121,10 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
           <div className="text-yellow-500 font-medium mb-2">As Needed</div>
           <div className="space-y-2">
             {medications
-              .filter(med => med.asNeeded || med.doses.some(dose => dose.times.some(time => time.toLowerCase() === "as needed")))
+              .filter(med => 
+                med.asNeeded || 
+                med.doses.some(dose => dose.times.some(time => time.toLowerCase() === "as needed"))
+              )
               .map(med => (
                 <div key={med.id} className="bg-white/10 p-2 rounded">
                   <div className="font-medium">{med.name} {med.strength}</div>
@@ -130,7 +133,10 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
                   )}
                 </div>
               ))}
-            {!medications.some(med => med.asNeeded || med.doses.some(dose => dose.times.some(time => time.toLowerCase() === "as needed"))) && (
+            {!medications.some(med => 
+              med.asNeeded || 
+              med.doses.some(dose => dose.times.some(time => time.toLowerCase() === "as needed"))
+            ) && (
               <div className="text-white/30 text-sm">No as-needed medications</div>
             )}
           </div>
@@ -209,7 +215,10 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
           <div className="text-yellow-500 font-medium mb-3">As Needed</div>
           <div className="space-y-2">
             {medications
-              .filter(med => med.asNeeded || med.doses.some(dose => dose.times.some(time => time.toLowerCase() === "as needed")))
+              .filter(med => 
+                med.asNeeded || 
+                med.doses.some(dose => dose.times.some(time => time.toLowerCase() === "as needed"))
+              )
               .map(med => (
                 <div key={med.id} className="bg-white/10 p-2 rounded flex justify-between items-center">
                   <div>
@@ -223,7 +232,10 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
                   )}
                 </div>
               ))}
-            {!medications.some(med => med.asNeeded || med.doses.some(dose => dose.times.some(time => time.toLowerCase() === "as needed"))) && (
+            {!medications.some(med => 
+              med.asNeeded || 
+              med.doses.some(dose => dose.times.some(time => time.toLowerCase() === "as needed"))
+            ) && (
               <div className="text-white/30 text-sm">No as-needed medications</div>
             )}
           </div>

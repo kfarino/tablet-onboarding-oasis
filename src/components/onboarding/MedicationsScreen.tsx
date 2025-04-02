@@ -50,7 +50,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = tru
           times: ["12:00 PM"],
           quantity: 2
         }
-      ]
+      ],
+      asNeeded: null
     },
     {
       id: uuidv4(),
@@ -79,7 +80,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = tru
           times: ["7:00 AM"],
           quantity: 1
         }
-      ]
+      ],
+      asNeeded: null
     },
     {
       id: uuidv4(),
@@ -93,7 +95,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = tru
           times: ["10:00 AM"],
           quantity: 1
         }
-      ]
+      ],
+      asNeeded: null
     },
     {
       id: uuidv4(),
@@ -107,7 +110,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = tru
           times: ["7:30 AM"],
           quantity: 1
         }
-      ]
+      ],
+      asNeeded: { maxPerDay: 1 }
     },
     {
       id: uuidv4(),
@@ -121,7 +125,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = tru
           times: ["as needed"],
           quantity: 2
         }
-      ]
+      ],
+      asNeeded: { maxPerDay: 8 }
     },
     {
       id: uuidv4(),
@@ -135,7 +140,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = tru
           times: ["9:00 PM"],
           quantity: 1
         }
-      ]
+      ],
+      asNeeded: null
     },
     {
       id: uuidv4(),
@@ -155,7 +161,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = tru
           times: ["10:00 AM"],
           quantity: 2
         }
-      ]
+      ],
+      asNeeded: { maxPerDay: 2 }
     },
     {
       id: uuidv4(),
@@ -169,7 +176,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = tru
           times: ["8:00 AM", "8:00 PM"],
           quantity: 1
         }
-      ]
+      ],
+      asNeeded: null
     },
     {
       id: uuidv4(),
@@ -183,7 +191,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = tru
           times: ["10:30 AM"],
           quantity: 1
         }
-      ]
+      ],
+      asNeeded: { maxPerDay: 3 }
     },
     {
       id: uuidv4(),
@@ -203,7 +212,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = tru
           times: ["5:00 PM"],
           quantity: 2
         }
-      ]
+      ],
+      asNeeded: null
     },
     {
       id: uuidv4(),
@@ -217,7 +227,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = tru
           times: ["10:00 AM"],
           quantity: 1
         }
-      ]
+      ],
+      asNeeded: { maxPerDay: 1 }
     },
     {
       id: uuidv4(),
@@ -231,7 +242,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = tru
           times: ["9:00 PM"],
           quantity: 20
         }
-      ]
+      ],
+      asNeeded: { maxPerDay: 40 }
     },
     {
       id: uuidv4(),
@@ -245,7 +257,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = tru
           times: ["8:00 AM"],
           quantity: 1
         }
-      ]
+      ],
+      asNeeded: null
     }
   ];
 
@@ -320,7 +333,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = tru
                         </span>
                       </div>
                       <div className="ml-6 text-sm text-white/80">
-                        <span>{dose.quantity} pill{dose.quantity !== 1 ? 's' : ''} per dose</span>
+                        <span>{dose.quantity} {medication.form || 'pill'}{dose.quantity !== 1 ? 's' : ''} per dose</span>
                       </div>
                     </div>
                   ))}

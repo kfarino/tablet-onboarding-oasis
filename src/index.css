@@ -43,28 +43,29 @@
   }
 
   body {
-    @apply bg-charcoal text-white;
+    @apply bg-charcoal text-white antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
 @layer components {
   .onboarding-container {
-    @apply fixed inset-0 flex flex-col items-center justify-between p-8 overflow-hidden;
+    @apply fixed inset-0 flex flex-col items-center justify-between p-6 overflow-hidden;
     max-width: 1024px;
     max-height: 600px;
     margin: 0 auto;
   }
 
   .onboarding-content {
-    @apply w-full max-h-full flex-1 overflow-y-auto py-4;
+    @apply w-full max-h-full flex-1 overflow-y-auto py-2;
   }
 
   .onboarding-header {
-    @apply w-full mb-6 flex items-center justify-between;
+    @apply w-full mb-4 flex items-center justify-between;
   }
 
   .onboarding-footer {
-    @apply w-full mt-6 flex items-center justify-between;
+    @apply w-full mt-4 flex items-center justify-between;
   }
 
   .onboarding-title {
@@ -72,11 +73,11 @@
   }
 
   .onboarding-subtitle {
-    @apply text-lg text-white/70 mb-6;
+    @apply text-base text-white/70;
   }
 
   .form-group {
-    @apply mb-6;
+    @apply mb-4;
   }
 
   .input-label {
@@ -109,11 +110,11 @@
 
   /* Header styling based on design system */
   .header-bar {
-    @apply flex items-center justify-center w-full h-16 bg-charcoal relative;
+    @apply flex items-center justify-center w-full h-14 bg-charcoal relative;
   }
   
   .header-title {
-    @apply text-white text-xl font-medium text-center;
+    @apply text-white text-lg font-medium text-center;
   }
   
   .header-button {
@@ -126,7 +127,7 @@
   }
 
   .voice-listening-indicator {
-    @apply flex justify-center mt-6;
+    @apply flex justify-center;
   }
 
   .voice-instruction {
@@ -140,7 +141,7 @@
 
   /* Button styling based on design system */
   .primary-button {
-    @apply bg-highlight text-white rounded-full py-3 px-6 w-full max-w-xs flex items-center justify-center hover:bg-highlight/90 transition-colors;
+    @apply bg-highlight text-white rounded-full py-3 px-6 w-full flex items-center justify-center hover:bg-highlight/90 transition-colors;
   }
 
   /* Pulse animation for microphone */

@@ -9,11 +9,11 @@ const ReviewScreen: React.FC = () => {
   const { userProfile, nextStep } = useOnboarding();
 
   return (
-    <div className="animate-fade-in">
-      <h2 className="onboarding-title">Review Your Information</h2>
-      <p className="onboarding-subtitle">Please review the following information</p>
+    <div className="animate-fade-in px-8">
+      <h2 className="onboarding-title mb-2">Review Your Information</h2>
+      <p className="onboarding-subtitle mb-6">Please review the following information</p>
 
-      <div className="space-y-6">
+      <div className="space-y-4">
         <div className="p-4 rounded-lg border border-white/10 bg-white/5">
           <h3 className="text-sm font-medium text-white/70 mb-3 flex items-center">
             <User className="h-4 w-4 mr-2 text-highlight" />
@@ -106,21 +106,21 @@ const ReviewScreen: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex justify-center mt-10">
+      <div className="mt-8 pb-6">
         <Button 
           onClick={nextStep}
-          className="bg-highlight hover:bg-highlight/90 text-white w-full max-w-xs rounded-full py-6 flex items-center justify-center"
+          className="bg-highlight hover:bg-highlight/90 text-white w-full rounded-full py-4 flex items-center justify-center"
         >
           Complete Setup <ArrowRight className="ml-2 h-5 w-5" />
         </Button>
       </div>
 
-      <div className="voice-listening-indicator mt-6">
+      <div className="voice-listening-indicator">
         <div className="flex flex-col items-center">
-          <div className="bg-white/10 rounded-full p-4 mb-4 pulse-animation">
+          <div className="bg-white/10 rounded-full p-4 mb-2 pulse-animation">
             <Mic className="text-highlight h-6 w-6" />
           </div>
-          <p className="text-white/70 text-center mb-6">
+          <p className="text-white/70 text-center text-sm">
             Say "Complete" to finish setup or "Go back" to make changes
           </p>
         </div>

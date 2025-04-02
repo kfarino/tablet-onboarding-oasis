@@ -12,7 +12,7 @@ import ProgressIndicator from './ProgressIndicator';
 import Header from '../Header';
 
 const OnboardingContainer: React.FC = () => {
-  const { currentStep } = useOnboarding();
+  const { currentStep, prevStep } = useOnboarding();
 
   const renderStep = () => {
     switch (currentStep) {
@@ -35,7 +35,7 @@ const OnboardingContainer: React.FC = () => {
 
   return (
     <div className="w-full h-full flex flex-col">
-      <Header currentStep={currentStep} />
+      <Header currentStep={currentStep} onBack={prevStep} />
       <div className="flex-1 overflow-y-auto p-10">
         <div className="w-full mb-4">
           {currentStep !== OnboardingStep.Welcome && currentStep !== OnboardingStep.Complete && (

@@ -25,13 +25,13 @@ const OnboardingContainer: React.FC = () => {
       case OnboardingStep.Welcome:
         return <WelcomeScreen />;
       case OnboardingStep.PersonalInfo:
-        return <PersonalInfoScreen />;
+        return <PersonalInfoScreen showExample={showExample} />;
       case OnboardingStep.HealthConditions:
-        return <HealthConditionsScreen />;
+        return <HealthConditionsScreen showExample={showExample} />;
       case OnboardingStep.Medications:
-        return <MedicationsScreen />;
+        return <MedicationsScreen showExample={showExample} />;
       case OnboardingStep.Review:
-        return <ReviewScreen />;
+        return <ReviewScreen showExample={showExample} />;
       case OnboardingStep.Complete:
         return <CompleteScreen />;
       default:
@@ -41,7 +41,12 @@ const OnboardingContainer: React.FC = () => {
 
   return (
     <div className="w-full h-full flex flex-col overflow-hidden">
-      <Header currentStep={currentStep} onBack={prevStep} />
+      <Header 
+        currentStep={currentStep} 
+        onBack={prevStep} 
+        toggleExample={toggleExample}
+        showExample={showExample}
+      />
       <div className="flex-1 overflow-hidden">
         <div className="w-full mb-3">
           {currentStep !== OnboardingStep.Welcome && currentStep !== OnboardingStep.Complete && (

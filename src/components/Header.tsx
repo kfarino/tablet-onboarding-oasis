@@ -9,12 +9,13 @@ import { useOnboarding } from '@/contexts/OnboardingContext';
 interface HeaderProps {
   currentStep?: OnboardingStep;
   onBack?: () => void;
+  toggleExample?: () => void;
+  showExample?: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ currentStep, onBack }) => {
+const Header: React.FC<HeaderProps> = ({ currentStep, onBack, toggleExample, showExample }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const { nextStep } = useOnboarding();
-  const [showExample, setShowExample] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -23,10 +24,6 @@ const Header: React.FC<HeaderProps> = ({ currentStep, onBack }) => {
     
     return () => clearInterval(interval);
   }, []);
-
-  const toggleExample = () => {
-    setShowExample(!showExample);
-  };
 
   const getStepTitle = () => {
     if (currentStep === undefined) return "";
@@ -56,7 +53,9 @@ const Header: React.FC<HeaderProps> = ({ currentStep, onBack }) => {
   const showNextButton = currentStep !== undefined && 
     currentStep !== OnboardingStep.Complete;
     
-  const showPreviewButton = currentStep === OnboardingStep.Review;
+  const showPreviewButton = currentStep !== OnboardingStep.Welcome && 
+    currentStep !== OnboardingStep.Complete && 
+    toggleExample !== undefined;
 
   return (
     <div className="w-full bg-charcoal text-white py-4 px-8 flex flex-col relative">
@@ -85,7 +84,7 @@ const Header: React.FC<HeaderProps> = ({ currentStep, onBack }) => {
           </Button>
         )}
         
-        {showPreviewButton && (
+        {showPreviewButton && toggleExample && (
           <Button
             variant="ghost"
             size="icon"

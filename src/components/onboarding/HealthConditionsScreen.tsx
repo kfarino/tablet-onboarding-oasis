@@ -1,62 +1,40 @@
-
-import React, { useState } from 'react';
+import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { Heart, Info } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 
-const HealthConditionsScreen: React.FC = () => {
+interface HealthConditionsScreenProps {
+  showExample?: boolean;
+}
+
+const HealthConditionsScreen: React.FC<HealthConditionsScreenProps> = ({ showExample = false }) => {
   const { userProfile } = useOnboarding();
-  const [showExample, setShowExample] = useState(false);
 
   // Example data for populated view
-  const exampleConditions = ["Diabetes Type 2", "Hypertension", "Arthritis", "High Cholesterol"];
+  const exampleConditions = ["Diabetes Type 2", "Hypertension", "Arthritis"];
 
-  const toggleExample = () => {
-    setShowExample(!showExample);
-  };
+  const displayConditions = showExample ? exampleConditions : userProfile.healthConditions;
 
   return (
-    <div className="animate-fade-in flex flex-col h-full px-10 py-6">
-      <div className="flex justify-end items-center mb-6">
-        <Badge 
-          className="cursor-pointer bg-highlight hover:bg-highlight/90 text-base py-1.5 px-4" 
-          onClick={toggleExample}
-        >
-          {showExample ? "Show Empty View" : "Show Populated View"}
-        </Badge>
-      </div>
-
-      <div className="voice-display-card p-5 h-40 mb-5">
-        <Heart className="text-highlight h-7 w-7" />
-        <div className="flex-1">
-          <p className="text-white/70 text-xl mb-2">Your Health Conditions</p>
-          
-          {(!showExample && userProfile.healthConditions.length === 0) || 
-           (showExample && exampleConditions.length === 0) ? (
-            <div className="flex items-center mt-3">
-              <Info className="h-5 w-5 text-white/40 mr-3" />
-              <p className="text-white/40 text-lg">None added yet</p>
-            </div>
+    <div className="animate-fade-in px-10 py-6 pb-10">
+      <div className="space-y-6">
+        <div className="p-5 rounded-lg border border-white/10 bg-white/5">
+          <h3 className="text-xl font-medium text-white/90 mb-4 flex items-center">
+            <Heart className="h-6 w-6 mr-3 text-highlight" />
+            Health Conditions
+          </h3>
+          {displayConditions.length === 0 ? (
+            <p className="text-white/40 text-lg">No health conditions added</p>
           ) : (
-            <div className="flex flex-wrap gap-4 mt-4 max-h-24 overflow-y-auto">
-              {showExample ? 
-                exampleConditions.map((condition, index) => (
-                  <Badge 
-                    key={index} 
-                    className="bg-white/10 text-white text-lg px-5 py-2 font-medium"
-                  >
-                    {condition}
-                  </Badge>
-                )) :
-                userProfile.healthConditions.map((condition, index) => (
-                  <Badge 
-                    key={index} 
-                    className="bg-white/10 text-white text-lg px-5 py-2 font-medium"
-                  >
-                    {condition}
-                  </Badge>
-                ))
-              }
+            <div className="flex flex-wrap gap-3">
+              {displayConditions.map((condition, index) => (
+                <Badge 
+                  key={index} 
+                  className="bg-white/10 hover:bg-white/20 text-white text-base py-1.5 px-4"
+                >
+                  {condition}
+                </Badge>
+              ))}
             </div>
           )}
         </div>

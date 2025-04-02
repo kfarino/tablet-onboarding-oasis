@@ -1,15 +1,17 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, Pill, User, Phone, Heart, Eye } from 'lucide-react';
+import { Calendar, Clock, Pill, User, Phone, Heart } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { getDayAbbreviation } from '@/utils/dateUtils';
-import { Button } from '@/components/ui/button';
 
-const ReviewScreen: React.FC = () => {
+interface ReviewScreenProps {
+  showExample?: boolean;
+}
+
+const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
   const { userProfile } = useOnboarding();
-  const [showExample, setShowExample] = useState(false);
 
   // Example data for populated view
   const exampleProfile = {
@@ -51,10 +53,6 @@ const ReviewScreen: React.FC = () => {
     ]
   };
 
-  const toggleExample = () => {
-    setShowExample(!showExample);
-  };
-
   const displayProfile = showExample ? exampleProfile : userProfile;
 
   const formatDays = (days: string[]) => {
@@ -64,7 +62,7 @@ const ReviewScreen: React.FC = () => {
   };
 
   return (
-    <div className="animate-fade-in px-10 py-6">
+    <div className="animate-fade-in px-10 py-6 pb-10">
       <div className="space-y-6">
         <div className="p-5 rounded-lg border border-white/10 bg-white/5">
           <h3 className="text-xl font-medium text-white/90 mb-4 flex items-center">

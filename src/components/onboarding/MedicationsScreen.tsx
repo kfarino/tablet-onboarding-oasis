@@ -1,14 +1,15 @@
-
-import React, { useState } from 'react';
+import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { Pill, Clock, Calendar, Info } from 'lucide-react';
-import { Badge } from "@/components/ui/badge";
+import { Pill, Clock, Calendar } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { getDayAbbreviation } from '@/utils/dateUtils';
 
-const MedicationsScreen: React.FC = () => {
+interface MedicationsScreenProps {
+  showExample?: boolean;
+}
+
+const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = true }) => {
   const { userProfile } = useOnboarding();
-  const [showExample, setShowExample] = useState(true); // Set to true by default to show examples
 
   // Example data for populated view - expanded to 15 medications with various scenarios
   const exampleMedications = [
@@ -236,10 +237,6 @@ const MedicationsScreen: React.FC = () => {
     }
   ];
 
-  const toggleExample = () => {
-    setShowExample(!showExample);
-  };
-
   const displayMedications = showExample ? exampleMedications : userProfile.medications;
 
   const formatDays = (days: string[]) => {
@@ -249,16 +246,7 @@ const MedicationsScreen: React.FC = () => {
   };
 
   return (
-    <div className="animate-fade-in px-8">
-      <div className="flex justify-end items-center mb-4">
-        <Badge 
-          className="cursor-pointer bg-highlight hover:bg-highlight/90" 
-          onClick={toggleExample}
-        >
-          {showExample ? "Show Empty View" : "Show Populated View"}
-        </Badge>
-      </div>
-
+    <div className="animate-fade-in px-8 pb-10">
       {(!showExample && userProfile.medications.length === 0) || 
        (showExample && !exampleMedications.length) ? (
         <div className="flex flex-col items-center justify-center py-8 border border-dashed border-white/20 rounded-lg">

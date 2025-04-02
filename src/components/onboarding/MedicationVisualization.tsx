@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Calendar, List, LayoutGrid, Sun, Moon, Info } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -808,80 +809,6 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
             )}
           </div>
         </div>
-      </div>
-    );
-  };
-
-  const renderTableView = () => {
-    // Get all unique days across all medications
-    const allDays = new Set<string>();
-    medications.forEach(med => {
-      med.doses.forEach(dose => {
-        dose.days.forEach(day => {
-          allDays.add(day);
-        });
-      });
-    });
-    
-    // Convert to array and sort days of week
-    const daysOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'everyday'];
-    const sortedDays = Array.from(allDays).sort((a, b) => {
-      if (a === 'everyday') return 1;
-      if (b === 'everyday') return -1;
-      return daysOrder.indexOf(a) - daysOrder.indexOf(b);
-    });
-
-    return (
-      <div className="my-4 rounded-lg overflow-hidden">
-        <Table className="w-full">
-          <TableHeader className="bg-white/10">
-            <TableRow>
-              <TableHead className="text-white">Medication</TableHead>
-              <TableHead className="text-white">Form/Strength</TableHead>
-              <TableHead className="text-white">Schedule</TableHead>
-              <TableHead className="text-white">Dosage</TableHead>
-              <TableHead className="text-white">Special</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {medications.map(med => (
-              <TableRow key={med.id} className="border-b border-white/10">
-                <TableCell className="text-white font-medium">{med.name}</TableCell>
-                <TableCell className="text-white/70">
-                  {med.form}{med.strength ? `, ${med.strength}` : ''}
-                </TableCell>
-                <TableCell>
-                  {med.doses.map(dose => (
-                    <div key={dose.id} className="mb-1 last:mb-0">
-                      <div className="text-white/80">
-                        {dose.days.includes('everyday') ? 'Daily' : dose.days.map(d => d.substring(0, 3)).join(', ')}
-                      </div>
-                      <div className="text-white/70 text-xs">
-                        {dose.times.join(', ')}
-                      </div>
-                    </div>
-                  ))}
-                </TableCell>
-                <TableCell>
-                  {med.doses.map(dose => (
-                    <div key={dose.id} className="text-white mb-1 last:mb-0">
-                      {dose.quantity} {med.form || 'pill'}{dose.quantity !== 1 ? 's' : ''}
-                    </div>
-                  ))}
-                </TableCell>
-                <TableCell>
-                  {med.asNeeded ? (
-                    <div className="bg-yellow-500/20 text-yellow-500 px-2 py-1 rounded text-xs inline-block">
-                      As needed (max {med.asNeeded.maxPerDay}/day)
-                    </div>
-                  ) : (
-                    <span className="text-white/30">-</span>
-                  )}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
       </div>
     );
   };

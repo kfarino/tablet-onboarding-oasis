@@ -106,7 +106,16 @@ const ReviewScreen: React.FC = () => {
         </div>
       </div>
 
-      <div className="voice-listening-indicator mt-8">
+      <div className="flex justify-center mt-10">
+        <Button 
+          onClick={nextStep}
+          className="bg-highlight hover:bg-highlight/90 text-white w-full max-w-xs rounded-full py-6 flex items-center justify-center"
+        >
+          Complete Setup <ArrowRight className="ml-2 h-5 w-5" />
+        </Button>
+      </div>
+
+      <div className="voice-listening-indicator mt-6">
         <div className="flex flex-col items-center">
           <div className="bg-white/10 rounded-full p-4 mb-4 pulse-animation">
             <Mic className="text-highlight h-6 w-6" />
@@ -114,13 +123,6 @@ const ReviewScreen: React.FC = () => {
           <p className="text-white/70 text-center mb-6">
             Say "Complete" to finish setup or "Go back" to make changes
           </p>
-          
-          <Button 
-            onClick={nextStep}
-            className="bg-highlight hover:bg-highlight/90 text-white"
-          >
-            Complete Setup <ArrowRight className="ml-2" />
-          </Button>
         </div>
       </div>
     </div>

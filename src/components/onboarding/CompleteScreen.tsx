@@ -32,7 +32,7 @@ const CompleteScreen: React.FC = () => {
           You can now access your medication schedule and reminders in the main dashboard.
         </p>
         
-        <div className="voice-listening-indicator mt-8 w-full">
+        <div className="mt-8 w-full">
           <div className="flex flex-col items-center">
             <div className="bg-white/10 rounded-full p-4 mb-4 pulse-animation">
               <Mic className="text-highlight h-6 w-6" />
@@ -41,12 +41,12 @@ const CompleteScreen: React.FC = () => {
               Say "Go to dashboard" to continue
             </p>
             
-            {/* Styled button to match design system */}
+            {/* Button that matches design system */}
             <Button 
               onClick={goToDashboard}
-              className="bg-highlight hover:bg-highlight/90 text-white w-full max-w-xs rounded-full py-6"
+              className="bg-highlight hover:bg-highlight/90 text-white w-full max-w-xs rounded-full py-6 flex items-center justify-center"
             >
-              Go to Dashboard
+              Go to Dashboard <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
         </div>

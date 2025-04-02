@@ -12,7 +12,7 @@ interface LovedOneInfoScreenProps {
 const LovedOneInfoScreen: React.FC<LovedOneInfoScreenProps> = ({ showExample = false }) => {
   const { userProfile, updateUserProfile } = useOnboarding();
 
-  // Example data for populated view
+  // Example data for populated view - corrected for caregiver flow
   const exampleLovedOne = {
     firstName: "Robert",
     lastName: "Smith",

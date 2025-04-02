@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Badge } from "@/components/ui/badge";
@@ -14,31 +13,51 @@ interface ReviewScreenProps {
 const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
   const { userProfile } = useOnboarding();
 
-  // Example data for populated view
+  // Example data for populated view - updated for caregiver flow
   const exampleProfile = {
     firstName: "Jane",
     lastName: "Smith",
-    role: "caregiver",
+    role: UserRole.Caregiver,
     relationship: "child",
-    dateOfBirth: "",  // Empty for caregivers
+    dateOfBirth: "", // Empty for caregivers
     phoneNumber: "(555) 123-4567",
-    alertPreference: null,  // Alert preference only for primary users
-    healthConditions: ["Diabetes Type 2", "Hypertension", "Arthritis"],
+    alertPreference: null, // No alert preference for caregivers
+    healthConditions: [], // Caregivers don't have health conditions
+    medications: [], // Caregivers don't have medications
+    lovedOne: {
+      firstName: "Robert",
+      lastName: "Smith",
+      dateOfBirth: "06/12/1940",
+      phoneNumber: "(555) 678-9012",
+      alertPreference: "phone_call"
+    }
+  };
+
+  // Example for primary user - updated
+  const examplePrimaryUser = {
+    firstName: "Robert",
+    lastName: "Johnson",
+    role: UserRole.PrimaryUser,
+    relationship: "", // Empty for primary users
+    dateOfBirth: "05/12/1945",
+    phoneNumber: "(555) 987-6543",
+    alertPreference: "app_notification",
+    healthConditions: ["Hypertension", "Glaucoma"],
     medications: [
       {
         id: uuidv4(),
-        name: "Lipitor",
-        strength: "20mg",
+        name: "Lisinopril",
+        strength: "10mg",
         form: "tablet",
         doses: [
           {
             id: uuidv4(),
             days: ["everyday"],
-            times: ["8:00 AM", "8:00 PM"],
+            times: ["9:00 AM"],
             quantity: 1
           }
         ],
-        asNeeded: { maxPerDay: 1 }
+        asNeeded: { maxPerDay: 2 }
       },
       {
         id: uuidv4(),
@@ -264,42 +283,6 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
       }
     ],
     lovedOne: {
-      firstName: "Robert",
-      lastName: "Smith",
-      dateOfBirth: "06/12/1940",
-      phoneNumber: "(555) 678-9012",
-      alertPreference: "phone_call"
-    }
-  };
-
-  // Example for primary user
-  const examplePrimaryUser = {
-    firstName: "Robert",
-    lastName: "Johnson",
-    role: "primary_user",
-    relationship: "",  // Empty for primary users
-    dateOfBirth: "05/12/1945",
-    phoneNumber: "(555) 987-6543",
-    alertPreference: "app_notification",
-    healthConditions: ["Hypertension", "Glaucoma"],
-    medications: [
-      {
-        id: uuidv4(),
-        name: "Lisinopril",
-        strength: "10mg",
-        form: "tablet",
-        doses: [
-          {
-            id: uuidv4(),
-            days: ["everyday"],
-            times: ["9:00 AM"],
-            quantity: 1
-          }
-        ],
-        asNeeded: { maxPerDay: 2 }
-      }
-    ],
-    lovedOne: {
       firstName: "",
       lastName: "",
       dateOfBirth: "",
@@ -400,90 +383,100 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
           </div>
         )}
 
-        <div className="p-5 rounded-lg border border-white/10 bg-white/5">
-          <h3 className="text-xl font-medium text-white/90 mb-4 flex items-center">
-            <Heart className="h-6 w-6 mr-3 text-highlight" />
-            Health Conditions
-          </h3>
-          {displayProfile.healthConditions.length === 0 ? (
-            <p className="text-white/40 text-lg">No health conditions added</p>
-          ) : (
-            <div className="flex flex-wrap gap-3">
-              {displayProfile.healthConditions.map((condition, index) => (
-                <Badge 
-                  key={index} 
-                  className="bg-white/10 hover:bg-white/20 text-white text-base py-1.5 px-4"
-                >
-                  {condition}
-                </Badge>
-              ))}
-            </div>
-          )}
-        </div>
+        {/* Only show health conditions for primary users */}
+        {(displayProfile.role === UserRole.PrimaryUser || 
+          (displayProfile.role === UserRole.Caregiver && displayProfile.lovedOne.firstName)) && (
+          <div className="p-5 rounded-lg border border-white/10 bg-white/5">
+            <h3 className="text-xl font-medium text-white/90 mb-4 flex items-center">
+              <Heart className="h-6 w-6 mr-3 text-highlight" />
+              Health Conditions
+              {displayProfile.role === UserRole.Caregiver && <span className="ml-2 text-white/50">(Loved One)</span>}
+            </h3>
+            {displayProfile.healthConditions.length === 0 ? (
+              <p className="text-white/40 text-lg">No health conditions added</p>
+            ) : (
+              <div className="flex flex-wrap gap-3">
+                {displayProfile.healthConditions.map((condition, index) => (
+                  <Badge 
+                    key={index} 
+                    className="bg-white/10 hover:bg-white/20 text-white text-base py-1.5 px-4"
+                  >
+                    {condition}
+                  </Badge>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
-        <div className="p-5 rounded-lg border border-white/10 bg-white/5">
-          <h3 className="text-xl font-medium text-white/90 mb-4 flex items-center">
-            <Pill className="h-6 w-6 mr-3 text-highlight" />
-            Medications
-          </h3>
-          {displayProfile.medications.length === 0 ? (
-            <p className="text-white/40 text-lg">No medications added</p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {displayProfile.medications.map(medication => (
-                <div key={medication.id} className="p-4 border border-white/20 bg-white/5 rounded-md hover:bg-white/10 transition-colors">
-                  <div className="flex items-center gap-3 mb-3">
-                    <Pill className="h-5 w-5 text-highlight" />
-                    <h4 className="font-medium text-white text-lg">
-                      {medication.name}{medication.strength ? ` ${medication.strength}` : ""}
-                    </h4>
-                  </div>
-                  
-                  <div className="flex flex-wrap gap-2 mb-4 ml-8">
-                    {medication.form && (
-                      <span className="text-base text-white/80 bg-white/10 px-3 py-1 rounded">
-                        {medication.form}
-                      </span>
+        {/* Only show medications for primary users */}
+        {(displayProfile.role === UserRole.PrimaryUser || 
+          (displayProfile.role === UserRole.Caregiver && displayProfile.lovedOne.firstName)) && (
+          <div className="p-5 rounded-lg border border-white/10 bg-white/5">
+            <h3 className="text-xl font-medium text-white/90 mb-4 flex items-center">
+              <Pill className="h-6 w-6 mr-3 text-highlight" />
+              Medications
+              {displayProfile.role === UserRole.Caregiver && <span className="ml-2 text-white/50">(Loved One)</span>}
+            </h3>
+            {displayProfile.medications.length === 0 ? (
+              <p className="text-white/40 text-lg">No medications added</p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {displayProfile.medications.map(medication => (
+                  <div key={medication.id} className="p-4 border border-white/20 bg-white/5 rounded-md hover:bg-white/10 transition-colors">
+                    <div className="flex items-center gap-3 mb-3">
+                      <Pill className="h-5 w-5 text-highlight" />
+                      <h4 className="font-medium text-white text-lg">
+                        {medication.name}{medication.strength ? ` ${medication.strength}` : ""}
+                      </h4>
+                    </div>
+                    
+                    <div className="flex flex-wrap gap-2 mb-4 ml-8">
+                      {medication.form && (
+                        <span className="text-base text-white/80 bg-white/10 px-3 py-1 rounded">
+                          {medication.form}
+                        </span>
+                      )}
+                    </div>
+                    
+                    {medication.doses.map(dose => (
+                      <div key={dose.id} className="ml-8 mb-3 border-l border-white/20 pl-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Calendar className="h-5 w-5 text-white/80" />
+                          <span className="text-base text-white">
+                            {dose.days.length > 0 
+                              ? formatDays(dose.days)
+                              : 'No days selected'}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <Clock className="h-5 w-5 text-white/80" />
+                          <span className="text-base text-white">
+                            {dose.times.length > 0 
+                              ? dose.times.join(', ')
+                              : 'No times selected'}
+                          </span>
+                        </div>
+                        <div className="text-sm text-white/80 mt-2">
+                          {dose.quantity} pill{dose.quantity !== 1 ? 's' : ''} per dose
+                        </div>
+                      </div>
+                    ))}
+                    
+                    {medication.asNeeded && (
+                      <div className="ml-8 mt-3 flex items-center gap-2 bg-white/5 p-2 rounded-md border-l-2 border-yellow-500/50">
+                        <AlertCircle className="h-5 w-5 text-yellow-500/90" />
+                        <span className="text-white/90">
+                          As needed: max {medication.asNeeded.maxPerDay} per day
+                        </span>
+                      </div>
                     )}
                   </div>
-                  
-                  {medication.doses.map(dose => (
-                    <div key={dose.id} className="ml-8 mb-3 border-l border-white/20 pl-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Calendar className="h-5 w-5 text-white/80" />
-                        <span className="text-base text-white">
-                          {dose.days.length > 0 
-                            ? formatDays(dose.days)
-                            : 'No days selected'}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <Clock className="h-5 w-5 text-white/80" />
-                        <span className="text-base text-white">
-                          {dose.times.length > 0 
-                            ? dose.times.join(', ')
-                            : 'No times selected'}
-                        </span>
-                      </div>
-                      <div className="text-sm text-white/80 mt-2">
-                        {dose.quantity} pill{dose.quantity !== 1 ? 's' : ''} per dose
-                      </div>
-                    </div>
-                  ))}
-                  
-                  {medication.asNeeded && (
-                    <div className="ml-8 mt-3 flex items-center gap-2 bg-white/5 p-2 rounded-md border-l-2 border-yellow-500/50">
-                      <AlertCircle className="h-5 w-5 text-yellow-500/90" />
-                      <span className="text-white/90">
-                        As needed: max {medication.asNeeded.maxPerDay} per day
-                      </span>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

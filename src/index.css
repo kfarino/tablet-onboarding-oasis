@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -50,10 +49,7 @@
 
 @layer components {
   .onboarding-container {
-    @apply fixed inset-0 flex flex-col items-center justify-between p-6 overflow-hidden;
-    max-width: 1024px;
-    max-height: 600px;
-    margin: 0 auto;
+    @apply flex flex-col items-center justify-between p-6 overflow-hidden w-full h-full;
   }
 
   .onboarding-content {

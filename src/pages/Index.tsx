@@ -18,10 +18,12 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-charcoal">
-      <OnboardingProvider>
-        <OnboardingContainer />
-      </OnboardingProvider>
+    <div className="min-h-screen bg-charcoal flex items-center justify-center p-4">
+      <div className="w-[1024px] h-[600px] border-2 border-white/30 overflow-hidden relative">
+        <OnboardingProvider>
+          <OnboardingContainer />
+        </OnboardingProvider>
+      </div>
     </div>
   );
 };

@@ -33,13 +33,13 @@ const OnboardingContainer: React.FC = () => {
   };
 
   return (
-    <div className="onboarding-container">
+    <div className="w-full h-full flex flex-col">
       <div className="w-full mb-4">
         {currentStep !== OnboardingStep.Welcome && currentStep !== OnboardingStep.Complete && (
           <ProgressIndicator />
         )}
       </div>
-      <div className="onboarding-content">
+      <div className="flex-1 overflow-y-auto">
         {renderStep()}
       </div>
     </div>

@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState } from 'react';
 import { UserProfile, Medication, Dose, OnboardingStep, UserRole, AlertPreference } from '../types/onboarding';
 import { v4 as uuidv4 } from 'uuid';
@@ -54,12 +53,10 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
   const nextStep = () => {
     if (currentStep < OnboardingStep.Complete) {
-      // Special case for caregivers - add the loved one step
       if (currentStep === OnboardingStep.PersonalInfo && shouldShowLovedOneScreen()) {
         setCurrentStep(OnboardingStep.LovedOneInfo);
       } else {
         setCurrentStep(prevStep => {
-          // Skip the loved one step if the user is not a caregiver
           if (prevStep === OnboardingStep.PersonalInfo && 
               !shouldShowLovedOneScreen() && 
               (prevStep + 1) === OnboardingStep.LovedOneInfo) {
@@ -74,7 +71,6 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const prevStep = () => {
     if (currentStep > OnboardingStep.Welcome) {
       setCurrentStep(prevStep => {
-        // Skip the loved one step if the user is not a caregiver
         if (prevStep === OnboardingStep.HealthConditions && 
             !shouldShowLovedOneScreen() && 
             (prevStep - 1) === OnboardingStep.LovedOneInfo) {

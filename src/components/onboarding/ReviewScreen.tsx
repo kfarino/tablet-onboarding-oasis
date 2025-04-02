@@ -19,8 +19,7 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
     firstName: "Jane",
     lastName: "Smith",
     role: "caregiver",
-    relationship: "child", // Added the relationship property to match the expected structure
-    dateOfBirth: "03/15/1965",
+    relationship: "child",
     phoneNumber: "(555) 123-4567",
     healthConditions: ["Diabetes Type 2", "Hypertension", "Arthritis"],
     medications: [

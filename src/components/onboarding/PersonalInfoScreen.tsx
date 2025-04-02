@@ -19,9 +19,7 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
     lastName: "Smith",
     role: UserRole.Caregiver,
     relationship: "child",
-    dateOfBirth: "03/15/1965",
     phoneNumber: "(555) 123-4567",
-    alertPreference: AlertPreference.Text
   };
 
   const handleRoleChange = (value: string) => {
@@ -30,10 +28,6 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
 
   const handleRelationshipChange = (value: string) => {
     updateUserProfile('relationship', value);
-  };
-
-  const handleAlertPreferenceChange = (value: string) => {
-    updateUserProfile('alertPreference', value as AlertPreference);
   };
 
   return (
@@ -108,6 +102,7 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
             </div>
           )}
 
+          {/* Phone number is needed for both roles */}
           <div className="voice-display-card p-5 h-32">
             <Phone className="text-highlight h-6 w-6" />
             <div className="flex-1">
@@ -119,8 +114,6 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
               </p>
             </div>
           </div>
-
-          {/* Remove the alert preference from the caregiver's personal info screen */}
         </div>
       </div>
     </div>

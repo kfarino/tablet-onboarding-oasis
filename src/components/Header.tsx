@@ -60,10 +60,10 @@ const Header: React.FC<HeaderProps> = ({ currentStep, onBack, toggleExample, sho
   return (
     <div className="w-full bg-charcoal text-white py-4 px-8 flex flex-col relative">
       <div className="flex justify-between items-center">
-        <div className="text-3xl font-medium">
+        <div className="text-[25px] font-medium">
           {format(currentTime, 'EEE, MMM d')}
         </div>
-        <div className="text-3xl font-medium absolute left-1/2 transform -translate-x-1/2">
+        <div className="text-[25px] font-medium absolute left-1/2 transform -translate-x-1/2">
           {format(currentTime, 'h:mm a')}
         </div>
         <div>
@@ -109,7 +109,7 @@ const Header: React.FC<HeaderProps> = ({ currentStep, onBack, toggleExample, sho
         )}
         
         {getStepTitle() && (
-          <div className="text-[44px] font-bold">
+          <div className="text-[40px] font-bold">
             {getStepTitle()}
           </div>
         )}

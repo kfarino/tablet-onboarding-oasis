@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Pill, Clock, Calendar, AlertCircle } from 'lucide-react';
@@ -24,6 +25,12 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ showExample = tru
           days: ["everyday"],
           times: ["8:00 AM", "8:00 PM"],
           quantity: 1
+        },
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["9:00 AM"],
+          quantity: 2
         }
       ],
       asNeeded: { maxPerDay: 2 }

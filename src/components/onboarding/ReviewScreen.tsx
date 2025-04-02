@@ -46,15 +46,21 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
     medications: [
       {
         id: uuidv4(),
-        name: "Lisinopril",
-        strength: "10mg",
+        name: "Lipitor",
+        strength: "20mg",
         form: "tablet",
         doses: [
           {
             id: uuidv4(),
             days: ["everyday"],
-            times: ["9:00 AM"],
+            times: ["8:00 AM", "8:00 PM"],
             quantity: 1
+          },
+          {
+            id: uuidv4(),
+            days: ["everyday"],
+            times: ["9:00 AM"],
+            quantity: 2
           }
         ],
         asNeeded: { maxPerDay: 2 }

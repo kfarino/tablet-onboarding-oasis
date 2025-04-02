@@ -1,23 +1,39 @@
 
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { User, Calendar, Phone } from 'lucide-react';
+import { User, Calendar, Phone, BellRing } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { USER_ROLES, UserRole, RELATIONSHIP_OPTIONS, ALERT_PREFERENCES, AlertPreference } from '@/types/onboarding';
 
 interface PersonalInfoScreenProps {
   showExample?: boolean;
 }
 
 const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = false }) => {
-  const { userProfile } = useOnboarding();
+  const { userProfile, updateUserProfile } = useOnboarding();
 
   // Example data for populated view
   const exampleProfile = {
     firstName: "Jane",
     lastName: "Smith",
-    role: "Caregiver",
+    role: UserRole.Caregiver,
+    relationship: "child",
     dateOfBirth: "03/15/1965",
-    phoneNumber: "(555) 123-4567"
+    phoneNumber: "(555) 123-4567",
+    alertPreference: AlertPreference.Text
+  };
+
+  const handleRoleChange = (value: string) => {
+    updateUserProfile('role', value);
+  };
+
+  const handleRelationshipChange = (value: string) => {
+    updateUserProfile('relationship', value);
+  };
+
+  const handleAlertPreferenceChange = (value: string) => {
+    updateUserProfile('alertPreference', value as AlertPreference);
   };
 
   return (
@@ -42,37 +58,109 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
             <User className="text-highlight h-6 w-6" />
             <div className="flex-1">
               <p className="text-white/70 text-lg mb-1">Role</p>
-              <p className="text-2xl text-white">
-                {showExample 
-                  ? exampleProfile.role 
-                  : userProfile.role || "Listening..."}
-              </p>
+              {showExample ? (
+                <p className="text-2xl text-white">
+                  {exampleProfile.role === UserRole.Caregiver ? 'Caregiver' : 'Primary User'}
+                </p>
+              ) : (
+                <Select 
+                  value={userProfile.role} 
+                  onValueChange={handleRoleChange}
+                >
+                  <SelectTrigger className="w-full bg-transparent border-white/20 text-white text-2xl h-auto p-0">
+                    <SelectValue placeholder="Select role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {USER_ROLES.map((role) => (
+                      <SelectItem key={role.value} value={role.value}>{role.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
             </div>
           </div>
 
-          <div className="voice-display-card p-5 h-32">
-            <Calendar className="text-highlight h-6 w-6" />
-            <div className="flex-1">
-              <p className="text-white/70 text-lg mb-1">Date of Birth</p>
-              <p className="text-2xl text-white">
-                {showExample 
-                  ? exampleProfile.dateOfBirth 
-                  : userProfile.dateOfBirth || "Listening..."}
-              </p>
+          {(userProfile.role === UserRole.Caregiver || (showExample && exampleProfile.role === UserRole.Caregiver)) && (
+            <div className="voice-display-card p-5 h-32">
+              <User className="text-highlight h-6 w-6" />
+              <div className="flex-1">
+                <p className="text-white/70 text-lg mb-1">Relationship to Loved One</p>
+                {showExample ? (
+                  <p className="text-2xl text-white">
+                    {RELATIONSHIP_OPTIONS.find(r => r.value === exampleProfile.relationship)?.label || 'Child'}
+                  </p>
+                ) : (
+                  <Select 
+                    value={userProfile.relationship} 
+                    onValueChange={handleRelationshipChange}
+                  >
+                    <SelectTrigger className="w-full bg-transparent border-white/20 text-white text-2xl h-auto p-0">
+                      <SelectValue placeholder="Select relationship" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {RELATIONSHIP_OPTIONS.map((relationship) => (
+                        <SelectItem key={relationship.value} value={relationship.value}>{relationship.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
-          <div className="voice-display-card p-5 h-32">
-            <Phone className="text-highlight h-6 w-6" />
-            <div className="flex-1">
-              <p className="text-white/70 text-lg mb-1">Phone Number</p>
-              <p className="text-2xl text-white">
-                {showExample 
-                  ? exampleProfile.phoneNumber 
-                  : userProfile.phoneNumber || "Listening..."}
-              </p>
+          {userProfile.role === UserRole.PrimaryUser || (showExample && exampleProfile.role === UserRole.PrimaryUser) ? (
+            <>
+              <div className="voice-display-card p-5 h-32">
+                <Calendar className="text-highlight h-6 w-6" />
+                <div className="flex-1">
+                  <p className="text-white/70 text-lg mb-1">Date of Birth</p>
+                  <p className="text-2xl text-white">
+                    {showExample 
+                      ? exampleProfile.dateOfBirth 
+                      : userProfile.dateOfBirth || "Listening..."}
+                  </p>
+                </div>
+              </div>
+
+              <div className="voice-display-card p-5 h-32">
+                <BellRing className="text-highlight h-6 w-6" />
+                <div className="flex-1">
+                  <p className="text-white/70 text-lg mb-1">Alert Preference</p>
+                  {showExample ? (
+                    <p className="text-2xl text-white">
+                      {ALERT_PREFERENCES.find(a => a.value === exampleProfile.alertPreference)?.label || 'Text Message'}
+                    </p>
+                  ) : (
+                    <Select 
+                      value={userProfile.alertPreference || ''} 
+                      onValueChange={handleAlertPreferenceChange}
+                    >
+                      <SelectTrigger className="w-full bg-transparent border-white/20 text-white text-2xl h-auto p-0">
+                        <SelectValue placeholder="Select alert preference" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {ALERT_PREFERENCES.map((pref) => (
+                          <SelectItem key={pref.value} value={pref.value}>{pref.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="voice-display-card p-5 h-32">
+              <Phone className="text-highlight h-6 w-6" />
+              <div className="flex-1">
+                <p className="text-white/70 text-lg mb-1">Phone Number</p>
+                <p className="text-2xl text-white">
+                  {showExample 
+                    ? exampleProfile.phoneNumber 
+                    : userProfile.phoneNumber || "Listening..."}
+                </p>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

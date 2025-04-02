@@ -1,5 +1,6 @@
+
 import React, { createContext, useContext, useState } from 'react';
-import { UserProfile, Medication, Dose, OnboardingStep } from '../types/onboarding';
+import { UserProfile, Medication, Dose, OnboardingStep, UserRole, AlertPreference } from '../types/onboarding';
 import { v4 as uuidv4 } from 'uuid';
 
 interface OnboardingContextType {
@@ -18,6 +19,7 @@ interface OnboardingContextType {
   addHealthCondition: (condition: string) => void;
   removeHealthCondition: (index: number) => void;
   processVoiceInput: (text: string) => void;
+  shouldShowLovedOneScreen: () => boolean;
 }
 
 const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
@@ -36,22 +38,55 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     firstName: '',
     lastName: '',
     role: '',
+    relationship: '',
     dateOfBirth: '',
     phoneNumber: '',
+    alertPreference: null,
     healthConditions: [],
-    medications: []
+    medications: [],
+    lovedOne: {
+      firstName: '',
+      lastName: '',
+      dateOfBirth: '',
+      alertPreference: null
+    }
   });
 
   const nextStep = () => {
     if (currentStep < OnboardingStep.Complete) {
-      setCurrentStep(prevStep => (prevStep + 1) as OnboardingStep);
+      // Special case for caregivers - add the loved one step
+      if (currentStep === OnboardingStep.PersonalInfo && shouldShowLovedOneScreen()) {
+        setCurrentStep(OnboardingStep.LovedOneInfo);
+      } else {
+        setCurrentStep(prevStep => {
+          // Skip the loved one step if the user is not a caregiver
+          if (prevStep === OnboardingStep.PersonalInfo && 
+              !shouldShowLovedOneScreen() && 
+              (prevStep + 1) === OnboardingStep.LovedOneInfo) {
+            return (prevStep + 2) as OnboardingStep;
+          }
+          return (prevStep + 1) as OnboardingStep;
+        });
+      }
     }
   };
 
   const prevStep = () => {
     if (currentStep > OnboardingStep.Welcome) {
-      setCurrentStep(prevStep => (prevStep - 1) as OnboardingStep);
+      setCurrentStep(prevStep => {
+        // Skip the loved one step if the user is not a caregiver
+        if (prevStep === OnboardingStep.HealthConditions && 
+            !shouldShowLovedOneScreen() && 
+            (prevStep - 1) === OnboardingStep.LovedOneInfo) {
+          return (prevStep - 2) as OnboardingStep;
+        }
+        return (prevStep - 1) as OnboardingStep;
+      });
     }
+  };
+
+  const shouldShowLovedOneScreen = () => {
+    return userProfile.role === UserRole.Caregiver;
   };
 
   const updateUserProfile = <K extends keyof UserProfile>(key: K, value: UserProfile[K]) => {
@@ -169,7 +204,8 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     removeDose,
     addHealthCondition,
     removeHealthCondition,
-    processVoiceInput
+    processVoiceInput,
+    shouldShowLovedOneScreen
   };
 
   return (

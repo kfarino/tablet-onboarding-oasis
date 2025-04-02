@@ -4,6 +4,7 @@ import { useOnboarding } from '@/contexts/OnboardingContext';
 import { OnboardingStep } from '@/types/onboarding';
 import WelcomeScreen from './WelcomeScreen';
 import PersonalInfoScreen from './PersonalInfoScreen';
+import LovedOneInfoScreen from './LovedOneInfoScreen';
 import HealthConditionsScreen from './HealthConditionsScreen';
 import MedicationsScreen from './MedicationsScreen';
 import ReviewScreen from './ReviewScreen';
@@ -26,6 +27,8 @@ const OnboardingContainer: React.FC = () => {
         return <WelcomeScreen />;
       case OnboardingStep.PersonalInfo:
         return <PersonalInfoScreen showExample={showExample} />;
+      case OnboardingStep.LovedOneInfo:
+        return <LovedOneInfoScreen showExample={showExample} />;
       case OnboardingStep.HealthConditions:
         return <HealthConditionsScreen showExample={showExample} />;
       case OnboardingStep.Medications:

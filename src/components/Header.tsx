@@ -33,6 +33,8 @@ const Header: React.FC<HeaderProps> = ({ currentStep, onBack, toggleExample, sho
         return "Welcome";
       case OnboardingStep.PersonalInfo:
         return "Personal Information";
+      case OnboardingStep.LovedOneInfo:
+        return "Loved One Information";
       case OnboardingStep.HealthConditions:
         return "Health Conditions";
       case OnboardingStep.Medications:

@@ -10,7 +10,6 @@ const WelcomeScreen: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center h-full animate-fade-in overflow-hidden px-8">
       <div className="text-center mb-8">
-        <h1 className="text-[40px] font-bold mb-4">Welcome</h1>
         <p className="text-white/70 text-xl">
           Let's set up your medication schedule and reminders
         </p>

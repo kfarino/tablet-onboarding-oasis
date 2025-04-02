@@ -38,14 +38,14 @@ const LovedOneInfoScreen: React.FC<LovedOneInfoScreenProps> = ({ showExample = f
   };
 
   return (
-    <div className="animate-fade-in flex flex-col h-full px-10 py-6">
-      <div className="space-y-6">
-        <div className="grid grid-cols-2 gap-5 mb-4">
-          <div className="voice-display-card p-5 h-32">
-            <User className="text-highlight h-6 w-6" />
+    <div className="animate-fade-in flex flex-col h-full px-6 py-2">
+      <div className="space-y-2">
+        <div className="grid grid-cols-2 gap-3">
+          <div className="voice-display-card p-3 h-24">
+            <User className="text-highlight h-5 w-5" />
             <div className="flex-1">
-              <p className="text-white/70 text-lg mb-1">Full Name</p>
-              <p className="text-2xl text-white">
+              <p className="text-white/70 text-base mb-0.5">Full Name</p>
+              <p className="text-xl text-white">
                 {showExample 
                   ? `${exampleLovedOne.firstName} ${exampleLovedOne.lastName}` 
                   : userProfile.lovedOne.firstName || userProfile.lovedOne.lastName 
@@ -55,11 +55,11 @@ const LovedOneInfoScreen: React.FC<LovedOneInfoScreenProps> = ({ showExample = f
             </div>
           </div>
 
-          <div className="voice-display-card p-5 h-32">
-            <Calendar className="text-highlight h-6 w-6" />
+          <div className="voice-display-card p-3 h-24">
+            <Calendar className="text-highlight h-5 w-5" />
             <div className="flex-1">
-              <p className="text-white/70 text-lg mb-1">Date of Birth</p>
-              <p className="text-2xl text-white">
+              <p className="text-white/70 text-base mb-0.5">Date of Birth</p>
+              <p className="text-xl text-white">
                 {showExample 
                   ? exampleLovedOne.dateOfBirth 
                   : userProfile.lovedOne.dateOfBirth || "Listening..."}
@@ -67,11 +67,11 @@ const LovedOneInfoScreen: React.FC<LovedOneInfoScreenProps> = ({ showExample = f
             </div>
           </div>
 
-          <div className="voice-display-card p-5 h-32">
-            <Phone className="text-highlight h-6 w-6" />
+          <div className="voice-display-card p-3 h-24">
+            <Phone className="text-highlight h-5 w-5" />
             <div className="flex-1">
-              <p className="text-white/70 text-lg mb-1">Phone Number</p>
-              <p className="text-2xl text-white">
+              <p className="text-white/70 text-base mb-0.5">Phone Number</p>
+              <p className="text-xl text-white">
                 {showExample 
                   ? exampleLovedOne.phoneNumber 
                   : userProfile.lovedOne.phoneNumber || "Listening..."}
@@ -79,12 +79,12 @@ const LovedOneInfoScreen: React.FC<LovedOneInfoScreenProps> = ({ showExample = f
             </div>
           </div>
 
-          <div className="voice-display-card p-5 h-32">
-            <BellRing className="text-highlight h-6 w-6" />
+          <div className="voice-display-card p-3 h-24">
+            <BellRing className="text-highlight h-5 w-5" />
             <div className="flex-1">
-              <p className="text-white/70 text-lg mb-1">Alert Preference</p>
+              <p className="text-white/70 text-base mb-0.5">Alert Preference</p>
               {showExample ? (
-                <p className="text-2xl text-white">
+                <p className="text-xl text-white">
                   {ALERT_PREFERENCES.find(a => a.value === exampleLovedOne.alertPreference)?.label || 'Phone Call'}
                 </p>
               ) : (
@@ -92,7 +92,7 @@ const LovedOneInfoScreen: React.FC<LovedOneInfoScreenProps> = ({ showExample = f
                   value={userProfile.lovedOne.alertPreference || ''} 
                   onValueChange={handleAlertPreferenceChange}
                 >
-                  <SelectTrigger className="w-full bg-transparent border-white/20 text-white text-2xl h-auto p-0">
+                  <SelectTrigger className="w-full bg-transparent border-white/20 text-white text-xl h-auto p-0">
                     <SelectValue placeholder="Select alert preference" />
                   </SelectTrigger>
                   <SelectContent>

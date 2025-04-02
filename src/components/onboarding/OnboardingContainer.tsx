@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { OnboardingStep, UserRole } from '@/types/onboarding';
@@ -14,6 +15,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import MedicationVisualization from './MedicationVisualization';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
+import { v4 as uuidv4 } from 'uuid';
 
 interface OnboardingContainerProps {
   showMedicationSchedule?: boolean;
@@ -27,6 +29,253 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
   const { currentStep, prevStep, updateUserProfile, userProfile } = useOnboarding();
   const [showExample, setShowExample] = useState(false);
   const [previewRole, setPreviewRole] = useState<UserRole | null>(null);
+
+  // Example data for populated view - expanded to 15 medications with various scenarios
+  const exampleMedications = [
+    {
+      id: uuidv4(),
+      name: "Levothyroxine",
+      strength: "75mcg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["7:00 AM"],
+          quantity: 1
+        }
+      ],
+      asNeeded: null
+    },
+    {
+      id: uuidv4(),
+      name: "Aspirin",
+      strength: "81mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["10:00 AM"],
+          quantity: 1
+        }
+      ],
+      asNeeded: null
+    },
+    {
+      id: uuidv4(),
+      name: "Omeprazole",
+      strength: "20mg",
+      form: "capsule",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          times: ["7:30 AM"],
+          quantity: 1
+        }
+      ],
+      asNeeded: { maxPerDay: 1 }
+    },
+    {
+      id: uuidv4(),
+      name: "Lipitor",
+      strength: "20mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["8:00 AM", "8:00 PM"],
+          quantity: 1
+        },
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["9:00 AM"],
+          quantity: 2
+        }
+      ],
+      asNeeded: { maxPerDay: 2 }
+    },
+    {
+      id: uuidv4(),
+      name: "Metformin",
+      strength: "500mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["Monday", "Wednesday", "Friday"],
+          times: ["12:00 PM"],
+          quantity: 2
+        }
+      ],
+      asNeeded: null
+    },
+    {
+      id: uuidv4(),
+      name: "Lisinopril",
+      strength: "10mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["9:00 AM"],
+          quantity: 1
+        }
+      ],
+      asNeeded: { maxPerDay: 1 }
+    },
+    {
+      id: uuidv4(),
+      name: "Albuterol",
+      strength: "90mcg",
+      form: "inhaler",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["as needed"],
+          quantity: 2
+        }
+      ],
+      asNeeded: { maxPerDay: 8 }
+    },
+    {
+      id: uuidv4(),
+      name: "Amlodipine",
+      strength: "5mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["9:00 PM"],
+          quantity: 1
+        }
+      ],
+      asNeeded: null
+    },
+    {
+      id: uuidv4(),
+      name: "Furosemide",
+      strength: "40mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["Monday", "Wednesday", "Friday"],
+          times: ["9:00 AM"],
+          quantity: 1
+        },
+        {
+          id: uuidv4(),
+          days: ["Tuesday", "Thursday"],
+          times: ["10:00 AM"],
+          quantity: 2
+        }
+      ],
+      asNeeded: { maxPerDay: 2 }
+    },
+    {
+      id: uuidv4(),
+      name: "Januvia",
+      strength: "100mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["8:00 AM", "8:00 PM"],
+          quantity: 1
+        }
+      ],
+      asNeeded: null
+    },
+    {
+      id: uuidv4(),
+      name: "Prednisone",
+      strength: "5mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          times: ["10:30 AM"],
+          quantity: 1
+        }
+      ],
+      asNeeded: { maxPerDay: 3 }
+    },
+    {
+      id: uuidv4(),
+      name: "Warfarin",
+      strength: "2.5mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["Monday", "Wednesday", "Friday", "Sunday"],
+          times: ["5:00 PM"],
+          quantity: 1
+        },
+        {
+          id: uuidv4(),
+          days: ["Tuesday", "Thursday", "Saturday"],
+          times: ["5:00 PM"],
+          quantity: 2
+        }
+      ],
+      asNeeded: null
+    },
+    {
+      id: uuidv4(),
+      name: "Hydrochlorothiazide",
+      strength: "25mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["10:00 AM"],
+          quantity: 1
+        }
+      ],
+      asNeeded: { maxPerDay: 1 }
+    },
+    {
+      id: uuidv4(),
+      name: "Insulin Glargine",
+      strength: "100 units/mL",
+      form: "injection",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["9:00 PM"],
+          quantity: 20
+        }
+      ],
+      asNeeded: { maxPerDay: 40 }
+    },
+    {
+      id: uuidv4(),
+      name: "Fentanyl",
+      strength: "50mcg/hr",
+      form: "patch",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["Monday"],
+          times: ["8:00 AM"],
+          quantity: 1
+        }
+      ],
+      asNeeded: null
+    }
+  ];
 
   const toggleExample = () => {
     if (showExample) {
@@ -67,12 +316,14 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
                  showExample={showExample} 
                  showMedicationSchedule={showMedicationSchedule}
                  setShowMedicationSchedule={setShowMedicationSchedule}
+                 exampleMedications={exampleMedications}
                />;
       case OnboardingStep.Review:
         return <ReviewScreen 
                  showExample={showExample} 
                  showMedicationSchedule={showMedicationSchedule}
                  setShowMedicationSchedule={setShowMedicationSchedule}
+                 exampleMedications={exampleMedications}
                />;
       case OnboardingStep.Complete:
         return <CompleteScreen />;
@@ -82,11 +333,6 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
   };
 
   if (showMedicationSchedule) {
-    const exampleMedications = [
-      // This would typically be your example medications data
-      // For now, we'll use what's available in the userProfile
-    ];
-    
     const medications = showExample ? exampleMedications : userProfile.medications;
     
     return (

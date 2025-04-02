@@ -6,270 +6,23 @@ import { v4 as uuidv4 } from 'uuid';
 import { getDayAbbreviation } from '@/utils/dateUtils';
 import { Button } from '@/components/ui/button';
 import MedicationVisualization from './MedicationVisualization';
+import { Medication } from '@/types/onboarding';
 
 interface MedicationsScreenProps {
   showExample?: boolean;
   showMedicationSchedule?: boolean;
   setShowMedicationSchedule?: (show: boolean) => void;
+  exampleMedications?: Medication[];
 }
 
 const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ 
-  showExample = true,
+  showExample = false,
   showMedicationSchedule = false,
-  setShowMedicationSchedule = () => {}
+  setShowMedicationSchedule = () => {},
+  exampleMedications = []
 }) => {
   const { userProfile } = useOnboarding();
   const [showVisualization, setShowVisualization] = useState(false);
-
-  // Example data for populated view - expanded to 15 medications with various scenarios
-  // Swapped first and second row (first 6 items rearranged)
-  const exampleMedications = [
-    // Original medications 4-6 now in positions 1-3
-    {
-      id: uuidv4(),
-      name: "Levothyroxine",
-      strength: "75mcg",
-      form: "tablet",
-      doses: [
-        {
-          id: uuidv4(),
-          days: ["everyday"],
-          times: ["7:00 AM"],
-          quantity: 1
-        }
-      ],
-      asNeeded: null
-    },
-    {
-      id: uuidv4(),
-      name: "Aspirin",
-      strength: "81mg",
-      form: "tablet",
-      doses: [
-        {
-          id: uuidv4(),
-          days: ["everyday"],
-          times: ["10:00 AM"],
-          quantity: 1
-        }
-      ],
-      asNeeded: null
-    },
-    {
-      id: uuidv4(),
-      name: "Omeprazole",
-      strength: "20mg",
-      form: "capsule",
-      doses: [
-        {
-          id: uuidv4(),
-          days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-          times: ["7:30 AM"],
-          quantity: 1
-        }
-      ],
-      asNeeded: { maxPerDay: 1 }
-    },
-    // Original medications 1-3 now in positions 4-6
-    {
-      id: uuidv4(),
-      name: "Lipitor",
-      strength: "20mg",
-      form: "tablet",
-      doses: [
-        {
-          id: uuidv4(),
-          days: ["everyday"],
-          times: ["8:00 AM", "8:00 PM"],
-          quantity: 1
-        },
-        {
-          id: uuidv4(),
-          days: ["everyday"],
-          times: ["9:00 AM"],
-          quantity: 2
-        }
-      ],
-      asNeeded: { maxPerDay: 2 }
-    },
-    {
-      id: uuidv4(),
-      name: "Metformin",
-      strength: "500mg",
-      form: "tablet",
-      doses: [
-        {
-          id: uuidv4(),
-          days: ["Monday", "Wednesday", "Friday"],
-          times: ["12:00 PM"],
-          quantity: 2
-        }
-      ],
-      asNeeded: null
-    },
-    {
-      id: uuidv4(),
-      name: "Lisinopril",
-      strength: "10mg",
-      form: "tablet",
-      doses: [
-        {
-          id: uuidv4(),
-          days: ["everyday"],
-          times: ["9:00 AM"],
-          quantity: 1
-        }
-      ],
-      asNeeded: { maxPerDay: 1 }
-    },
-    {
-      id: uuidv4(),
-      name: "Albuterol",
-      strength: "90mcg",
-      form: "inhaler",
-      doses: [
-        {
-          id: uuidv4(),
-          days: ["everyday"],
-          times: ["as needed"],
-          quantity: 2
-        }
-      ],
-      asNeeded: { maxPerDay: 8 }
-    },
-    {
-      id: uuidv4(),
-      name: "Amlodipine",
-      strength: "5mg",
-      form: "tablet",
-      doses: [
-        {
-          id: uuidv4(),
-          days: ["everyday"],
-          times: ["9:00 PM"],
-          quantity: 1
-        }
-      ],
-      asNeeded: null
-    },
-    {
-      id: uuidv4(),
-      name: "Furosemide",
-      strength: "40mg",
-      form: "tablet",
-      doses: [
-        {
-          id: uuidv4(),
-          days: ["Monday", "Wednesday", "Friday"],
-          times: ["9:00 AM"],
-          quantity: 1
-        },
-        {
-          id: uuidv4(),
-          days: ["Tuesday", "Thursday"],
-          times: ["10:00 AM"],
-          quantity: 2
-        }
-      ],
-      asNeeded: { maxPerDay: 2 }
-    },
-    {
-      id: uuidv4(),
-      name: "Januvia",
-      strength: "100mg",
-      form: "tablet",
-      doses: [
-        {
-          id: uuidv4(),
-          days: ["everyday"],
-          times: ["8:00 AM", "8:00 PM"],
-          quantity: 1
-        }
-      ],
-      asNeeded: null
-    },
-    {
-      id: uuidv4(),
-      name: "Prednisone",
-      strength: "5mg",
-      form: "tablet",
-      doses: [
-        {
-          id: uuidv4(),
-          days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-          times: ["10:30 AM"],
-          quantity: 1
-        }
-      ],
-      asNeeded: { maxPerDay: 3 }
-    },
-    {
-      id: uuidv4(),
-      name: "Warfarin",
-      strength: "2.5mg",
-      form: "tablet",
-      doses: [
-        {
-          id: uuidv4(),
-          days: ["Monday", "Wednesday", "Friday", "Sunday"],
-          times: ["5:00 PM"],
-          quantity: 1
-        },
-        {
-          id: uuidv4(),
-          days: ["Tuesday", "Thursday", "Saturday"],
-          times: ["5:00 PM"],
-          quantity: 2
-        }
-      ],
-      asNeeded: null
-    },
-    {
-      id: uuidv4(),
-      name: "Hydrochlorothiazide",
-      strength: "25mg",
-      form: "tablet",
-      doses: [
-        {
-          id: uuidv4(),
-          days: ["everyday"],
-          times: ["10:00 AM"],
-          quantity: 1
-        }
-      ],
-      asNeeded: { maxPerDay: 1 }
-    },
-    {
-      id: uuidv4(),
-      name: "Insulin Glargine",
-      strength: "100 units/mL",
-      form: "injection",
-      doses: [
-        {
-          id: uuidv4(),
-          days: ["everyday"],
-          times: ["9:00 PM"],
-          quantity: 20
-        }
-      ],
-      asNeeded: { maxPerDay: 40 }
-    },
-    {
-      id: uuidv4(),
-      name: "Fentanyl",
-      strength: "50mcg/hr",
-      form: "patch",
-      doses: [
-        {
-          id: uuidv4(),
-          days: ["Monday"],
-          times: ["8:00 AM"],
-          quantity: 1
-        }
-      ],
-      asNeeded: null
-    }
-  ];
 
   const displayMedications = showExample ? exampleMedications : userProfile.medications;
 
@@ -325,7 +78,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
       </div>
 
       {(!showExample && userProfile.medications.length === 0) || 
-        (showExample && !exampleMedications.length) ? (
+        (showExample && !displayMedications.length) ? (
         <div className="flex flex-col items-center justify-center py-8 border border-dashed border-white/20 rounded-lg">
           <Pill className="h-12 w-12 text-white/30 mb-4" />
           <p className="text-white/50 mb-1">No medications added yet</p>

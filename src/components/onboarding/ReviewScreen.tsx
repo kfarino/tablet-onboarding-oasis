@@ -1,16 +1,72 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Badge } from "@/components/ui/badge";
 import { Mic, Calendar, Clock, Pill, User, Phone, Heart, ArrowRight } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { v4 as uuidv4 } from 'uuid';
 
 const ReviewScreen: React.FC = () => {
   const { userProfile, nextStep } = useOnboarding();
+  const [showExample, setShowExample] = useState(false);
+
+  // Example data for populated view
+  const exampleProfile = {
+    firstName: "Jane",
+    lastName: "Smith",
+    role: "Caregiver",
+    dateOfBirth: "03/15/1965",
+    phoneNumber: "(555) 123-4567",
+    healthConditions: ["Diabetes Type 2", "Hypertension", "Arthritis"],
+    medications: [
+      {
+        id: uuidv4(),
+        name: "Lipitor",
+        strength: "20mg",
+        form: "tablet",
+        doses: [
+          {
+            id: uuidv4(),
+            days: ["everyday"],
+            times: ["8:00 AM", "8:00 PM"],
+            quantity: 1
+          }
+        ]
+      },
+      {
+        id: uuidv4(),
+        name: "Metformin",
+        strength: "500mg",
+        form: "tablet",
+        doses: [
+          {
+            id: uuidv4(),
+            days: ["Monday", "Wednesday", "Friday"],
+            times: ["12:00 PM"],
+            quantity: 2
+          }
+        ]
+      }
+    ]
+  };
+
+  const toggleExample = () => {
+    setShowExample(!showExample);
+  };
+
+  const displayProfile = showExample ? exampleProfile : userProfile;
 
   return (
     <div className="animate-fade-in px-8">
-      <p className="onboarding-subtitle mb-6">Please review the following information</p>
+      <div className="flex justify-between items-center mb-6">
+        <p className="onboarding-subtitle">Please review the following information</p>
+        <Badge 
+          className="cursor-pointer bg-highlight hover:bg-highlight/90" 
+          onClick={toggleExample}
+        >
+          {showExample ? "Show Empty View" : "Show Populated View"}
+        </Badge>
+      </div>
 
       <div className="space-y-4">
         <div className="p-4 rounded-lg border border-white/10 bg-white/5">
@@ -21,19 +77,19 @@ const ReviewScreen: React.FC = () => {
           <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-white">
             <div>
               <p className="text-xs text-white/50">Full Name</p>
-              <p>{userProfile.firstName} {userProfile.lastName}</p>
+              <p>{displayProfile.firstName || "—"} {displayProfile.lastName || "—"}</p>
             </div>
             <div>
               <p className="text-xs text-white/50">Role</p>
-              <p>{userProfile.role}</p>
+              <p>{displayProfile.role || "—"}</p>
             </div>
             <div>
               <p className="text-xs text-white/50">Date of Birth</p>
-              <p>{userProfile.dateOfBirth}</p>
+              <p>{displayProfile.dateOfBirth || "—"}</p>
             </div>
             <div>
               <p className="text-xs text-white/50">Phone Number</p>
-              <p>{userProfile.phoneNumber}</p>
+              <p>{displayProfile.phoneNumber || "—"}</p>
             </div>
           </div>
         </div>
@@ -43,11 +99,11 @@ const ReviewScreen: React.FC = () => {
             <Heart className="h-4 w-4 mr-2 text-highlight" />
             Health Conditions
           </h3>
-          {userProfile.healthConditions.length === 0 ? (
+          {displayProfile.healthConditions.length === 0 ? (
             <p className="text-white/40 text-sm">No health conditions added</p>
           ) : (
             <div className="flex flex-wrap gap-2">
-              {userProfile.healthConditions.map((condition, index) => (
+              {displayProfile.healthConditions.map((condition, index) => (
                 <Badge 
                   key={index} 
                   className="bg-white/10 text-white"
@@ -64,11 +120,11 @@ const ReviewScreen: React.FC = () => {
             <Pill className="h-4 w-4 mr-2 text-highlight" />
             Medications
           </h3>
-          {userProfile.medications.length === 0 ? (
+          {displayProfile.medications.length === 0 ? (
             <p className="text-white/40 text-sm">No medications added</p>
           ) : (
             <div className="space-y-4">
-              {userProfile.medications.map(medication => (
+              {displayProfile.medications.map(medication => (
                 <div key={medication.id} className="p-3 border border-white/10 bg-white/5 rounded-md">
                   <div className="flex items-center gap-2 mb-2">
                     <Pill className="h-5 w-5 text-highlight" />

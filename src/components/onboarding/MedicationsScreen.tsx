@@ -1,18 +1,67 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Mic, Pill, Clock, Calendar, Info, ArrowRight } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { v4 as uuidv4 } from 'uuid';
 
 const MedicationsScreen: React.FC = () => {
   const { userProfile, nextStep } = useOnboarding();
+  const [showExample, setShowExample] = useState(false);
+
+  // Example data for populated view
+  const exampleMedications = [
+    {
+      id: uuidv4(),
+      name: "Lipitor",
+      strength: "20mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["8:00 AM", "8:00 PM"],
+          quantity: 1
+        }
+      ]
+    },
+    {
+      id: uuidv4(),
+      name: "Metformin",
+      strength: "500mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["Monday", "Wednesday", "Friday"],
+          times: ["12:00 PM"],
+          quantity: 2
+        }
+      ]
+    }
+  ];
+
+  const toggleExample = () => {
+    setShowExample(!showExample);
+  };
+
+  const displayMedications = showExample ? exampleMedications : userProfile.medications;
 
   return (
-    <div className="animate-fade-in">
-      <p className="onboarding-subtitle mb-6">Please speak your medication details</p>
+    <div className="animate-fade-in px-8">
+      <div className="flex justify-between items-center mb-6">
+        <p className="onboarding-subtitle">Please speak your medication details</p>
+        <Badge 
+          className="cursor-pointer bg-highlight hover:bg-highlight/90" 
+          onClick={toggleExample}
+        >
+          {showExample ? "Show Empty View" : "Show Populated View"}
+        </Badge>
+      </div>
 
-      {userProfile.medications.length === 0 ? (
+      {(!showExample && userProfile.medications.length === 0) || 
+       (showExample && !exampleMedications.length) ? (
         <div className="flex flex-col items-center justify-center py-8 border border-dashed border-white/20 rounded-lg">
           <Pill className="h-12 w-12 text-white/30 mb-4" />
           <p className="text-white/50 mb-1">No medications added yet</p>
@@ -20,7 +69,7 @@ const MedicationsScreen: React.FC = () => {
         </div>
       ) : (
         <div className="space-y-6">
-          {userProfile.medications.map(medication => (
+          {displayMedications.map(medication => (
             <div key={medication.id} className="medication-card">
               <div className="flex items-start gap-3 mb-4">
                 <Pill className="h-5 w-5 text-highlight mt-1" />

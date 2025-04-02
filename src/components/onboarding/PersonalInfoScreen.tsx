@@ -1,15 +1,38 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { User, Calendar, Phone, ArrowRight } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 const PersonalInfoScreen: React.FC = () => {
   const { userProfile, nextStep } = useOnboarding();
+  const [showExample, setShowExample] = useState(false);
+
+  // Example data for populated view
+  const exampleProfile = {
+    firstName: "Jane",
+    lastName: "Smith",
+    role: "Caregiver",
+    dateOfBirth: "03/15/1965",
+    phoneNumber: "(555) 123-4567"
+  };
+
+  const toggleExample = () => {
+    setShowExample(!showExample);
+  };
 
   return (
-    <div className="animate-fade-in flex flex-col h-full">
-      <p className="text-white/70 mb-3">Please speak your information clearly when prompted</p>
+    <div className="animate-fade-in flex flex-col h-full px-8">
+      <div className="flex justify-between items-center mb-4">
+        <p className="text-white/70">Please speak your information clearly when prompted</p>
+        <Badge 
+          className="cursor-pointer bg-highlight hover:bg-highlight/90" 
+          onClick={toggleExample}
+        >
+          {showExample ? "Show Empty View" : "Show Populated View"}
+        </Badge>
+      </div>
       
       <div className="grid grid-cols-2 gap-3 mb-3">
         <div className="voice-display-card p-3 h-24">
@@ -17,9 +40,11 @@ const PersonalInfoScreen: React.FC = () => {
           <div className="flex-1">
             <p className="text-white/70 text-sm">Full Name</p>
             <p className="text-xl text-white">
-              {userProfile.firstName || userProfile.lastName 
-                ? `${userProfile.firstName} ${userProfile.lastName}` 
-                : "Listening..."}
+              {showExample 
+                ? `${exampleProfile.firstName} ${exampleProfile.lastName}` 
+                : userProfile.firstName || userProfile.lastName 
+                  ? `${userProfile.firstName} ${userProfile.lastName}` 
+                  : "Listening..."}
             </p>
           </div>
         </div>
@@ -28,7 +53,11 @@ const PersonalInfoScreen: React.FC = () => {
           <User className="text-highlight h-5 w-5" />
           <div className="flex-1">
             <p className="text-white/70 text-sm">Role</p>
-            <p className="text-xl text-white">{userProfile.role || "Listening..."}</p>
+            <p className="text-xl text-white">
+              {showExample 
+                ? exampleProfile.role 
+                : userProfile.role || "Listening..."}
+            </p>
           </div>
         </div>
 
@@ -36,7 +65,11 @@ const PersonalInfoScreen: React.FC = () => {
           <Calendar className="text-highlight h-5 w-5" />
           <div className="flex-1">
             <p className="text-white/70 text-sm">Date of Birth</p>
-            <p className="text-xl text-white">{userProfile.dateOfBirth || "Listening..."}</p>
+            <p className="text-xl text-white">
+              {showExample 
+                ? exampleProfile.dateOfBirth 
+                : userProfile.dateOfBirth || "Listening..."}
+            </p>
           </div>
         </div>
 
@@ -44,7 +77,11 @@ const PersonalInfoScreen: React.FC = () => {
           <Phone className="text-highlight h-5 w-5" />
           <div className="flex-1">
             <p className="text-white/70 text-sm">Phone Number</p>
-            <p className="text-xl text-white">{userProfile.phoneNumber || "Listening..."}</p>
+            <p className="text-xl text-white">
+              {showExample 
+                ? exampleProfile.phoneNumber 
+                : userProfile.phoneNumber || "Listening..."}
+            </p>
           </div>
         </div>
       </div>

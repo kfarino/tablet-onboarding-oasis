@@ -1,4 +1,3 @@
-
 export interface UserProfile {
   firstName: string;
   lastName: string;
@@ -26,6 +25,9 @@ export interface Medication {
   strength: string;
   form: string;
   doses: Dose[];
+  asNeeded?: {
+    maxPerDay: number;
+  } | null;
 }
 
 export interface Dose {

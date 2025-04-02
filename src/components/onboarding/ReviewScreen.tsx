@@ -2,7 +2,7 @@
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, Pill, User, Phone, Heart, BellRing } from 'lucide-react';
+import { Calendar, Clock, Pill, User, Phone, Heart, BellRing, AlertCircle } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { getDayAbbreviation } from '@/utils/dateUtils';
 import { ALERT_PREFERENCES, UserRole } from '@/types/onboarding';
@@ -37,7 +37,8 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
             times: ["8:00 AM", "8:00 PM"],
             quantity: 1
           }
-        ]
+        ],
+        asNeeded: { maxPerDay: 1 }
       },
       {
         id: uuidv4(),
@@ -51,7 +52,215 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
             times: ["12:00 PM"],
             quantity: 2
           }
-        ]
+        ],
+        asNeeded: null
+      },
+      {
+        id: uuidv4(),
+        name: "Lisinopril",
+        strength: "10mg",
+        form: "tablet",
+        doses: [
+          {
+            id: uuidv4(),
+            days: ["everyday"],
+            times: ["9:00 AM"],
+            quantity: 1
+          }
+        ],
+        asNeeded: { maxPerDay: 2 }
+      },
+      {
+        id: uuidv4(),
+        name: "Levothyroxine",
+        strength: "75mcg",
+        form: "tablet",
+        doses: [
+          {
+            id: uuidv4(),
+            days: ["everyday"],
+            times: ["7:00 AM"],
+            quantity: 1
+          }
+        ],
+        asNeeded: null
+      },
+      {
+        id: uuidv4(),
+        name: "Aspirin",
+        strength: "81mg",
+        form: "tablet",
+        doses: [
+          {
+            id: uuidv4(),
+            days: ["everyday"],
+            times: ["10:00 AM"],
+            quantity: 1
+          }
+        ],
+        asNeeded: null
+      },
+      {
+        id: uuidv4(),
+        name: "Omeprazole",
+        strength: "20mg",
+        form: "capsule",
+        doses: [
+          {
+            id: uuidv4(),
+            days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+            times: ["7:30 AM"],
+            quantity: 1
+          }
+        ],
+        asNeeded: { maxPerDay: 1 }
+      },
+      {
+        id: uuidv4(),
+        name: "Albuterol",
+        strength: "90mcg",
+        form: "inhaler",
+        doses: [
+          {
+            id: uuidv4(),
+            days: ["everyday"],
+            times: ["as needed"],
+            quantity: 2
+          }
+        ],
+        asNeeded: { maxPerDay: 8 }
+      },
+      {
+        id: uuidv4(),
+        name: "Amlodipine",
+        strength: "5mg",
+        form: "tablet",
+        doses: [
+          {
+            id: uuidv4(),
+            days: ["everyday"],
+            times: ["9:00 PM"],
+            quantity: 1
+          }
+        ],
+        asNeeded: null
+      },
+      {
+        id: uuidv4(),
+        name: "Furosemide",
+        strength: "40mg",
+        form: "tablet",
+        doses: [
+          {
+            id: uuidv4(),
+            days: ["Monday", "Wednesday", "Friday"],
+            times: ["9:00 AM"],
+            quantity: 1
+          },
+          {
+            id: uuidv4(),
+            days: ["Tuesday", "Thursday"],
+            times: ["10:00 AM"],
+            quantity: 2
+          }
+        ],
+        asNeeded: { maxPerDay: 2 }
+      },
+      {
+        id: uuidv4(),
+        name: "Januvia",
+        strength: "100mg",
+        form: "tablet",
+        doses: [
+          {
+            id: uuidv4(),
+            days: ["everyday"],
+            times: ["8:00 AM", "8:00 PM"],
+            quantity: 1
+          }
+        ],
+        asNeeded: null
+      },
+      {
+        id: uuidv4(),
+        name: "Prednisone",
+        strength: "5mg",
+        form: "tablet",
+        doses: [
+          {
+            id: uuidv4(),
+            days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            times: ["10:30 AM"],
+            quantity: 1
+          }
+        ],
+        asNeeded: { maxPerDay: 3 }
+      },
+      {
+        id: uuidv4(),
+        name: "Warfarin",
+        strength: "2.5mg",
+        form: "tablet",
+        doses: [
+          {
+            id: uuidv4(),
+            days: ["Monday", "Wednesday", "Friday", "Sunday"],
+            times: ["5:00 PM"],
+            quantity: 1
+          },
+          {
+            id: uuidv4(),
+            days: ["Tuesday", "Thursday", "Saturday"],
+            times: ["5:00 PM"],
+            quantity: 2
+          }
+        ],
+        asNeeded: null
+      },
+      {
+        id: uuidv4(),
+        name: "Hydrochlorothiazide",
+        strength: "25mg",
+        form: "tablet",
+        doses: [
+          {
+            id: uuidv4(),
+            days: ["everyday"],
+            times: ["10:00 AM"],
+            quantity: 1
+          }
+        ],
+        asNeeded: { maxPerDay: 1 }
+      },
+      {
+        id: uuidv4(),
+        name: "Insulin Glargine",
+        strength: "100 units/mL",
+        form: "injection",
+        doses: [
+          {
+            id: uuidv4(),
+            days: ["everyday"],
+            times: ["9:00 PM"],
+            quantity: 20
+          }
+        ],
+        asNeeded: { maxPerDay: 40 }
+      },
+      {
+        id: uuidv4(),
+        name: "Fentanyl",
+        strength: "50mcg/hr",
+        form: "patch",
+        doses: [
+          {
+            id: uuidv4(),
+            days: ["Monday"],
+            times: ["8:00 AM"],
+            quantity: 1
+          }
+        ],
+        asNeeded: null
       }
     ],
     lovedOne: {
@@ -86,7 +295,8 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
             times: ["9:00 AM"],
             quantity: 1
           }
-        ]
+        ],
+        asNeeded: { maxPerDay: 2 }
       }
     ],
     lovedOne: {
@@ -260,6 +470,15 @@ const ReviewScreen: React.FC<ReviewScreenProps> = ({ showExample = false }) => {
                       </div>
                     </div>
                   ))}
+                  
+                  {medication.asNeeded && (
+                    <div className="ml-8 mt-3 flex items-center gap-2 bg-white/5 p-2 rounded-md border-l-2 border-yellow-500/50">
+                      <AlertCircle className="h-5 w-5 text-yellow-500/90" />
+                      <span className="text-white/90">
+                        As needed: max {medication.asNeeded.maxPerDay} per day
+                      </span>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

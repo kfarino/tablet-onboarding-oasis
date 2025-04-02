@@ -2,10 +2,11 @@
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Badge } from "@/components/ui/badge";
-import { Mic, Calendar, Clock, Pill, User, Phone, Heart } from 'lucide-react';
+import { Mic, Calendar, Clock, Pill, User, Phone, Heart, ArrowRight } from 'lucide-react';
+import { Button } from "@/components/ui/button";
 
 const ReviewScreen: React.FC = () => {
-  const { userProfile } = useOnboarding();
+  const { userProfile, nextStep } = useOnboarding();
 
   return (
     <div className="animate-fade-in">
@@ -110,9 +111,16 @@ const ReviewScreen: React.FC = () => {
           <div className="bg-white/10 rounded-full p-4 mb-4 pulse-animation">
             <Mic className="text-highlight h-6 w-6" />
           </div>
-          <p className="text-white/70 text-center">
+          <p className="text-white/70 text-center mb-6">
             Say "Complete" to finish setup or "Go back" to make changes
           </p>
+          
+          <Button 
+            onClick={nextStep}
+            className="bg-highlight hover:bg-highlight/90 text-white"
+          >
+            Complete Setup <ArrowRight className="ml-2" />
+          </Button>
         </div>
       </div>
     </div>

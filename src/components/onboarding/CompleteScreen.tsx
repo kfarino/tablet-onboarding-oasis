@@ -1,10 +1,18 @@
 
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { CheckCircle2, Mic } from 'lucide-react';
+import { CheckCircle2, Mic, ArrowRight } from 'lucide-react';
+import { Button } from "@/components/ui/button";
 
 const CompleteScreen: React.FC = () => {
   const { userProfile } = useOnboarding();
+
+  // In a real application, we would have a redirect function here
+  const goToDashboard = () => {
+    // This would navigate to the dashboard in a real app
+    console.log('Navigating to dashboard...');
+    window.location.href = '/dashboard';
+  };
 
   return (
     <div className="flex flex-col items-center justify-center h-full animate-fade-in text-center">
@@ -22,9 +30,16 @@ const CompleteScreen: React.FC = () => {
           <div className="bg-white/10 rounded-full p-4 mb-4 pulse-animation">
             <Mic className="text-highlight h-6 w-6" />
           </div>
-          <p className="text-white/70 text-center">
+          <p className="text-white/70 text-center mb-6">
             Say "Go to dashboard" to continue
           </p>
+          
+          <Button 
+            onClick={goToDashboard}
+            className="bg-highlight hover:bg-highlight/90 text-white"
+          >
+            Go to Dashboard <ArrowRight className="ml-2" />
+          </Button>
         </div>
       </div>
     </div>

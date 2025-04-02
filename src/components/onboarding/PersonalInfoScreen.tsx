@@ -1,10 +1,11 @@
 
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { Mic, User, Calendar, Phone } from 'lucide-react';
+import { Mic, User, Calendar, Phone, ArrowRight } from 'lucide-react';
+import { Button } from "@/components/ui/button";
 
 const PersonalInfoScreen: React.FC = () => {
-  const { userProfile } = useOnboarding();
+  const { userProfile, nextStep } = useOnboarding();
 
   return (
     <div className="animate-fade-in">
@@ -54,11 +55,18 @@ const PersonalInfoScreen: React.FC = () => {
           <div className="bg-white/10 rounded-full p-4 mb-4 pulse-animation">
             <Mic className="text-highlight h-6 w-6" />
           </div>
-          <p className="text-white/70 text-center">
+          <p className="text-white/70 text-center mb-6">
             {userProfile.firstName && userProfile.lastName && userProfile.role && userProfile.dateOfBirth && userProfile.phoneNumber
               ? "Say \"Next\" to continue"
               : "I'm listening..."}
           </p>
+          
+          <Button 
+            onClick={nextStep}
+            className="bg-highlight hover:bg-highlight/90 text-white"
+          >
+            Continue <ArrowRight className="ml-2" />
+          </Button>
         </div>
       </div>
     </div>

@@ -1,11 +1,12 @@
 
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { Mic, Heart, Info } from 'lucide-react';
+import { Mic, Heart, Info, ArrowRight } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 const HealthConditionsScreen: React.FC = () => {
-  const { userProfile } = useOnboarding();
+  const { userProfile, nextStep } = useOnboarding();
 
   return (
     <div className="animate-fade-in">
@@ -52,9 +53,16 @@ const HealthConditionsScreen: React.FC = () => {
           <div className="bg-white/10 rounded-full p-4 mb-4 pulse-animation">
             <Mic className="text-highlight h-6 w-6" />
           </div>
-          <p className="text-white/70 text-center">
+          <p className="text-white/70 text-center mb-6">
             Say "Next" when you're finished adding conditions
           </p>
+          
+          <Button 
+            onClick={nextStep}
+            className="bg-highlight hover:bg-highlight/90 text-white"
+          >
+            Continue <ArrowRight className="ml-2" />
+          </Button>
         </div>
       </div>
     </div>

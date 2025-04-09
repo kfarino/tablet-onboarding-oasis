@@ -8,7 +8,7 @@ const Index = () => {
 
   // Set up viewport meta tag for tablet display
   useEffect(() => {
-    // Add viewport meta tag optimized for 7" tablet (747x420)
+    // Add viewport meta tag optimized for 7" tablet (747x420) with no scaling
     const meta = document.createElement('meta');
     meta.name = 'viewport';
     meta.content = 'width=747, height=420, initial-scale=1, user-scalable=no, maximum-scale=1';
@@ -21,7 +21,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-charcoal flex items-center justify-center p-4">
-      <div className="w-[747px] h-[420px] border-2 border-white/30 overflow-hidden relative">
+      <div className="w-[747px] h-[420px] border-2 border-white/30 overflow-hidden relative" style={{ transformOrigin: 'center', transform: 'scale(1)' }}>
         <OnboardingProvider>
           <OnboardingContainer 
             showMedicationSchedule={showMedicationSchedule}

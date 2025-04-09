@@ -38,13 +38,13 @@ const LovedOneInfoScreen: React.FC<LovedOneInfoScreenProps> = ({ showExample = f
   };
 
   return (
-    <div className="animate-fade-in flex flex-col h-full px-10 py-6">
-      <div className="space-y-6">
-        <div className="grid grid-cols-2 gap-5 mb-4">
-          <div className="voice-display-card p-5 h-32">
-            <User className="text-highlight h-6 w-6" />
+    <div className="animate-fade-in flex flex-col h-full px-6 py-4">
+      <div className="space-y-4">
+        <div className="grid grid-cols-2 gap-4 mb-3">
+          <div className="voice-display-card p-4 h-28">
+            <User className="text-highlight h-5 w-5" />
             <div className="flex-1">
-              <p className="text-white/70 text-lg mb-1">Full Name</p>
+              <p className="text-white/70 text-lg mb-0.5">Full Name</p>
               <p className="text-2xl text-white">
                 {showExample 
                   ? `${exampleLovedOne.firstName} ${exampleLovedOne.lastName}` 
@@ -55,10 +55,10 @@ const LovedOneInfoScreen: React.FC<LovedOneInfoScreenProps> = ({ showExample = f
             </div>
           </div>
 
-          <div className="voice-display-card p-5 h-32">
-            <Calendar className="text-highlight h-6 w-6" />
+          <div className="voice-display-card p-4 h-28">
+            <Calendar className="text-highlight h-5 w-5" />
             <div className="flex-1">
-              <p className="text-white/70 text-lg mb-1">Date of Birth</p>
+              <p className="text-white/70 text-lg mb-0.5">Date of Birth</p>
               <p className="text-2xl text-white">
                 {showExample 
                   ? exampleLovedOne.dateOfBirth 
@@ -67,10 +67,10 @@ const LovedOneInfoScreen: React.FC<LovedOneInfoScreenProps> = ({ showExample = f
             </div>
           </div>
 
-          <div className="voice-display-card p-5 h-32">
-            <Phone className="text-highlight h-6 w-6" />
+          <div className="voice-display-card p-4 h-28">
+            <Phone className="text-highlight h-5 w-5" />
             <div className="flex-1">
-              <p className="text-white/70 text-lg mb-1">Phone Number</p>
+              <p className="text-white/70 text-lg mb-0.5">Phone Number</p>
               <p className="text-2xl text-white">
                 {showExample 
                   ? exampleLovedOne.phoneNumber 
@@ -79,10 +79,10 @@ const LovedOneInfoScreen: React.FC<LovedOneInfoScreenProps> = ({ showExample = f
             </div>
           </div>
 
-          <div className="voice-display-card p-5 h-32">
-            <BellRing className="text-highlight h-6 w-6" />
+          <div className="voice-display-card p-4 h-28">
+            <BellRing className="text-highlight h-5 w-5" />
             <div className="flex-1">
-              <p className="text-white/70 text-lg mb-1">Alert Preference</p>
+              <p className="text-white/70 text-lg mb-0.5">Alert Preference</p>
               {showExample ? (
                 <p className="text-2xl text-white">
                   {ALERT_PREFERENCES.find(a => a.value === exampleLovedOne.alertPreference)?.label || 'Phone Call'}

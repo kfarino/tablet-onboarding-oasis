@@ -30,11 +30,11 @@ const ProgressIndicator: React.FC = () => {
   const steps = getSteps();
 
   return (
-    <div className="flex justify-center items-center gap-3 mb-3 px-8" role="navigation" aria-label="Onboarding progress">
+    <div className="flex justify-center items-center gap-2 mb-2 px-4" role="navigation" aria-label="Onboarding progress">
       {steps.map((step) => (
         <div key={step.id} className="flex flex-col items-center">
           <div 
-            className={`h-3 w-3 rounded-full transition-all duration-300 ${
+            className={`h-2.5 w-2.5 rounded-full transition-all duration-300 ${
               step.id < currentStep 
                 ? 'bg-white/40' 
                 : step.id === currentStep 
@@ -44,7 +44,6 @@ const ProgressIndicator: React.FC = () => {
             title={step.label}
             aria-current={currentStep === step.id ? 'step' : undefined}
           />
-          {/* Removed the text label span that was here */}
         </div>
       ))}
     </div>

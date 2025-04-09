@@ -69,12 +69,12 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
 
   // Dashboard Layout
   const dashboardLayout = (
-    <div className="flex flex-col space-y-2">
-      <div className="bg-gray-800 rounded-lg p-3 flex items-center">
-        <div className="flex items-center mr-4 max-w-[50%]">
+    <div className="flex flex-col space-y-4">
+      <div className="rounded-lg border border-white/10 bg-white/5 p-4 flex items-center">
+        <div className="w-1/2 flex items-center">
           <User className="text-highlight h-10 w-10 mr-3 flex-shrink-0" />
-          <div className="min-w-0">
-            <p className="text-white text-2xl font-bold break-words">
+          <div>
+            <p className="text-white text-xl font-bold break-words hyphens-auto">
               {showExample || userProfile.firstName || userProfile.lastName
                 ? `${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.firstName : examplePrimaryUser.firstName) : userProfile.firstName || ""} ${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.lastName : examplePrimaryUser.lastName) : userProfile.lastName || ""}`
                 : "Name"}
@@ -89,10 +89,10 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
           </div>
         </div>
 
-        <div className="flex flex-1 justify-around">
+        <div className="w-1/2 flex items-center justify-end space-x-8">
           {displayRole === UserRole.PrimaryUser && (
-            <div className="flex flex-col justify-center flex-shrink-0 text-center">
-              <p className="text-white text-2xl font-bold">
+            <div className="flex flex-col items-end">
+              <p className="text-white text-xl font-bold text-right">
                 {showExample || userProfile.dateOfBirth
                   ? (showExample ? examplePrimaryUser.dateOfBirth : userProfile.dateOfBirth)
                   : ""}
@@ -101,8 +101,8 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
             </div>
           )}
           
-          <div className="flex flex-col items-center flex-shrink-0">
-            <p className="text-white text-2xl font-bold whitespace-nowrap">
+          <div className="flex flex-col items-end">
+            <p className="text-white text-xl font-bold whitespace-nowrap">
               {showExample || userProfile.phoneNumber
                 ? (showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.phoneNumber : examplePrimaryUser.phoneNumber) : userProfile.phoneNumber)
                 : ""}
@@ -113,51 +113,47 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
       </div>
 
       {displayRole === UserRole.Caregiver && (
-        <>
-          <div className="col-span-2 h-0.5 bg-gray-600 my-3"></div>
-          
-          <div className="bg-gray-800 rounded-lg p-3 flex items-center">
-            <div className="flex items-center mr-4 max-w-[50%]">
-              <User className="text-highlight h-10 w-10 mr-3 flex-shrink-0" />
-              <div className="min-w-0">
-                <p className="text-white text-2xl font-bold break-words">
-                  {showExample || userProfile.lovedOne?.firstName || userProfile.lovedOne?.lastName
-                    ? (showExample ? "Margaret Eleanor Thompson" : `${userProfile.lovedOne?.firstName || ""} ${userProfile.lovedOne?.lastName || ""}`)
-                    : "Loved One's Name"}
-                </p>
-                <p className="text-highlight text-lg font-medium">
-                  {showExample || userProfile.relationship
-                    ? (showExample ? "Parent" : getRelationshipLabel(userProfile.relationship))
-                    : "Relationship"}
-                </p>
-              </div>
-            </div>
-            
-            <div className="flex flex-1 justify-around">
-              <div className="flex flex-col justify-center flex-shrink-0 text-center">
-                <p className="text-white text-2xl font-bold">
-                  {showExample || userProfile.lovedOne?.dateOfBirth
-                    ? (showExample ? "01/01/1970" : userProfile.lovedOne?.dateOfBirth)
-                    : ""}
-                </p>
-                <p className="text-white/70 text-lg">Date of Birth</p>
-              </div>
-              
-              <div className="flex flex-col items-center flex-shrink-0">
-                <p className="text-white text-2xl font-bold whitespace-nowrap">
-                  {showExample || userProfile.lovedOne?.phoneNumber
-                    ? (showExample ? "(555) 987-6543" : userProfile.lovedOne?.phoneNumber)
-                    : ""}
-                </p>
-                <p className="text-white/70 text-lg">
-                  {showExample || userProfile.lovedOne?.alertPreference
-                    ? (showExample ? "Text Message" : getAlertPreferenceLabel(userProfile.lovedOne?.alertPreference))
-                    : "Alert Preference"}
-                </p>
-              </div>
+        <div className="rounded-lg border border-white/10 bg-white/5 p-4 flex items-center">
+          <div className="w-1/2 flex items-center">
+            <User className="text-highlight h-10 w-10 mr-3 flex-shrink-0" />
+            <div>
+              <p className="text-white text-xl font-bold break-words hyphens-auto">
+                {showExample || userProfile.lovedOne?.firstName || userProfile.lovedOne?.lastName
+                  ? (showExample ? "Margaret Eleanor Thompson" : `${userProfile.lovedOne?.firstName || ""} ${userProfile.lovedOne?.lastName || ""}`)
+                  : "Loved One's Name"}
+              </p>
+              <p className="text-highlight text-lg font-medium">
+                {showExample || userProfile.relationship
+                  ? (showExample ? "Parent" : getRelationshipLabel(userProfile.relationship))
+                  : "Relationship"}
+              </p>
             </div>
           </div>
-        </>
+          
+          <div className="w-1/2 flex items-center justify-end space-x-8">
+            <div className="flex flex-col items-end">
+              <p className="text-white text-xl font-bold text-right">
+                {showExample || userProfile.lovedOne?.dateOfBirth
+                  ? (showExample ? "01/01/1970" : userProfile.lovedOne?.dateOfBirth)
+                  : ""}
+              </p>
+              <p className="text-white/70 text-lg">Date of Birth</p>
+            </div>
+            
+            <div className="flex flex-col items-end">
+              <p className="text-white text-xl font-bold whitespace-nowrap">
+                {showExample || userProfile.lovedOne?.phoneNumber
+                  ? (showExample ? "(555) 987-6543" : userProfile.lovedOne?.phoneNumber)
+                  : ""}
+              </p>
+              <p className="text-white/70 text-lg">
+                {showExample || userProfile.lovedOne?.alertPreference
+                  ? (showExample ? "Text Message" : getAlertPreferenceLabel(userProfile.lovedOne?.alertPreference))
+                  : "Alert Preference"}
+              </p>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
@@ -165,9 +161,9 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
   // Split Layout
   const splitLayout = (
     <div className="flex h-full">
-      {/* Left Half - User Profile */}
-      <div className="w-1/2 pr-2 flex flex-col">
-        <div className="bg-gray-800 rounded-lg p-4">
+      {/* User Profile - Takes full width for Primary User, half width for Caregiver */}
+      <div className={`${displayRole === UserRole.PrimaryUser ? 'w-full' : 'w-1/2 pr-2'} flex flex-col`}>
+        <div className="rounded-lg border border-white/10 bg-white/5 p-4">
           <div className="mb-4">
             <p className="text-white text-3xl font-bold break-words">
               {showExample || userProfile.firstName || userProfile.lastName
@@ -208,9 +204,9 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
       </div>
       
       {/* Right Half - Loved One Profile (only for caregivers) */}
-      <div className="w-1/2 pl-2 flex flex-col">
-        {displayRole === UserRole.Caregiver ? (
-          <div className="bg-gray-800 rounded-lg p-4">
+      {displayRole === UserRole.Caregiver && (
+        <div className="w-1/2 pl-2 flex flex-col">
+          <div className="rounded-lg border border-white/10 bg-white/5 p-4">
             <div className="mb-4">
               <p className="text-white text-3xl font-bold break-words">
                 {showExample || userProfile.lovedOne?.firstName || userProfile.lovedOne?.lastName
@@ -253,12 +249,8 @@ const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ showExample = f
               </div>
             </div>
           </div>
-        ) : (
-          <div className="bg-gray-800/50 rounded-lg p-4 flex items-center justify-center">
-            <p className="text-white/50 text-xl">Additional information will appear here</p>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 

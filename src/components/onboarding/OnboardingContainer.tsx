@@ -1,10 +1,8 @@
-
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { OnboardingStep, UserRole } from '@/types/onboarding';
 import WelcomeScreen from './WelcomeScreen';
-import PersonalInfoScreen from './PersonalInfoScreen';
-import LovedOneInfoScreen from './LovedOneInfoScreen';
+import AccountInfoScreen from './AccountInfoScreen';
 import HealthConditionsScreen from './HealthConditionsScreen';
 import MedicationsScreen from './MedicationsScreen';
 import ReviewScreen from './ReviewScreen';
@@ -306,9 +304,7 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
       case OnboardingStep.Welcome:
         return <WelcomeScreen />;
       case OnboardingStep.PersonalInfo:
-        return <PersonalInfoScreen showExample={showExample} previewRole={previewRole} />;
-      case OnboardingStep.LovedOneInfo:
-        return <LovedOneInfoScreen showExample={showExample} />;
+        return <AccountInfoScreen showExample={showExample} previewRole={previewRole} />;
       case OnboardingStep.HealthConditions:
         return <HealthConditionsScreen showExample={showExample} />;
       case OnboardingStep.Medications:
@@ -367,19 +363,16 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
         onTogglePreviewRole={showExample ? togglePreviewRole : undefined}
         previewRole={previewRole}
       />
-      <div className="flex-1 overflow-hidden">
-        <div className="w-full mb-3">
-          {currentStep !== OnboardingStep.Welcome && currentStep !== OnboardingStep.Complete && (
-            <ProgressIndicator />
-          )}
-        </div>
-        <div className="h-[calc(100%-40px)] overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden pt-2">
+        <div className="flex-1 overflow-hidden px-8 pb-8">
           {needsScrollArea() ? (
             <ScrollArea className="h-full">
               {renderStep()}
             </ScrollArea>
           ) : (
-            renderStep()
+            <div className="h-full flex items-center justify-center">
+              {renderStep()}
+            </div>
           )}
         </div>
       </div>

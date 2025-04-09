@@ -19,6 +19,7 @@ export interface LovedOneProfile {
   alertPreference: AlertPreference | null;
   healthConditions: string[];
   medications: Medication[];
+  relationship: string;
 }
 
 export interface Medication {
@@ -42,11 +43,10 @@ export interface Dose {
 export enum OnboardingStep {
   Welcome = 0,
   PersonalInfo = 1,
-  LovedOneInfo = 2,
-  HealthConditions = 3,
-  Medications = 4,
-  Review = 5,
-  Complete = 6
+  HealthConditions = 2,
+  Medications = 3,
+  Review = 4,
+  Complete = 5
 }
 
 export enum UserRole {

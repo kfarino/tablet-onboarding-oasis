@@ -1,12 +1,10 @@
-
-import React, { useState } from 'react';
+import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { Pill, Clock, Calendar, AlertCircle, Eye, X } from 'lucide-react';
-import { v4 as uuidv4 } from 'uuid';
-import { getDayAbbreviation } from '@/utils/dateUtils';
+import { Pill, Eye, Calendar, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import MedicationVisualization from './MedicationVisualization';
 import { Medication } from '@/types/onboarding';
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 
 interface MedicationsScreenProps {
   showExample?: boolean;
@@ -22,118 +20,78 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   exampleMedications = []
 }) => {
   const { userProfile } = useOnboarding();
-  const [showVisualization, setShowVisualization] = useState(false);
-
   const displayMedications = showExample ? exampleMedications : userProfile.medications;
 
-  const formatDays = (days: string[]) => {
-    if (days.includes('everyday')) return 'Everyday';
-    
-    return days.map(day => getDayAbbreviation(day)).join(', ');
-  };
-
-  const toggleVisualization = () => {
-    setShowMedicationSchedule(true);
-  };
-
-  // Remove local visualization since we're using the container's full-screen approach
-  if (showVisualization) {
-    return (
-      <div className="fixed inset-0 z-50 bg-charcoal animate-in fade-in">
-        <div className="p-4 h-full flex flex-col">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold text-white">Medication Schedule</h2>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={() => setShowVisualization(false)}
-              className="text-white hover:bg-white/10"
-            >
-              <X className="h-5 w-5" />
-            </Button>
-          </div>
-          <div className="flex-1 overflow-auto">
-            <MedicationVisualization medications={displayMedications} />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="animate-fade-in px-8 pb-10">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold text-white">Your Medications</h2>
-        {displayMedications.length > 0 && (
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={toggleVisualization}
-            className="text-white bg-white/10 hover:bg-white/20"
-          >
-            <Eye className="h-4 w-4 mr-2" />
-            View Schedule
-          </Button>
-        )}
-      </div>
-
+    <div className="animate-fade-in px-6 pb-10">
       {(!showExample && userProfile.medications.length === 0) || 
         (showExample && !displayMedications.length) ? (
         <div className="flex flex-col items-center justify-center py-8 border border-dashed border-white/20 rounded-lg">
-          <Pill className="h-12 w-12 text-white/30 mb-4" />
-          <p className="text-white/50 mb-1">No medications added yet</p>
-          <p className="text-white/70">Say "Add medication" to begin</p>
+          <Pill className="h-16 w-16 text-white/30 mb-4" />
+          <p className="text-white/60 text-xl mb-2">No medications added yet</p>
+          <p className="text-white/80 text-lg">Say "Add medication" to begin</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {displayMedications.map(medication => (
-            <div key={medication.id} className="p-4 border border-white/10 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
-              <div className="flex items-center gap-3 mb-3">
-                <Pill className="h-5 w-5 text-highlight" />
-                <div>
-                  <h3 className="text-lg font-medium text-white">
-                    {medication.name || "New Medication"}{medication.strength ? ` ${medication.strength}` : ""}
-                  </h3>
-                  <div className="flex items-center gap-2 text-white/70 text-sm mt-1">
-                    {medication.form && <span className="bg-white/10 px-2 py-0.5 rounded">{medication.form}</span>}
-                  </div>
-                </div>
-              </div>
-
-              {medication.doses.map(dose => (
-                <div key={dose.id} className="ml-6 mt-3 border-l-2 border-white/20 pl-4 py-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Calendar className="h-4 w-4 text-white/80" />
-                    <span className="text-base text-white">
-                      {dose.days.length > 0 
-                        ? formatDays(dose.days)
-                        : 'No days selected'}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Clock className="h-4 w-4 text-white/80" />
-                    <span className="text-base text-white">
-                      {dose.times.length > 0 
-                        ? dose.times.join(', ')
-                        : 'No times selected'}
-                    </span>
-                  </div>
-                  <div className="ml-6 text-sm text-white/80">
-                    <span>{dose.quantity} {medication.form || 'pill'}{dose.quantity !== 1 ? 's' : ''} per dose</span>
-                  </div>
-                </div>
+        <div className="rounded-lg overflow-hidden">
+          <Table className="w-full">
+            <TableBody>
+              {displayMedications.map(med => (
+                <TableRow key={med.id} className="border-b border-white/10 hover:bg-white/5">
+                  <TableCell className="text-white py-4 w-[45%]">
+                    <div className="text-2xl font-bold">
+                      {med.name} {med.strength}
+                    </div>
+                  </TableCell>
+                  <TableCell className="w-[55%]">
+                    {med.doses.length > 0 ? (
+                      med.doses.map(dose => (
+                        <div key={dose.id} className="mb-3 last:mb-0">
+                          <div className="flex flex-col text-lg">
+                            <div className="flex items-center gap-2">
+                              <span className="text-white font-medium">
+                                {dose.quantity} {med.form || 'dose'}
+                                {dose.quantity !== 1 && (med.form ? 's' : 's')}
+                              </span>
+                              <span className="text-white/70">•</span>
+                              <span className="text-white">
+                                {dose.days.includes('everyday')
+                                  ? 'Every day'
+                                  : dose.days.map(day => {
+                                      // 1-2 letter abbreviations
+                                      const lowerDay = day.toLowerCase();
+                                      if (lowerDay === 'monday') return 'M';
+                                      if (lowerDay === 'tuesday') return 'Tu';
+                                      if (lowerDay === 'wednesday') return 'W';
+                                      if (lowerDay === 'thursday') return 'Th';
+                                      if (lowerDay === 'friday') return 'F';
+                                      if (lowerDay === 'saturday') return 'Sa';
+                                      if (lowerDay === 'sunday') return 'Su';
+                                      return day.charAt(0);
+                                    }).join(', ')}
+                              </span>
+                            </div>
+                            <div className="text-highlight font-medium mt-1">
+                              {dose.times.join(', ')}
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-white/50 text-lg">Not scheduled</div>
+                    )}
+                    
+                    {med.asNeeded && (
+                      <div className="mt-2 pl-1 border-l-2 border-yellow-400/50">
+                        <div className="text-yellow-400 text-lg font-medium">
+                          {med.asNeeded.maxPerDay}x more taken as-needed per day
+                        </div>
+                      </div>
+                    )}
+                  </TableCell>
+                </TableRow>
               ))}
-              
-              {medication.asNeeded && (
-                <div className="ml-6 mt-3 flex items-center gap-2 bg-white/5 p-2 rounded-md border-l-2 border-yellow-500/50">
-                  <AlertCircle className="h-4 w-4 text-yellow-500/90" />
-                  <span className="text-white/90 text-sm">
-                    As needed: max {medication.asNeeded.maxPerDay} per day
-                  </span>
-                </div>
-              )}
-            </div>
-          ))}
+            </TableBody>
+          </Table>
         </div>
       )}
     </div>

@@ -131,14 +131,7 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
       name: "Albuterol",
       strength: "90mcg",
       form: "inhaler",
-      doses: [
-        {
-          id: uuidv4(),
-          days: ["everyday"],
-          times: ["as needed"],
-          quantity: 2
-        }
-      ],
+      doses: [],
       asNeeded: { maxPerDay: 8 }
     },
     {
@@ -362,6 +355,8 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
         showExample={showExample}
         onTogglePreviewRole={showExample ? togglePreviewRole : undefined}
         previewRole={previewRole}
+        showMedicationSchedule={showMedicationSchedule}
+        setShowMedicationSchedule={currentStep === OnboardingStep.Medications ? setShowMedicationSchedule : undefined}
       />
       <div className="flex-1 flex flex-col overflow-hidden pt-2">
         <div className="flex-1 overflow-hidden px-8 pb-8">

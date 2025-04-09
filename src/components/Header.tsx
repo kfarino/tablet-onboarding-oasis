@@ -40,9 +40,7 @@ const Header: React.FC<HeaderProps> = ({
       case OnboardingStep.Welcome:
         return "Welcome";
       case OnboardingStep.PersonalInfo:
-        return "Personal Information";
-      case OnboardingStep.LovedOneInfo:
-        return "Loved One Information";
+        return "Account";
       case OnboardingStep.HealthConditions:
         return "Health Conditions";
       case OnboardingStep.Medications:
@@ -75,7 +73,7 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <div className="w-full bg-charcoal text-white py-4 px-8 flex flex-col relative">
+    <div className="w-full bg-charcoal text-white py-2 px-8 relative">
       <div className="flex justify-between items-center">
         <div className="text-[25px] font-medium">
           {format(currentTime, 'EEE, MMM d')}
@@ -88,7 +86,7 @@ const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
       
-      <div className="w-full flex items-center justify-center relative mt-8 mb-5">
+      <div className="w-full flex items-center justify-center relative mt-0.5">
         {showBackButton && onBack && (
           <Button 
             variant="ghost" 
@@ -140,7 +138,7 @@ const Header: React.FC<HeaderProps> = ({
         )}
         
         {getStepTitle() && (
-          <div className="text-[40px] font-bold">
+          <div className="text-[32px] font-bold text-center">
             {getStepTitle()}
           </div>
         )}

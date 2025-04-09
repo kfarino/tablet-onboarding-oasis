@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, List, LayoutGrid, Sun, Moon, Info, Clock, Calendar as CalendarIcon, Pill, AlertCircle } from 'lucide-react';
+import { Calendar, List, LayoutGrid, Sun, Moon, Info, Clock, Calendar as CalendarIcon, Pill, AlertCircle, Sunrise, Sunset } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { format, startOfWeek, addDays } from 'date-fns';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
@@ -85,20 +85,20 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
 
     return (
       <div className="my-4">
-        <div className="grid grid-cols-7 gap-1 mb-4">
+        <div className="grid grid-cols-7 gap-2 mb-6">
           {weekDays.map((day) => (
             <div key={day.dayName} className="text-center">
-              <div className="text-white/70 text-sm">{day.dayName}</div>
-              <div className="bg-white/10 rounded-full h-8 w-8 flex items-center justify-center mx-auto mt-1 text-white">{day.dayNumber}</div>
+              <div className="text-white/80 text-lg mb-1">{day.dayName}</div>
+              <div className="bg-white/15 rounded-full h-10 w-10 flex items-center justify-center mx-auto text-white text-lg font-medium">{day.dayNumber}</div>
             </div>
           ))}
         </div>
         
-        <div className="space-y-4">
+        <div className="space-y-6">
           {sortedTimes.map(({ time, meds }) => (
-            <div key={time} className="bg-white/5 rounded-lg p-3">
-              <div className="text-highlight font-medium mb-2">{time}</div>
-              <div className="grid grid-cols-7 gap-1">
+            <div key={time} className="bg-white/10 rounded-lg p-4">
+              <div className="text-highlight text-xl font-bold mb-3">{time}</div>
+              <div className="grid grid-cols-7 gap-2">
                 {weekDays.map((day) => {
                   const relevantMeds = meds.filter(({ med, dose }) => {
                     return dose.days.includes('everyday') || 
@@ -108,18 +108,19 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
                   });
                   
                   return (
-                    <div key={`${time}-${day.dayName}`} className="min-h-[60px] border border-white/10 rounded p-1">
+                    <div key={`${time}-${day.dayName}`} className="min-h-[80px] border border-white/15 rounded p-2 hover:bg-white/5">
                       {relevantMeds.length > 0 ? (
-                        <div className="text-xs text-white space-y-1">
+                        <div className="text-white space-y-2">
                           {relevantMeds.map(({ med, dose }) => (
-                            <div key={`${time}-${day.dayName}-${med.id}`} className="bg-white/10 p-1 rounded">
-                              <div className="font-medium truncate">{med.name}</div>
-                              <div>{dose.quantity} {med.form || 'pill'}{dose.quantity !== 1 ? 's' : ''}</div>
+                            <div key={`${time}-${day.dayName}-${med.id}`} className="bg-white/15 p-2 rounded">
+                              <div className="font-medium text-base">{med.name} {med.strength}</div>
+                              {med.form && <div className="text-white/60 text-xs mb-1">{med.form}</div>}
+                              <div className="text-white/80">{dose.quantity}x</div>
                             </div>
                           ))}
                         </div>
                       ) : (
-                        <div className="text-white/30 text-xs flex items-center justify-center h-full">None</div>
+                        <div className="text-white/40 text-base flex items-center justify-center h-full">None</div>
                       )}
                     </div>
                   );
@@ -129,19 +130,20 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
           ))}
         </div>
         
-        <div className="mt-6 bg-white/5 rounded-lg p-3">
-          <div className="text-yellow-500 font-medium mb-2">As Needed</div>
-          <div className="space-y-2">
+        <div className="mt-8 bg-white/10 rounded-lg p-4">
+          <div className="text-yellow-400 text-xl font-bold mb-3">As Needed</div>
+          <div className="space-y-3">
             {medications
               .filter(med => 
                 med.asNeeded || 
                 med.doses.some(dose => dose.times.some(time => time.toLowerCase() === "as needed"))
               )
               .map(med => (
-                <div key={med.id} className="bg-white/10 p-2 rounded">
-                  <div className="font-medium">{med.name} {med.strength}</div>
+                <div key={med.id} className="bg-white/15 p-3 rounded">
+                  <div className="font-medium text-lg">{med.name} {med.strength}</div>
+                  {med.form && <div className="text-white/60 text-sm">{med.form}</div>}
                   {med.asNeeded && (
-                    <div className="text-sm text-white/70">Max {med.asNeeded.maxPerDay} per day</div>
+                    <div className="text-base text-white/80 mt-1">Max {med.asNeeded.maxPerDay}x daily</div>
                   )}
                 </div>
               ))}
@@ -149,7 +151,7 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
               med.asNeeded || 
               med.doses.some(dose => dose.times.some(time => time.toLowerCase() === "as needed"))
             ) && (
-              <div className="text-white/30 text-sm">No as-needed medications</div>
+              <div className="text-white/40 text-lg p-2">No as-needed medications</div>
             )}
           </div>
         </div>
@@ -211,7 +213,7 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
                     </div>
                     <div>
                       <div className="font-medium">{med.name} {med.strength}</div>
-                      <div className="text-xs text-white/70">{med.form || 'tablet'}</div>
+                      {med.form && <div className="text-white/60 text-xs">{med.form}</div>}
                     </div>
                   </div>
                 );
@@ -232,7 +234,7 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
                 <div key={med.id} className="bg-white/10 p-2 rounded flex justify-between items-center">
                   <div>
                     <div className="font-medium">{med.name} {med.strength}</div>
-                    <div className="text-xs text-white/70">{med.form || 'tablet'}</div>
+                    {med.form && <div className="text-white/60 text-xs">{med.form}</div>}
                   </div>
                   {med.asNeeded && (
                     <div className="text-sm bg-yellow-500/20 text-yellow-500 px-2 py-1 rounded">
@@ -254,206 +256,110 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
   };
 
   const renderInteractiveDayPartsView = () => {
-    const timeGroups = {
-      morning: { 
-        label: "Morning", 
-        icon: <Sun className="h-5 w-5 text-yellow-400" />, 
-        meds: [] as { med: Medication, dose: MedicationDose, time: string }[] 
-      },
-      day: { 
-        label: "Day", 
-        icon: <Sun className="h-5 w-5 text-orange-400" />, 
-        meds: [] as { med: Medication, dose: MedicationDose, time: string }[] 
-      },
-      night: { 
-        label: "Night", 
-        icon: <Moon className="h-5 w-5 text-blue-400" />, 
-        meds: [] as { med: Medication, dose: MedicationDose, time: string }[] 
-      }
+    const dayParts = ["Morning", "Afternoon", "Evening", "Bedtime"];
+    
+    // Helper function to map time periods to day parts
+    const getDayPartFromTime = (time: string): string => {
+      const lowerTime = time.toLowerCase();
+      if (lowerTime.includes('am') || lowerTime.includes('morning')) return 'Morning';
+      if (lowerTime.includes('afternoon') || (lowerTime.includes('pm') && parseInt(lowerTime) < 6)) return 'Afternoon';
+      if (lowerTime.includes('evening') || (lowerTime.includes('pm') && parseInt(lowerTime) >= 6)) return 'Evening';
+      if (lowerTime.includes('bedtime') || lowerTime.includes('night')) return 'Bedtime';
+      return 'Morning'; // Default fallback
+    };
+    
+    // Group medications by day part
+    const medsByDayPart: Record<string, Medication[]> = {
+      'Morning': [],
+      'Afternoon': [],
+      'Evening': [],
+      'Bedtime': []
     };
     
     medications.forEach(med => {
       med.doses.forEach(dose => {
         dose.times.forEach(time => {
           if (time.toLowerCase() === "as needed") return;
-          
-          const timeGroup = getTimeGroup(time);
-          timeGroups[timeGroup].meds.push({ med, dose, time });
+          const dayPart = getDayPartFromTime(time);
+          if (!medsByDayPart[dayPart].includes(med)) {
+            medsByDayPart[dayPart].push(med);
+          }
         });
       });
     });
     
-    Object.values(timeGroups).forEach(group => {
-      group.meds.sort((a, b) => {
-        return compareTimeStrings(a.time, b.time);
-      });
-    });
-    
-    const groupMedsByTime = (meds: { med: Medication, dose: MedicationDose, time: string }[]) => {
-      const timeMap: Record<string, { med: Medication, dose: MedicationDose, time: string }[]> = {};
-      
-      meds.forEach(item => {
-        if (!timeMap[item.time]) {
-          timeMap[item.time] = [];
-        }
-        timeMap[item.time].push(item);
-      });
-      
-      return Object.entries(timeMap).sort((a, b) => compareTimeStrings(a[0], b[0]));
-    };
-    
-    const renderMedicationTimeCard = (time: string, medsAtTime: { med: Medication, dose: MedicationDose, time: string }[]) => {
-      const frequencies = new Set<string>();
-      medsAtTime.forEach(item => {
-        frequencies.add(formatFrequency(item.dose.days));
-      });
-      
-      const sortedFrequencies = Array.from(frequencies).sort((a, b) => 
-        a === "Daily" ? -1 : b === "Daily" ? 1 : 0
-      );
-      
-      return (
-        <Card key={time} className="bg-white/10 hover:bg-white/15 transition-colors">
-          <CardContent className="p-3">
-            <div className="flex justify-between items-center mb-2">
-              <div className="bg-highlight rounded-md px-2 py-1 text-charcoal font-medium text-sm">
-                {time}
-              </div>
-              <div className="text-white/70 text-xs">
-                {medsAtTime.length} med{medsAtTime.length !== 1 ? 's' : ''}
-              </div>
-            </div>
+    return (
+      <div className="space-y-6">
+        {dayParts.map((dayPart) => (
+          <div key={dayPart} className="bg-white/15 rounded-lg p-4">
+            <h4 className="text-xl font-bold text-white mb-4 flex items-center">
+              {dayPart === "Morning" && <Sunrise className="h-6 w-6 mr-2 text-yellow-400" />}
+              {dayPart === "Afternoon" && <Sun className="h-6 w-6 mr-2 text-yellow-400" />}
+              {dayPart === "Evening" && <Sunset className="h-6 w-6 mr-2 text-orange-400" />}
+              {dayPart === "Bedtime" && <Moon className="h-6 w-6 mr-2 text-blue-400" />}
+              {dayPart}
+            </h4>
             
-            <div className="flex flex-wrap gap-1 mb-2">
-              {sortedFrequencies.map(freq => (
-                <Badge key={freq} variant="outline" className="bg-white/20 text-white/90 border-none">
-                  {freq}
-                </Badge>
-              ))}
-            </div>
-            
-            <Dialog>
-              <DialogTrigger asChild>
-                <button className="w-full mt-1 py-1 text-xs text-white/70 bg-white/5 rounded hover:bg-white/10 transition-colors">
-                  View all {medsAtTime.length} medications
-                </button>
-              </DialogTrigger>
-              <DialogContent className="max-w-lg">
-                <DialogHeader>
-                  <DialogTitle>{time} Medications</DialogTitle>
-                </DialogHeader>
-                <div className="mt-4 space-y-3">
-                  {medsAtTime.map((item, index) => (
-                    <div key={`dialog-${item.med.id}-${index}`} className="bg-white/10 p-3 rounded-lg">
-                      <h4 className="text-lg font-medium flex items-center gap-2 mb-2">
-                        <Pill className="h-5 w-5 text-highlight" />
-                        {item.med.name} {item.med.strength}
-                      </h4>
-                      <div className="grid grid-cols-2 gap-y-2 gap-x-2 mt-3">
-                        <div className="text-white/70 text-sm">Form:</div>
-                        <div className="text-white text-sm font-medium">{item.med.form || 'Unknown'}</div>
-                        
-                        <div className="text-white/70 text-sm">Quantity:</div>
-                        <div className="text-white text-sm font-medium">
-                          {item.dose.quantity} {item.med.form || 'pill'}{item.dose.quantity !== 1 ? 's' : ''}
+            <div className="space-y-3">
+              {medsByDayPart[dayPart].length > 0 ? (
+                medsByDayPart[dayPart].map(med => {
+                  // Find the dose that corresponds to this day part
+                  const relevantDoses = med.doses.filter(dose => 
+                    dose.times.some(time => getDayPartFromTime(time) === dayPart)
+                  );
+                  
+                  return (
+                    <div key={med.id} className="bg-white/15 rounded p-3 flex items-center">
+                      <Pill className="h-6 w-6 mr-3 text-blue-400" />
+                      <div>
+                        <div className="text-xl font-medium text-white">{med.name} {med.strength}</div>
+                        {med.form && <div className="text-white/60 text-sm">{med.form}</div>}
+                        <div className="text-lg text-white/80">
+                          {relevantDoses.map(dose => `${dose.quantity}x`).join(', ')}
                         </div>
-                        
-                        <div className="text-white/70 text-sm">Time:</div>
-                        <div className="text-white text-sm font-medium">{item.time}</div>
-                        
-                        <div className="text-white/70 text-sm">Days:</div>
-                        <div className="text-white text-sm font-medium">{formatDays(item.dose.days)}</div>
-                        
-                        {item.med.asNeeded && (
-                          <>
-                            <div className="text-yellow-500 text-sm">As needed:</div>
-                            <div className="text-white text-sm font-medium">Max {item.med.asNeeded.maxPerDay} per day</div>
-                          </>
-                        )}
                       </div>
                     </div>
-                  ))}
-                </div>
-              </DialogContent>
-            </Dialog>
-          </CardContent>
-        </Card>
-      );
-    };
-    
-    return (
-      <div className="space-y-4 my-4">
-        {Object.entries(timeGroups).map(([key, group]) => (
-          <div key={key} className="bg-white/5 p-3 rounded-lg">
-            <div className="flex items-center gap-2 mb-3">
-              {group.icon}
-              <div className="text-lg font-medium text-white">{group.label}</div>
-              <div className="text-white/70 text-sm">
-                {group.meds.length} dose{group.meds.length !== 1 ? 's' : ''}
-              </div>
+                  );
+                })
+              ) : (
+                <div className="text-lg text-white/40 p-2">No medications for this time</div>
+              )}
             </div>
-            
-            {group.meds.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 ml-8">
-                {groupMedsByTime(group.meds).map(([time, medsAtTime]) => (
-                  renderMedicationTimeCard(time, medsAtTime)
-                ))}
-              </div>
-            ) : (
-              <div className="text-white/30 text-sm ml-8">No medications scheduled</div>
-            )}
           </div>
         ))}
         
-        <div className="bg-white/5 p-3 rounded-lg">
-          <div className="text-yellow-500 font-medium mb-3">As Needed</div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 ml-8">
-            {medications
-              .filter(med => 
-                med.asNeeded || 
-                med.doses.some(dose => dose.times.some(time => time.toLowerCase() === "as needed"))
-              )
-              .map(med => (
-                <Popover key={med.id}>
-                  <PopoverTrigger asChild>
-                    <div className="bg-white/10 p-2 rounded-lg flex flex-col cursor-pointer hover:bg-white/20 transition-colors">
-                      <div className="font-medium text-white truncate">{med.name}</div>
-                      {med.asNeeded && (
-                        <div className="text-yellow-500 text-xs mt-1">
-                          Max {med.asNeeded.maxPerDay}/day
-                        </div>
-                      )}
-                    </div>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-72 p-3">
-                    <div className="space-y-2">
-                      <h4 className="text-base font-semibold text-white">{med.name}</h4>
-                      {med.strength && (
-                        <div className="bg-white/10 px-2 py-1 rounded text-xs inline-block text-white/90">
-                          {med.strength}
-                        </div>
-                      )}
-                      
-                      <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-2 items-center mt-2 text-sm">
-                        <Pill className="h-4 w-4 text-white/70" />
-                        <div className="text-white">{med.form || 'Unknown'}</div>
-                        
-                        {med.asNeeded && (
-                          <>
-                            <AlertCircle className="h-4 w-4 text-yellow-500" />
-                            <div className="text-yellow-500">Max {med.asNeeded.maxPerDay} per day</div>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </PopoverContent>
-                </Popover>
-              ))}
-            {!medications.some(med => 
+        <div className="bg-white/15 rounded-lg p-4 mt-6">
+          <h4 className="text-xl font-bold text-yellow-400 mb-4 flex items-center">
+            <Clock className="h-6 w-6 mr-2" />
+            As Needed
+          </h4>
+          
+          <div className="space-y-3">
+            {medications.filter(med => 
               med.asNeeded || 
               med.doses.some(dose => dose.times.some(time => time.toLowerCase() === "as needed"))
-            ) && (
-              <div className="text-white/30 text-sm">No as-needed medications</div>
+            ).length > 0 ? (
+              medications
+                .filter(med => 
+                  med.asNeeded || 
+                  med.doses.some(dose => dose.times.some(time => time.toLowerCase() === "as needed"))
+                )
+                .map(med => (
+                  <div key={med.id} className="bg-white/15 rounded p-3 flex items-center">
+                    <Pill className="h-6 w-6 mr-3 text-blue-400" />
+                    <div>
+                      <div className="text-xl font-medium text-white">{med.name} {med.strength}</div>
+                      {med.form && <div className="text-white/60 text-sm">{med.form}</div>}
+                      {med.asNeeded && (
+                        <div className="text-lg text-white/80 mt-1">
+                          Max per day: {med.asNeeded.maxPerDay || "As directed"}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))
+            ) : (
+              <div className="text-lg text-white/40 p-2">No as-needed medications</div>
             )}
           </div>
         </div>
@@ -481,29 +387,29 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
     return (
       <div className="my-4 rounded-lg overflow-hidden">
         <Table className="w-full">
-          <TableHeader className="bg-white/10">
+          <TableHeader className="bg-white/15">
             <TableRow>
-              <TableHead className="text-white">Medication</TableHead>
-              <TableHead className="text-white">Form/Strength</TableHead>
-              <TableHead className="text-white">Schedule</TableHead>
-              <TableHead className="text-white">Dosage</TableHead>
-              <TableHead className="text-white">Special</TableHead>
+              <TableHead className="text-white text-xl py-5">Medication</TableHead>
+              <TableHead className="text-white text-xl">Form/Strength</TableHead>
+              <TableHead className="text-white text-xl">Schedule</TableHead>
+              <TableHead className="text-white text-xl">Dosage</TableHead>
+              <TableHead className="text-white text-xl">Special</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {medications.map(med => (
-              <TableRow key={med.id} className="border-b border-white/10">
-                <TableCell className="text-white font-medium">{med.name}</TableCell>
-                <TableCell className="text-white/70">
+              <TableRow key={med.id} className="border-b border-white/10 hover:bg-white/5">
+                <TableCell className="text-white font-medium text-xl py-4">{med.name}</TableCell>
+                <TableCell className="text-white/80 text-lg">
                   {med.form}{med.strength ? `, ${med.strength}` : ''}
                 </TableCell>
                 <TableCell>
                   {med.doses.map(dose => (
-                    <div key={dose.id} className="mb-1 last:mb-0">
-                      <div className="text-white/80">
+                    <div key={dose.id} className="mb-3 last:mb-0">
+                      <div className="text-white font-medium text-xl">
                         {dose.days.includes('everyday') ? 'Daily' : dose.days.map(d => d.substring(0, 3)).join(', ')}
                       </div>
-                      <div className="text-white/70 text-xs">
+                      <div className="text-highlight font-medium text-lg mt-1">
                         {dose.times.join(', ')}
                       </div>
                     </div>
@@ -511,18 +417,18 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
                 </TableCell>
                 <TableCell>
                   {med.doses.map(dose => (
-                    <div key={dose.id} className="text-white mb-1 last:mb-0">
+                    <div key={dose.id} className="text-white text-xl mb-2 last:mb-0">
                       {dose.quantity} {med.form || 'pill'}{dose.quantity !== 1 ? 's' : ''}
                     </div>
                   ))}
                 </TableCell>
                 <TableCell>
                   {med.asNeeded ? (
-                    <div className="bg-yellow-500/20 text-yellow-500 px-2 py-1 rounded text-xs inline-block">
+                    <div className="bg-yellow-500/20 text-yellow-400 px-3 py-2 rounded text-lg font-medium">
                       As needed (max {med.asNeeded.maxPerDay}/day)
                     </div>
                   ) : (
-                    <span className="text-white/30">-</span>
+                    <span className="text-white/40 text-xl">-</span>
                   )}
                 </TableCell>
               </TableRow>
@@ -569,21 +475,17 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
   };
 
   return (
-    <div className="animate-fade-in bg-white/5 rounded-lg p-4 h-full overflow-auto">
-      <h3 className="text-xl font-bold text-white mb-4">Medication Schedule</h3>
+    <div className="animate-fade-in bg-white/5 rounded-lg p-6 h-full overflow-auto">
+      <h3 className="text-2xl font-bold text-white mb-6">Medication Schedule</h3>
       <Tabs defaultValue="calendar" className="w-full">
-        <TabsList className="bg-white/10 mb-4 w-full grid grid-cols-3">
-          <TabsTrigger value="calendar" className="data-[state=active]:bg-white/20">
-            <Calendar className="h-4 w-4 mr-2" />
+        <TabsList className="bg-white/15 mb-6 w-full grid grid-cols-2 p-1">
+          <TabsTrigger value="calendar" className="data-[state=active]:bg-white/20 py-3 text-lg">
+            <Calendar className="h-5 w-5 mr-2" />
             Calendar
           </TabsTrigger>
-          <TabsTrigger value="days" className="data-[state=active]:bg-white/20">
-            <Sun className="h-4 w-4 mr-2" />
+          <TabsTrigger value="days" className="data-[state=active]:bg-white/20 py-3 text-lg">
+            <Sun className="h-5 w-5 mr-2" />
             Days
-          </TabsTrigger>
-          <TabsTrigger value="table" className="data-[state=active]:bg-white/20">
-            <LayoutGrid className="h-4 w-4 mr-2" />
-            Table
           </TabsTrigger>
         </TabsList>
         
@@ -593,10 +495,6 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
         
         <TabsContent value="days" className="mt-0">
           {renderInteractiveDayPartsView()}
-        </TabsContent>
-        
-        <TabsContent value="table" className="mt-0">
-          {renderTableView()}
         </TabsContent>
       </Tabs>
     </div>

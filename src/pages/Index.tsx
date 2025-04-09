@@ -11,7 +11,7 @@ const Index = () => {
     // Add viewport meta tag optimized for 7" tablet (747x420)
     const meta = document.createElement('meta');
     meta.name = 'viewport';
-    meta.content = 'width=747, height=420, initial-scale=1';
+    meta.content = 'width=747, height=420, initial-scale=1, user-scalable=no, maximum-scale=1';
     document.head.appendChild(meta);
 
     return () => {

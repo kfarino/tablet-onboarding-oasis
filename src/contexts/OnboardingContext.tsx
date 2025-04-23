@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState } from 'react';
 import { UserProfile, Medication, Dose, OnboardingStep, UserRole, AlertPreference } from '../types/onboarding';
 import { v4 as uuidv4 } from 'uuid';
@@ -50,6 +49,7 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       dateOfBirth: '',
       phoneNumber: '',
       alertPreference: null,
+      relationship: '',
       healthConditions: [],
       medications: []
     }
@@ -57,31 +57,13 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
   const nextStep = () => {
     if (currentStep < OnboardingStep.Complete) {
-      if (currentStep === OnboardingStep.PersonalInfo && shouldShowLovedOneScreen()) {
-        setCurrentStep(OnboardingStep.LovedOneInfo);
-      } else {
-        setCurrentStep(prevStep => {
-          if (prevStep === OnboardingStep.PersonalInfo && 
-              !shouldShowLovedOneScreen() && 
-              (prevStep + 1) === OnboardingStep.LovedOneInfo) {
-            return (prevStep + 2) as OnboardingStep;
-          }
-          return (prevStep + 1) as OnboardingStep;
-        });
-      }
+      setCurrentStep(prevStep => (prevStep + 1) as OnboardingStep);
     }
   };
 
   const prevStep = () => {
     if (currentStep > OnboardingStep.Welcome) {
-      setCurrentStep(prevStep => {
-        if (prevStep === OnboardingStep.HealthConditions && 
-            !shouldShowLovedOneScreen() && 
-            (prevStep - 1) === OnboardingStep.LovedOneInfo) {
-          return (prevStep - 2) as OnboardingStep;
-        }
-        return (prevStep - 1) as OnboardingStep;
-      });
+      setCurrentStep(prevStep => (prevStep - 1) as OnboardingStep);
     }
   };
 

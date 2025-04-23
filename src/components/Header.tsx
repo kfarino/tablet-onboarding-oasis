@@ -13,6 +13,8 @@ interface HeaderProps {
   showExample?: boolean;
   onTogglePreviewRole?: () => void;
   previewRole?: UserRole | null;
+  showMedicationSchedule?: boolean;
+  setShowMedicationSchedule?: (show: boolean) => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ 
@@ -21,7 +23,9 @@ const Header: React.FC<HeaderProps> = ({
   toggleExample, 
   showExample,
   onTogglePreviewRole,
-  previewRole
+  previewRole,
+  showMedicationSchedule,
+  setShowMedicationSchedule
 }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const { nextStep } = useOnboarding();
@@ -149,4 +153,3 @@ const Header: React.FC<HeaderProps> = ({
 };
 
 export default Header;
-

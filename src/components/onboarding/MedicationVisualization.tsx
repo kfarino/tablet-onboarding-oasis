@@ -1,12 +1,8 @@
+
 import React, { useState } from 'react';
-import { Calendar, List, LayoutGrid, Sun, Moon, Info, Clock, Calendar as CalendarIcon, Pill, AlertCircle, Sunrise, Sunset } from 'lucide-react';
+import { Calendar, List, Grid, Sun, Clock, Pill, AlertCircle, Sunrise, Sunset, Moon, Calendar as CalendarIcon } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { format, startOfWeek, addDays } from 'date-fns';
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
-import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
-import { Card, CardContent } from '@/components/ui/card';
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Badge } from '@/components/ui/badge';
 
 interface MedicationDose {
@@ -32,152 +28,30 @@ interface MedicationVisualizationProps {
 const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medications }) => {
   const [currentDate] = useState(new Date());
   
-  const renderCalendarView = () => {
-    const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 });
-    const weekDays = Array.from({ length: 7 }, (_, i) => {
-      const day = addDays(weekStart, i);
-      return {
-        date: day,
-        dayName: format(day, 'EEE'),
-        dayNumber: format(day, 'd'),
-        fullDayName: format(day, 'EEEE').toLowerCase(),
-      };
-    });
-
-    const allTimes = new Set<string>();
-    
-    medications.forEach(med => {
-      med.doses.forEach(dose => {
-        dose.times.forEach(time => {
-          if (time.toLowerCase() === "as needed") return;
-          allTimes.add(time);
-        });
-      });
-    });
-    
-    const medicationsByTime: Record<string, { time: string, meds: { med: Medication, dose: MedicationDose }[] }> = {};
-    
-    Array.from(allTimes).forEach(time => {
-      medicationsByTime[time] = { time, meds: [] };
-    });
-    
-    medications.forEach(med => {
-      med.doses.forEach(dose => {
-        dose.times.forEach(time => {
-          if (time.toLowerCase() === "as needed") return;
-          
-          medicationsByTime[time].meds.push({ med, dose });
-        });
-      });
-    });
-
-    const sortedTimes = Object.values(medicationsByTime).sort((a, b) => {
-      const parseTime = (timeStr: string) => {
-        const [time, meridiem] = timeStr.split(' ');
-        let [hours, minutes] = time.split(':').map(Number);
-        if (meridiem === 'PM' && hours !== 12) hours += 12;
-        if (meridiem === 'AM' && hours === 12) hours = 0;
-        return hours * 60 + minutes;
-      };
-      
-      return parseTime(a.time) - parseTime(b.time);
-    });
-
-    return (
-      <div className="my-4">
-        <div className="grid grid-cols-7 gap-2 mb-6">
-          {weekDays.map((day) => (
-            <div key={day.dayName} className="text-center">
-              <div className="text-white/80 text-lg mb-1">{day.dayName}</div>
-              <div className="bg-white/15 rounded-full h-10 w-10 flex items-center justify-center mx-auto text-white text-lg font-medium">{day.dayNumber}</div>
-            </div>
-          ))}
-        </div>
-        
-        <div className="space-y-6">
-          {sortedTimes.map(({ time, meds }) => (
-            <div key={time} className="bg-white/10 rounded-lg p-4">
-              <div className="text-highlight text-xl font-bold mb-3">{time}</div>
-              <div className="grid grid-cols-7 gap-2">
-                {weekDays.map((day) => {
-                  const relevantMeds = meds.filter(({ med, dose }) => {
-                    return dose.days.includes('everyday') || 
-                           dose.days.some(doseDay => 
-                             doseDay.toLowerCase() === day.fullDayName.toLowerCase()
-                           );
-                  });
-                  
-                  return (
-                    <div key={`${time}-${day.dayName}`} className="min-h-[80px] border border-white/15 rounded p-2 hover:bg-white/5">
-                      {relevantMeds.length > 0 ? (
-                        <div className="text-white space-y-2">
-                          {relevantMeds.map(({ med, dose }) => (
-                            <div key={`${time}-${day.dayName}-${med.id}`} className="bg-white/15 p-2 rounded">
-                              <div className="font-medium text-base">{med.name} {med.strength}</div>
-                              {med.form && <div className="text-white/60 text-xs mb-1">{med.form}</div>}
-                              <div className="text-white/80">{dose.quantity}x</div>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="text-white/40 text-base flex items-center justify-center h-full">None</div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
-        </div>
-        
-        <div className="mt-8 bg-white/10 rounded-lg p-4">
-          <div className="text-yellow-400 text-xl font-bold mb-3">As Needed</div>
-          <div className="space-y-3">
-            {medications
-              .filter(med => 
-                med.asNeeded || 
-                med.doses.some(dose => dose.times.some(time => time.toLowerCase() === "as needed"))
-              )
-              .map(med => (
-                <div key={med.id} className="bg-white/15 p-3 rounded">
-                  <div className="font-medium text-lg">{med.name} {med.strength}</div>
-                  {med.form && <div className="text-white/60 text-sm">{med.form}</div>}
-                  {med.asNeeded && (
-                    <div className="text-base text-white/80 mt-1">Max {med.asNeeded.maxPerDay}x daily</div>
-                  )}
-                </div>
-              ))}
-            {!medications.some(med => 
-              med.asNeeded || 
-              med.doses.some(dose => dose.times.some(time => time.toLowerCase() === "as needed"))
-            ) && (
-              <div className="text-white/40 text-lg p-2">No as-needed medications</div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
+  // Daily Timeline View
   const renderTimelineView = () => {
-    const timeSlots: Record<string, Medication[]> = {};
+    // Group medications by time slots
+    const timeSlots: Record<string, { meds: Medication[], doses: MedicationDose[] }> = {};
     
+    // Get all unique time slots
     medications.forEach(medication => {
       medication.doses.forEach(dose => {
         dose.times.forEach(time => {
           if (time.toLowerCase() === "as needed") return;
           
           if (!timeSlots[time]) {
-            timeSlots[time] = [];
+            timeSlots[time] = { meds: [], doses: [] };
           }
           
-          if (!timeSlots[time].includes(medication)) {
-            timeSlots[time].push(medication);
+          if (!timeSlots[time].meds.includes(medication)) {
+            timeSlots[time].meds.push(medication);
+            timeSlots[time].doses.push(dose);
           }
         });
       });
     });
     
+    // Sort time slots
     const sortedTimes = Object.keys(timeSlots).sort((a, b) => {
       const parseTime = (timeStr: string) => {
         const [time, meridiem] = timeStr.split(' ');
@@ -190,311 +64,452 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
       return parseTime(a) - parseTime(b);
     });
     
+    // Helper for time of day icon
+    const getTimeIcon = (time: string) => {
+      const timeValue = time.toLowerCase();
+      if (timeValue.includes('am') || timeValue.includes('morning')) return <Sunrise className="h-5 w-5 text-yellow-400" />;
+      if (timeValue.includes('pm') && (timeValue.includes('12:') || parseInt(timeValue) < 5)) 
+        return <Sun className="h-5 w-5 text-yellow-500" />;
+      if (timeValue.includes('evening') || (timeValue.includes('pm') && parseInt(timeValue) >= 5)) 
+        return <Sunset className="h-5 w-5 text-orange-400" />;
+      return <Clock className="h-5 w-5 text-blue-400" />;
+    };
+    
     return (
-      <div className="space-y-4 my-4">
+      <div className="space-y-6 mt-4">
         {sortedTimes.map(time => (
-          <div key={time} className="bg-white/5 p-3 rounded-lg">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="bg-highlight text-charcoal font-bold rounded-full h-10 w-10 flex items-center justify-center">
-                {time.split(':')[0]}
-              </div>
-              <div>
-                <div className="text-white font-medium">{time}</div>
-                <div className="text-white/70 text-sm">{timeSlots[time].length} medication{timeSlots[time].length !== 1 ? 's' : ''}</div>
-              </div>
+          <div key={time} className="bg-white/5 rounded-lg overflow-hidden border border-white/10">
+            <div className="bg-white/10 p-3 flex items-center gap-3">
+              {getTimeIcon(time)}
+              <span className="text-xl font-semibold text-white">{time}</span>
             </div>
-            <div className="space-y-2 ml-12">
-              {timeSlots[time].map(med => {
-                const dose = med.doses.find(d => d.times.includes(time));
-                return (
-                  <div key={med.id} className="bg-white/10 p-2 rounded flex items-center">
-                    <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mr-3">
-                      <span className="text-sm font-bold">{dose?.quantity || 1}</span>
+            <div className="p-3">
+              <div className="grid grid-cols-1 gap-2">
+                {timeSlots[time].meds.map((med, index) => (
+                  <div key={`${med.id}-${index}`} className="flex items-center p-3 bg-white/5 rounded-lg border border-white/10">
+                    <div className="h-10 w-10 rounded-full bg-highlight/20 flex items-center justify-center mr-3">
+                      <Pill className="h-5 w-5 text-highlight" />
                     </div>
-                    <div>
-                      <div className="font-medium">{med.name} {med.strength}</div>
-                      {med.form && <div className="text-white/60 text-xs">{med.form}</div>}
+                    <div className="flex-1">
+                      <div className="flex items-baseline gap-2">
+                        <h3 className="text-lg font-medium text-white">{med.name}</h3>
+                        {med.strength && <span className="text-white/70">{med.strength}</span>}
+                      </div>
+                      {med.form && <p className="text-sm text-white/60">{med.form}</p>}
+                    </div>
+                    <div className="bg-white/10 h-8 min-w-8 w-8 rounded-full flex items-center justify-center">
+                      <span className="text-sm font-bold text-white">
+                        {timeSlots[time].doses[index].quantity}
+                      </span>
                     </div>
                   </div>
-                );
-              })}
+                ))}
+              </div>
             </div>
           </div>
         ))}
         
-        <div className="bg-white/5 p-3 rounded-lg">
-          <div className="text-yellow-500 font-medium mb-3">As Needed</div>
-          <div className="space-y-2">
-            {medications
-              .filter(med => 
-                med.asNeeded || 
-                med.doses.some(dose => dose.times.some(time => time.toLowerCase() === "as needed"))
-              )
-              .map(med => (
-                <div key={med.id} className="bg-white/10 p-2 rounded flex justify-between items-center">
-                  <div>
-                    <div className="font-medium">{med.name} {med.strength}</div>
-                    {med.form && <div className="text-white/60 text-xs">{med.form}</div>}
-                  </div>
-                  {med.asNeeded && (
-                    <div className="text-sm bg-yellow-500/20 text-yellow-500 px-2 py-1 rounded">
-                      Max {med.asNeeded.maxPerDay}/day
+        {/* As Needed Section */}
+        <div className="bg-white/5 rounded-lg overflow-hidden border border-white/10">
+          <div className="bg-yellow-500/30 p-3 flex items-center gap-3">
+            <AlertCircle className="h-5 w-5 text-yellow-500" />
+            <span className="text-xl font-semibold text-white">As Needed</span>
+          </div>
+          <div className="p-3">
+            <div className="grid grid-cols-1 gap-2">
+              {medications
+                .filter(med => med.asNeeded || med.doses.some(d => d.times.includes('As needed')))
+                .map(med => (
+                  <div key={med.id} className="flex items-center p-3 bg-white/5 rounded-lg border border-yellow-500/30">
+                    <div className="h-10 w-10 rounded-full bg-yellow-500/20 flex items-center justify-center mr-3">
+                      <Pill className="h-5 w-5 text-yellow-500" />
                     </div>
-                  )}
-                </div>
-              ))}
-            {!medications.some(med => 
-              med.asNeeded || 
-              med.doses.some(dose => dose.times.some(time => time.toLowerCase() === "as needed"))
-            ) && (
-              <div className="text-white/30 text-sm">No as-needed medications</div>
-            )}
+                    <div className="flex-1">
+                      <div className="flex items-baseline gap-2">
+                        <h3 className="text-lg font-medium text-white">{med.name}</h3>
+                        {med.strength && <span className="text-white/70">{med.strength}</span>}
+                      </div>
+                      {med.form && <p className="text-sm text-white/60">{med.form}</p>}
+                    </div>
+                    {med.asNeeded && (
+                      <div className="bg-yellow-500/20 rounded-lg px-2 py-1">
+                        <span className="text-sm font-medium text-yellow-500">
+                          Max {med.asNeeded.maxPerDay}/day
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              {!medications.some(med => med.asNeeded || med.doses.some(d => d.times.includes('As needed'))) && (
+                <p className="text-white/50 text-base p-2">No as-needed medications</p>
+              )}
+            </div>
           </div>
         </div>
       </div>
     );
   };
 
-  const renderInteractiveDayPartsView = () => {
-    const dayParts = ["Morning", "Afternoon", "Evening", "Bedtime"];
+  // Calendar Week View
+  const renderCalendarView = () => {
+    const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 });
+    const weekDays = Array.from({ length: 7 }, (_, i) => {
+      const day = addDays(weekStart, i);
+      return {
+        date: day,
+        dayName: format(day, 'EEE'),
+        dayNumber: format(day, 'd'),
+        fullDayName: format(day, 'EEEE').toLowerCase(),
+      };
+    });
     
-    // Helper function to map time periods to day parts
-    const getDayPartFromTime = (time: string): string => {
-      const lowerTime = time.toLowerCase();
-      if (lowerTime.includes('am') || lowerTime.includes('morning')) return 'Morning';
-      if (lowerTime.includes('afternoon') || (lowerTime.includes('pm') && parseInt(lowerTime) < 6)) return 'Afternoon';
-      if (lowerTime.includes('evening') || (lowerTime.includes('pm') && parseInt(lowerTime) >= 6)) return 'Evening';
-      if (lowerTime.includes('bedtime') || lowerTime.includes('night')) return 'Bedtime';
-      return 'Morning'; // Default fallback
-    };
-    
-    // Group medications by day part
-    const medsByDayPart: Record<string, Medication[]> = {
-      'Morning': [],
-      'Afternoon': [],
-      'Evening': [],
-      'Bedtime': []
-    };
-    
+    // Get all unique time slots and sort them
+    const allTimes = new Set<string>();
     medications.forEach(med => {
       med.doses.forEach(dose => {
         dose.times.forEach(time => {
-          if (time.toLowerCase() === "as needed") return;
-          const dayPart = getDayPartFromTime(time);
-          if (!medsByDayPart[dayPart].includes(med)) {
-            medsByDayPart[dayPart].push(med);
+          if (time.toLowerCase() !== "as needed") {
+            allTimes.add(time);
+          }
+        });
+      });
+    });
+    
+    const sortedTimes = Array.from(allTimes).sort((a, b) => {
+      const parseTime = (timeStr: string) => {
+        const [time, meridiem] = timeStr.split(' ');
+        let [hours, minutes] = time.split(':').map(Number);
+        if (meridiem === 'PM' && hours !== 12) hours += 12;
+        if (meridiem === 'AM' && hours === 12) hours = 0;
+        return hours * 60 + minutes;
+      };
+      
+      return parseTime(a) - parseTime(b);
+    });
+    
+    return (
+      <div className="mt-4 space-y-4">
+        {/* Week header */}
+        <div className="grid grid-cols-7 gap-1 text-center">
+          {weekDays.map((day) => (
+            <div key={day.dayName} className="flex flex-col items-center">
+              <div className="text-white/80 font-medium mb-1">{day.dayName}</div>
+              <div className="bg-white/15 rounded-full h-8 w-8 flex items-center justify-center text-white font-medium">
+                {day.dayNumber}
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        {/* Time slots and medications */}
+        {sortedTimes.map(time => {
+          // Find medications for this time
+          const medsForTime = medications.filter(med => 
+            med.doses.some(dose => dose.times.includes(time))
+          );
+          
+          return (
+            <div key={time} className="bg-white/5 border border-white/10 rounded-lg overflow-hidden">
+              <div className="bg-white/10 p-2 px-3">
+                <span className="text-lg font-medium text-highlight">{time}</span>
+              </div>
+              <div className="grid grid-cols-7 gap-1">
+                {weekDays.map(day => {
+                  // Find medications that should be taken on this day at this time
+                  const relevantMeds = medsForTime.filter(med => 
+                    med.doses.some(dose => 
+                      dose.times.includes(time) && 
+                      (dose.days.includes('everyday') || dose.days.includes(day.fullDayName))
+                    )
+                  );
+                  
+                  return (
+                    <div key={`${day.dayName}-${time}`} className="p-2 min-h-16 border-t border-white/5">
+                      {relevantMeds.length > 0 ? (
+                        <div className="space-y-2">
+                          {relevantMeds.map(med => {
+                            const dose = med.doses.find(d => 
+                              d.times.includes(time) && 
+                              (d.days.includes('everyday') || d.days.includes(day.fullDayName))
+                            );
+                            
+                            return (
+                              <div key={med.id} className="bg-white/10 p-2 rounded text-center">
+                                <div className="text-sm font-medium text-white truncate" title={med.name}>
+                                  {med.name.length > 10 ? `${med.name.substring(0, 9)}...` : med.name}
+                                </div>
+                                <div className="text-xs text-white/70 mt-1">{dose?.quantity || 1}x</div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center h-full">
+                          <span className="text-white/30 text-xs">-</span>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  // Medication Cards View
+  const renderMedicationCardsView = () => {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        {medications.map(med => {
+          // Group doses by day
+          const dosesByDay = med.doses.reduce<Record<string, {times: string[], quantity: number}>>(
+            (acc, dose) => {
+              dose.days.forEach(day => {
+                if (!acc[day]) {
+                  acc[day] = { times: [], quantity: dose.quantity };
+                }
+                acc[day].times.push(...dose.times);
+              });
+              return acc;
+            }, {}
+          );
+          
+          return (
+            <div key={med.id} className="bg-white/5 border border-white/10 rounded-lg overflow-hidden">
+              <div className="bg-white/10 p-3 flex items-center gap-3">
+                <div className="h-10 w-10 rounded-full bg-highlight/20 flex items-center justify-center">
+                  <Pill className="h-5 w-5 text-highlight" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-medium text-white">{med.name}</h3>
+                  <div className="flex items-center gap-2 mt-1">
+                    {med.form && (
+                      <Badge variant="secondary" className="bg-white/10 text-white/70 hover:bg-white/20">
+                        {med.form}
+                      </Badge>
+                    )}
+                    {med.strength && (
+                      <Badge variant="secondary" className="bg-white/10 text-white/70 hover:bg-white/20">
+                        {med.strength}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+                {med.asNeeded && (
+                  <Badge className="ml-auto bg-yellow-500/30 text-yellow-400 hover:bg-yellow-500/50">
+                    As needed
+                  </Badge>
+                )}
+              </div>
+              
+              <div className="p-3 divide-y divide-white/10">
+                {Object.entries(dosesByDay).map(([day, info]) => (
+                  <div key={`${med.id}-${day}`} className="py-3 first:pt-0 last:pb-0">
+                    <div className="flex items-center mb-2">
+                      <CalendarIcon className="h-4 w-4 text-white/70 mr-2" />
+                      <span className="text-white font-medium">
+                        {day === 'everyday' ? 'Every day' : day}
+                      </span>
+                    </div>
+                    <div className="pl-6 space-y-2">
+                      {info.times.map((time, idx) => (
+                        <div key={`${med.id}-${day}-${time}-${idx}`} className="flex items-center">
+                          <Clock className="h-4 w-4 text-white/70 mr-2" />
+                          <span className="text-white">{time}</span>
+                          <span className="ml-auto text-white/80">{info.quantity}x</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+                
+                {med.asNeeded && (
+                  <div className="py-3">
+                    <div className="flex items-center text-yellow-400">
+                      <AlertCircle className="h-4 w-4 mr-2" />
+                      <span className="font-medium">Maximum {med.asNeeded.maxPerDay} per day</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+  
+  // Time of Day View (Morning, Afternoon, Evening, Night)
+  const renderTimeOfDayView = () => {
+    // Define time of day sections
+    const timeOfDaySections = [
+      { id: 'morning', label: 'Morning', icon: <Sunrise className="h-6 w-6 text-yellow-400" /> },
+      { id: 'afternoon', label: 'Afternoon', icon: <Sun className="h-6 w-6 text-yellow-500" /> },
+      { id: 'evening', label: 'Evening', icon: <Sunset className="h-6 w-6 text-orange-400" /> },
+      { id: 'night', label: 'Night', icon: <Moon className="h-6 w-6 text-blue-400" /> },
+      { id: 'asNeeded', label: 'As Needed', icon: <AlertCircle className="h-6 w-6 text-yellow-500" /> }
+    ];
+    
+    // Helper to determine time of day
+    const getTimeOfDay = (time: string): string => {
+      const lowerTime = time.toLowerCase();
+      
+      if (lowerTime === 'as needed') return 'asNeeded';
+      
+      if (lowerTime.includes('am') || lowerTime.includes('morning') || 
+          (lowerTime.includes(':') && parseInt(lowerTime) < 12)) return 'morning';
+      
+      if ((lowerTime.includes('pm') && parseInt(lowerTime) <= 5) || 
+          lowerTime.includes('afternoon')) return 'afternoon';
+      
+      if (lowerTime.includes('evening') || 
+          (lowerTime.includes('pm') && parseInt(lowerTime) > 5 && parseInt(lowerTime) < 9)) return 'evening';
+      
+      if (lowerTime.includes('night') || lowerTime.includes('bedtime') || 
+          (lowerTime.includes('pm') && parseInt(lowerTime) >= 9)) return 'night';
+      
+      return 'morning'; // Default
+    };
+    
+    // Group medications by time of day
+    const medsByTimeOfDay: Record<string, Medication[]> = {
+      morning: [],
+      afternoon: [],
+      evening: [],
+      night: [],
+      asNeeded: []
+    };
+    
+    medications.forEach(med => {
+      if (med.asNeeded) {
+        medsByTimeOfDay.asNeeded.push(med);
+        return;
+      }
+      
+      med.doses.forEach(dose => {
+        dose.times.forEach(time => {
+          const timeOfDay = getTimeOfDay(time);
+          if (!medsByTimeOfDay[timeOfDay].includes(med)) {
+            medsByTimeOfDay[timeOfDay].push(med);
           }
         });
       });
     });
     
     return (
-      <div className="space-y-6">
-        {dayParts.map((dayPart) => (
-          <div key={dayPart} className="bg-white/15 rounded-lg p-4">
-            <h4 className="text-xl font-bold text-white mb-4 flex items-center">
-              {dayPart === "Morning" && <Sunrise className="h-6 w-6 mr-2 text-yellow-400" />}
-              {dayPart === "Afternoon" && <Sun className="h-6 w-6 mr-2 text-yellow-400" />}
-              {dayPart === "Evening" && <Sunset className="h-6 w-6 mr-2 text-orange-400" />}
-              {dayPart === "Bedtime" && <Moon className="h-6 w-6 mr-2 text-blue-400" />}
-              {dayPart}
-            </h4>
-            
-            <div className="space-y-3">
-              {medsByDayPart[dayPart].length > 0 ? (
-                medsByDayPart[dayPart].map(med => {
-                  // Find the dose that corresponds to this day part
-                  const relevantDoses = med.doses.filter(dose => 
-                    dose.times.some(time => getDayPartFromTime(time) === dayPart)
-                  );
-                  
-                  return (
-                    <div key={med.id} className="bg-white/15 rounded p-3 flex items-center">
-                      <Pill className="h-6 w-6 mr-3 text-blue-400" />
-                      <div>
-                        <div className="text-xl font-medium text-white">{med.name} {med.strength}</div>
-                        {med.form && <div className="text-white/60 text-sm">{med.form}</div>}
-                        <div className="text-lg text-white/80">
-                          {relevantDoses.map(dose => `${dose.quantity}x`).join(', ')}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })
-              ) : (
-                <div className="text-lg text-white/40 p-2">No medications for this time</div>
-              )}
-            </div>
-          </div>
-        ))}
-        
-        <div className="bg-white/15 rounded-lg p-4 mt-6">
-          <h4 className="text-xl font-bold text-yellow-400 mb-4 flex items-center">
-            <Clock className="h-6 w-6 mr-2" />
-            As Needed
-          </h4>
+      <div className="space-y-6 mt-4">
+        {timeOfDaySections.map(section => {
+          const sectionMeds = medsByTimeOfDay[section.id];
+          if (section.id !== 'asNeeded' && sectionMeds.length === 0) return null;
           
-          <div className="space-y-3">
-            {medications.filter(med => 
-              med.asNeeded || 
-              med.doses.some(dose => dose.times.some(time => time.toLowerCase() === "as needed"))
-            ).length > 0 ? (
-              medications
-                .filter(med => 
-                  med.asNeeded || 
-                  med.doses.some(dose => dose.times.some(time => time.toLowerCase() === "as needed"))
-                )
-                .map(med => (
-                  <div key={med.id} className="bg-white/15 rounded p-3 flex items-center">
-                    <Pill className="h-6 w-6 mr-3 text-blue-400" />
-                    <div>
-                      <div className="text-xl font-medium text-white">{med.name} {med.strength}</div>
-                      {med.form && <div className="text-white/60 text-sm">{med.form}</div>}
-                      {med.asNeeded && (
-                        <div className="text-lg text-white/80 mt-1">
-                          Max per day: {med.asNeeded.maxPerDay || "As directed"}
+          return (
+            <div key={section.id} className="bg-white/5 border border-white/10 rounded-lg overflow-hidden">
+              <div className={`p-3 flex items-center gap-3 ${
+                section.id === 'asNeeded' ? 'bg-yellow-500/20' : 'bg-white/10'
+              }`}>
+                {section.icon}
+                <span className="text-xl font-semibold text-white">{section.label}</span>
+              </div>
+              
+              <div className="p-3">
+                {sectionMeds.length > 0 ? (
+                  <div className="grid gap-2">
+                    {sectionMeds.map(med => {
+                      // Find doses for this time of day
+                      const relevantDoses = med.doses.filter(dose => 
+                        dose.times.some(time => getTimeOfDay(time) === section.id)
+                      );
+                      
+                      return (
+                        <div key={med.id} className="flex items-center p-3 bg-white/10 rounded-lg">
+                          <div className="flex-1">
+                            <h3 className="text-lg font-medium text-white">{med.name}</h3>
+                            <div className="flex items-center gap-2 mt-1">
+                              {med.strength && <span className="text-white/70 text-sm">{med.strength}</span>}
+                              {med.form && <span className="text-white/70 text-sm">· {med.form}</span>}
+                            </div>
+                            
+                            {section.id !== 'asNeeded' && relevantDoses.length > 0 && (
+                              <div className="mt-2 border-t border-white/10 pt-2 grid gap-1">
+                                {relevantDoses.map((dose, index) => {
+                                  const timesForSection = dose.times.filter(
+                                    time => getTimeOfDay(time) === section.id
+                                  );
+                                  
+                                  return (
+                                    <div key={index} className="flex items-center">
+                                      <Clock className="h-4 w-4 text-white/60 mr-2" />
+                                      <span className="text-white/80 text-sm">
+                                        {timesForSection.join(', ')} - {dose.quantity} {med.form || 'pill'}
+                                        {dose.quantity !== 1 ? 's' : ''}
+                                      </span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
+                            
+                            {section.id === 'asNeeded' && med.asNeeded && (
+                              <div className="mt-2 text-yellow-400 text-sm">
+                                Maximum {med.asNeeded.maxPerDay} per day
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      )}
-                    </div>
+                      );
+                    })}
                   </div>
-                ))
-            ) : (
-              <div className="text-lg text-white/40 p-2">No as-needed medications</div>
-            )}
-          </div>
-        </div>
+                ) : (
+                  <p className="text-white/50 text-base p-2">No medications for this time</p>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
     );
-  };
-
-  const renderTableView = () => {
-    const allDays = new Set<string>();
-    medications.forEach(med => {
-      med.doses.forEach(dose => {
-        dose.days.forEach(day => {
-          allDays.add(day);
-        });
-      });
-    });
-    
-    const daysOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'everyday'];
-    const sortedDays = Array.from(allDays).sort((a, b) => {
-      if (a === 'everyday') return 1;
-      if (b === 'everyday') return -1;
-      return daysOrder.indexOf(a) - daysOrder.indexOf(b);
-    });
-
-    return (
-      <div className="my-4 rounded-lg overflow-hidden">
-        <Table className="w-full">
-          <TableHeader className="bg-white/15">
-            <TableRow>
-              <TableHead className="text-white text-xl py-5">Medication</TableHead>
-              <TableHead className="text-white text-xl">Form/Strength</TableHead>
-              <TableHead className="text-white text-xl">Schedule</TableHead>
-              <TableHead className="text-white text-xl">Dosage</TableHead>
-              <TableHead className="text-white text-xl">Special</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {medications.map(med => (
-              <TableRow key={med.id} className="border-b border-white/10 hover:bg-white/5">
-                <TableCell className="text-white font-medium text-xl py-4">{med.name}</TableCell>
-                <TableCell className="text-white/80 text-lg">
-                  {med.form}{med.strength ? `, ${med.strength}` : ''}
-                </TableCell>
-                <TableCell>
-                  {med.doses.map(dose => (
-                    <div key={dose.id} className="mb-3 last:mb-0">
-                      <div className="text-white font-medium text-xl">
-                        {dose.days.includes('everyday') ? 'Daily' : dose.days.map(d => d.substring(0, 3)).join(', ')}
-                      </div>
-                      <div className="text-highlight font-medium text-lg mt-1">
-                        {dose.times.join(', ')}
-                      </div>
-                    </div>
-                  ))}
-                </TableCell>
-                <TableCell>
-                  {med.doses.map(dose => (
-                    <div key={dose.id} className="text-white text-xl mb-2 last:mb-0">
-                      {dose.quantity} {med.form || 'pill'}{dose.quantity !== 1 ? 's' : ''}
-                    </div>
-                  ))}
-                </TableCell>
-                <TableCell>
-                  {med.asNeeded ? (
-                    <div className="bg-yellow-500/20 text-yellow-400 px-3 py-2 rounded text-lg font-medium">
-                      As needed (max {med.asNeeded.maxPerDay}/day)
-                    </div>
-                  ) : (
-                    <span className="text-white/40 text-xl">-</span>
-                  )}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    );
-  };
-
-  const getTimeGroup = (timeStr: string): "morning" | "day" | "night" => {
-    const [time, meridiem] = timeStr.split(' ');
-    let [hours, minutes] = time.split(':').map(Number);
-    
-    if (meridiem === 'PM' && hours !== 12) hours += 12;
-    if (meridiem === 'AM' && hours === 12) hours = 0;
-    
-    if (hours < 12) return "morning";
-    if (hours < 17) return "day";
-    return "night";
-  };
-
-  const compareTimeStrings = (a: string, b: string): number => {
-    const parseTime = (timeStr: string) => {
-      const [time, meridiem] = timeStr.split(' ');
-      let [hours, minutes] = time.split(':').map(Number);
-      if (meridiem === 'PM' && hours !== 12) hours += 12;
-      if (meridiem === 'AM' && hours === 12) hours = 0;
-      return hours * 60 + minutes;
-    };
-    
-    return parseTime(a) - parseTime(b);
-  };
-
-  const formatDays = (days: string[]): string => {
-    if (days.includes('everyday')) return 'Every day';
-    return days.map(day => day.substring(0, 3)).join(', ');
-  };
-
-  const formatFrequency = (days: string[]): string => {
-    if (days.includes('everyday')) return 'Daily';
-    if (days.length >= 5) return `${days.length} days/week`;
-    return days.map(day => day.substring(0, 1)).join('');
   };
 
   return (
     <div className="animate-fade-in bg-white/5 rounded-lg p-6 h-full overflow-auto">
       <h3 className="text-2xl font-bold text-white mb-6">Medication Schedule</h3>
-      <Tabs defaultValue="calendar" className="w-full">
-        <TabsList className="bg-white/15 mb-6 w-full grid grid-cols-2 p-1">
-          <TabsTrigger value="calendar" className="data-[state=active]:bg-white/20 py-3 text-lg">
-            <Calendar className="h-5 w-5 mr-2" />
-            Calendar
+      <Tabs defaultValue="timeline" className="w-full">
+        <TabsList className="bg-white/15 mb-6 w-full grid grid-cols-4 p-1">
+          <TabsTrigger value="timeline" className="data-[state=active]:bg-white/20 py-3">
+            <Clock className="h-5 w-5" />
+            <span className="sr-only md:not-sr-only md:ml-2">Timeline</span>
           </TabsTrigger>
-          <TabsTrigger value="days" className="data-[state=active]:bg-white/20 py-3 text-lg">
-            <Sun className="h-5 w-5 mr-2" />
-            Days
+          <TabsTrigger value="calendar" className="data-[state=active]:bg-white/20 py-3">
+            <Calendar className="h-5 w-5" />
+            <span className="sr-only md:not-sr-only md:ml-2">Calendar</span>
+          </TabsTrigger>
+          <TabsTrigger value="cards" className="data-[state=active]:bg-white/20 py-3">
+            <Pill className="h-5 w-5" />
+            <span className="sr-only md:not-sr-only md:ml-2">Cards</span>
+          </TabsTrigger>
+          <TabsTrigger value="timeofday" className="data-[state=active]:bg-white/20 py-3">
+            <Sun className="h-5 w-5" />
+            <span className="sr-only md:not-sr-only md:ml-2">Day Parts</span>
           </TabsTrigger>
         </TabsList>
         
-        <TabsContent value="calendar" className="mt-0">
+        <TabsContent value="timeline" className="mt-0 focus-visible:outline-none focus-visible:ring-0">
+          {renderTimelineView()}
+        </TabsContent>
+        
+        <TabsContent value="calendar" className="mt-0 focus-visible:outline-none focus-visible:ring-0">
           {renderCalendarView()}
         </TabsContent>
         
-        <TabsContent value="days" className="mt-0">
-          {renderInteractiveDayPartsView()}
+        <TabsContent value="cards" className="mt-0 focus-visible:outline-none focus-visible:ring-0">
+          {renderMedicationCardsView()}
+        </TabsContent>
+        
+        <TabsContent value="timeofday" className="mt-0 focus-visible:outline-none focus-visible:ring-0">
+          {renderTimeOfDayView()}
         </TabsContent>
       </Tabs>
     </div>

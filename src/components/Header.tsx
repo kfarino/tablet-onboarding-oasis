@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Wifi, ArrowLeft, ArrowRight, Eye } from 'lucide-react';
 import { format } from 'date-fns';
@@ -73,16 +74,16 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <div className="w-full bg-charcoal text-white py-2 px-8 relative">
+    <div className="w-full bg-charcoal text-white py-1 px-4 relative">
       <div className="flex justify-between items-center">
-        <div className="text-[25px] font-medium">
+        <div className="text-[12.5px] font-medium">
           {format(currentTime, 'EEE, MMM d')}
         </div>
-        <div className="text-[25px] font-medium absolute left-1/2 transform -translate-x-1/2">
+        <div className="text-[12.5px] font-medium absolute left-1/2 transform -translate-x-1/2">
           {format(currentTime, 'h:mm a')}
         </div>
         <div>
-          <Wifi size={28} />
+          <Wifi size={14} />
         </div>
       </div>
       
@@ -148,3 +149,4 @@ const Header: React.FC<HeaderProps> = ({
 };
 
 export default Header;
+

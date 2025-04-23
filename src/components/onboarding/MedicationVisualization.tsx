@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Calendar, List, Grid, Sun, Clock, Pill, AlertCircle, Sunrise, Sunset, Moon, Calendar as CalendarIcon } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -162,24 +163,53 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
       };
     });
     
-    const allTimes = new Set<string>();
+    // Create a flattened array of all medication doses
+    const allDoses: Array<{
+      medId: string,
+      doseId: string,
+      medName: string,
+      strength?: string,
+      form?: string,
+      time: string,
+      days: string[],
+      quantity: number
+    }> = [];
+    
     medications.forEach(med => {
       med.doses.forEach(dose => {
         dose.times.forEach(time => {
           if (time.toLowerCase() !== "as needed") {
-            allTimes.add(time);
+            allDoses.push({
+              medId: med.id,
+              doseId: dose.id,
+              medName: med.name,
+              strength: med.strength,
+              form: med.form,
+              time,
+              days: dose.days,
+              quantity: dose.quantity
+            });
           }
         });
       });
     });
     
-    const sortedTimes = Array.from(allTimes).sort((a, b) => {
+    // Group doses by time
+    const dosesByTime: Record<string, typeof allDoses> = {};
+    allDoses.forEach(dose => {
+      if (!dosesByTime[dose.time]) {
+        dosesByTime[dose.time] = [];
+      }
+      dosesByTime[dose.time].push(dose);
+    });
+    
+    const sortedTimes = Object.keys(dosesByTime).sort((a, b) => {
       const parseTime = (timeStr: string) => {
         const [time, meridiem] = timeStr.split(' ');
         let [hours, minutes] = time.split(':').map(Number);
         if (meridiem === 'PM' && hours !== 12) hours += 12;
         if (meridiem === 'AM' && hours === 12) hours = 0;
-        return hours * 60 + minutes;
+        return hours * 60 + (minutes || 0);
       };
       
       return parseTime(a) - parseTime(b);
@@ -198,44 +228,78 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
           ))}
         </div>
         
+        {/* Everyday doses - shown as one row spanning the entire week */}
         {sortedTimes.map(time => {
-          const medsForTime = medications.filter(med => 
-            med.doses.some(dose => dose.times.includes(time))
+          const everydayDoses = dosesByTime[time].filter(dose => 
+            dose.days.includes('everyday')
           );
           
+          if (everydayDoses.length === 0) return null;
+          
           return (
-            <div key={time} className="bg-white/5 border border-white/10 rounded-lg overflow-hidden">
-              <div className="bg-white/10 p-2 px-3">
-                <span className="text-lg font-medium text-highlight">{time}</span>
+            <Card key={`everyday-${time}`} className="overflow-hidden border-white/10 bg-white/5">
+              <div className="bg-white/10 p-2 px-4 flex items-center gap-2">
+                <Clock className="h-4 w-4 text-highlight" />
+                <span className="text-base font-medium text-white">{time}</span>
+                <Badge variant="outline" className="ml-2 bg-white/5 text-white/70">Everyday</Badge>
+              </div>
+              <div className="p-3 grid grid-cols-1 gap-2">
+                {everydayDoses.map(dose => (
+                  <div key={`${dose.medId}-${dose.doseId}`} className="flex items-center bg-white/10 p-2 rounded-lg">
+                    <div className="h-8 w-8 rounded-full bg-highlight/20 flex items-center justify-center mr-3">
+                      <Pill className="h-4 w-4 text-highlight" />
+                    </div>
+                    <div>
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-sm font-medium text-white">{dose.medName}</span>
+                        {dose.strength && <span className="text-xs text-white/70">{dose.strength}</span>}
+                      </div>
+                      {dose.form && <span className="text-xs text-white/50">{dose.form}</span>}
+                    </div>
+                    <div className="ml-auto px-2 py-1 bg-white/10 rounded text-sm font-medium text-white">
+                      {dose.quantity}x
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          );
+        })}
+        
+        {/* Specific day doses */}
+        {sortedTimes.map(time => {
+          // Only get doses that are NOT everyday
+          const specificDayDoses = dosesByTime[time].filter(dose => 
+            !dose.days.includes('everyday') && dose.days.length > 0
+          );
+          
+          if (specificDayDoses.length === 0) return null;
+          
+          return (
+            <Card key={`specific-${time}`} className="overflow-hidden border-white/10 bg-white/5">
+              <div className="bg-white/10 p-2 px-4 flex items-center gap-2">
+                <Clock className="h-4 w-4 text-highlight" />
+                <span className="text-base font-medium text-white">{time}</span>
+                <Badge variant="outline" className="ml-2 bg-white/5 text-white/70">Specific Days</Badge>
               </div>
               <div className="grid grid-cols-7 gap-1">
                 {weekDays.map(day => {
-                  const relevantMeds = medsForTime.filter(med => 
-                    med.doses.some(dose => 
-                      dose.times.includes(time) && 
-                      (dose.days.includes('everyday') || dose.days.includes(day.fullDayName))
-                    )
+                  const dosesForDay = specificDayDoses.filter(dose => 
+                    dose.days.includes(day.fullDayName)
                   );
                   
                   return (
                     <div key={`${day.dayName}-${time}`} className="p-2 min-h-16 border-t border-white/5">
-                      {relevantMeds.length > 0 ? (
+                      {dosesForDay.length > 0 ? (
                         <div className="space-y-2">
-                          {relevantMeds.map(med => {
-                            const dose = med.doses.find(d => 
-                              d.times.includes(time) && 
-                              (d.days.includes('everyday') || d.days.includes(day.fullDayName))
-                            );
-                            
-                            return (
-                              <div key={med.id} className="bg-white/10 p-2 rounded text-center">
-                                <div className="text-sm font-medium text-white truncate" title={med.name}>
-                                  {med.name.length > 10 ? `${med.name.substring(0, 9)}...` : med.name}
-                                </div>
-                                <div className="text-xs text-white/70 mt-1">{dose?.quantity || 1}x</div>
+                          {dosesForDay.map(dose => (
+                            <div key={`${dose.medId}-${day.dayName}`} className="bg-white/10 p-2 rounded text-center">
+                              <div className="text-xs font-medium text-white truncate" title={dose.medName}>
+                                {dose.medName}
                               </div>
-                            );
-                          })}
+                              <div className="text-xs text-white/70 mt-1">{dose.quantity}x</div>
+                            </div>
+                          ))}
                         </div>
                       ) : (
                         <div className="flex items-center justify-center h-full">
@@ -246,9 +310,42 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
                   );
                 })}
               </div>
-            </div>
+            </Card>
           );
         })}
+
+        {/* As Needed Medications */}
+        {medications.some(med => med.asNeeded) && (
+          <Card className="overflow-hidden border-white/10 bg-white/5 mt-4">
+            <div className="bg-yellow-500/20 p-2 px-4 flex items-center gap-2">
+              <AlertCircle className="h-4 w-4 text-yellow-500" />
+              <span className="text-base font-medium text-white">As Needed</span>
+            </div>
+            <div className="p-3 grid grid-cols-1 gap-2">
+              {medications
+                .filter(med => med.asNeeded)
+                .map(med => (
+                  <div key={med.id} className="flex items-center bg-white/10 p-2 rounded-lg border-l-2 border-yellow-500/30">
+                    <div className="h-8 w-8 rounded-full bg-yellow-500/20 flex items-center justify-center mr-3">
+                      <Pill className="h-4 w-4 text-yellow-500" />
+                    </div>
+                    <div>
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-sm font-medium text-white">{med.name}</span>
+                        {med.strength && <span className="text-xs text-white/70">{med.strength}</span>}
+                      </div>
+                      {med.form && <span className="text-xs text-white/50">{med.form}</span>}
+                    </div>
+                    {med.asNeeded && (
+                      <div className="ml-auto text-xs text-yellow-400 font-medium">
+                        Max {med.asNeeded.maxPerDay}/day
+                      </div>
+                    )}
+                  </div>
+                ))}
+            </div>
+          </Card>
+        )}
       </div>
     );
   };
@@ -270,7 +367,7 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
           );
           
           return (
-            <div key={med.id} className="bg-white/5 border border-white/10 rounded-lg overflow-hidden">
+            <Card key={med.id} className="overflow-hidden border-white/10 bg-white/5">
               <div className="bg-white/10 p-3 flex items-center gap-3">
                 <div className="h-10 w-10 rounded-full bg-highlight/20 flex items-center justify-center">
                   <Pill className="h-5 w-5 text-highlight" />
@@ -279,12 +376,12 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
                   <h3 className="text-lg font-medium text-white">{med.name}</h3>
                   <div className="flex items-center gap-2 mt-1">
                     {med.form && (
-                      <Badge variant="secondary" className="bg-white/10 text-white/70 hover:bg-white/20">
+                      <Badge variant="outline" className="bg-white/10 text-white/70 hover:bg-white/20">
                         {med.form}
                       </Badge>
                     )}
                     {med.strength && (
-                      <Badge variant="secondary" className="bg-white/10 text-white/70 hover:bg-white/20">
+                      <Badge variant="outline" className="bg-white/10 text-white/70 hover:bg-white/20">
                         {med.strength}
                       </Badge>
                     )}
@@ -302,7 +399,7 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
                   <div key={`${med.id}-${day}`} className="py-3 first:pt-0 last:pb-0">
                     <div className="flex items-center mb-2">
                       <CalendarIcon className="h-4 w-4 text-white/70 mr-2" />
-                      <span className="text-white font-medium">
+                      <span className="text-white font-medium capitalize">
                         {day === 'everyday' ? 'Every day' : day}
                       </span>
                     </div>
@@ -327,7 +424,7 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
                   </div>
                 )}
               </div>
-            </div>
+            </Card>
           );
         })}
       </div>
@@ -388,13 +485,13 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
     });
     
     return (
-      <div className="space-y-6 mt-4">
+      <div className="space-y-4 mt-4">
         {timeOfDaySections.map(section => {
           const sectionMeds = medsByTimeOfDay[section.id];
           if (section.id !== 'asNeeded' && sectionMeds.length === 0) return null;
           
           return (
-            <div key={section.id} className="bg-white/5 border border-white/10 rounded-lg overflow-hidden">
+            <Card key={section.id} className="overflow-hidden border-white/10 bg-white/5">
               <div className={`p-3 flex items-center gap-3 ${
                 section.id === 'asNeeded' ? 'bg-yellow-500/20' : 'bg-white/10'
               }`}>
@@ -453,7 +550,7 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
                   <p className="text-white/50 text-base p-2">No medications for this time</p>
                 )}
               </div>
-            </div>
+            </Card>
           );
         })}
       </div>

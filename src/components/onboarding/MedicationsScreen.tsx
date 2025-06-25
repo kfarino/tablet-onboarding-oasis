@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { Pill, Clock, Calendar as CalendarIcon } from 'lucide-react';
+import { Pill, Calendar as CalendarIcon } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Medication } from '@/types/onboarding';
@@ -32,42 +31,21 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
       'thursday': 4, 'friday': 5, 'saturday': 6
     };
 
-    // Create a flattened array of all medication doses from ALL medications
-    const allDoses: Array<{
-      medId: string,
-      medName: string,
-      time: string,
-      days: string[],
-      quantity: number
-    }> = [];
+    // Get all unique times that have doses
+    const allTimes = new Set<string>();
     
     displayMedications.forEach(med => {
       med.doses.forEach(dose => {
         dose.times.forEach(time => {
           if (time.toLowerCase() !== "as needed") {
-            allDoses.push({
-              medId: med.id,
-              medName: med.name,
-              time,
-              days: dose.days,
-              quantity: dose.quantity
-            });
+            allTimes.add(time);
           }
         });
       });
     });
 
-    // Group doses by time and only include times that have actual doses
-    const dosesByTime: Record<string, typeof allDoses> = {};
-    allDoses.forEach(dose => {
-      if (!dosesByTime[dose.time]) {
-        dosesByTime[dose.time] = [];
-      }
-      dosesByTime[dose.time].push(dose);
-    });
-
-    // Only sort times that actually exist
-    const sortedTimes = Object.keys(dosesByTime).sort((a, b) => {
+    // Sort times
+    const sortedTimes = Array.from(allTimes).sort((a, b) => {
       const parseTime = (timeStr: string) => {
         const [time, meridiem] = timeStr.split(' ');
         let [hours, minutes] = time.split(':').map(Number);
@@ -75,19 +53,21 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         if (meridiem === 'AM' && hours === 12) hours = 0;
         return hours * 60 + (minutes || 0);
       };
-      
       return parseTime(a) - parseTime(b);
     });
+
+    // Colors for different medications
+    const medColors = ['bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-orange-500', 'bg-pink-500'];
 
     return (
       <div className="bg-white/5 rounded-lg overflow-hidden border border-white/10">
         {/* Header with days of week */}
         <div className="grid grid-cols-8 bg-blue-600">
-          <div className="p-4 font-semibold text-white text-center border-r border-blue-500">
+          <div className="p-3 font-semibold text-white text-center border-r border-blue-500">
             Time
           </div>
           {daysOfWeek.map(day => (
-            <div key={day} className="p-4 font-semibold text-white text-center border-r border-blue-500 last:border-r-0">
+            <div key={day} className="p-3 font-semibold text-white text-center border-r border-blue-500 last:border-r-0">
               {day}
             </div>
           ))}
@@ -97,41 +77,38 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         {sortedTimes.map((time, timeIndex) => (
           <div key={time} className={`grid grid-cols-8 border-b border-white/10 ${timeIndex % 2 === 0 ? 'bg-white/5' : 'bg-white/10'}`}>
             {/* Time column */}
-            <div className="p-4 font-medium text-white border-r border-white/10 flex items-center">
-              <Clock className="h-4 w-4 mr-2 text-white/70" />
-              <div className="text-center">
-                <div className="font-semibold">{time.split(' ')[0]}</div>
-                <div className="text-xs text-white/70">{time.split(' ')[1]}</div>
-              </div>
+            <div className="p-3 font-medium text-white border-r border-white/10 text-center">
+              <div className="font-semibold">{time.split(' ')[0]}</div>
+              <div className="text-xs text-white/70">{time.split(' ')[1]}</div>
             </div>
             
             {/* Day columns */}
             {daysOfWeek.map((_, dayIndex) => {
               const dayName = Object.keys(dayMapping).find(key => dayMapping[key as keyof typeof dayMapping] === dayIndex);
               
-              // Find doses for this time and day
-              const dosesForTimeAndDay = dosesByTime[time].filter(dose => 
-                dose.days.includes('everyday') || 
-                dose.days.includes(dayName || '')
-              );
-
-              // Calculate total dose count for this time slot
-              const totalDoses = dosesForTimeAndDay.reduce((sum, dose) => sum + dose.quantity, 0);
-              const medCount = dosesForTimeAndDay.length;
+              // Find medications that have doses for this time and day
+              const medsForTimeAndDay: Array<{ medIndex: number, quantity: number }> = [];
+              
+              displayMedications.forEach((med, medIndex) => {
+                med.doses.forEach(dose => {
+                  if (dose.times.includes(time) && 
+                      (dose.days.includes('everyday') || dose.days.includes(dayName || ''))) {
+                    medsForTimeAndDay.push({ medIndex, quantity: dose.quantity });
+                  }
+                });
+              });
 
               return (
-                <div key={dayIndex} className="p-3 border-r border-white/10 last:border-r-0 min-h-16 flex items-center justify-center">
-                  {totalDoses > 0 && (
-                    <div className="bg-blue-500 rounded-lg px-3 py-2 text-white font-medium flex items-center gap-2 min-w-fit">
-                      <Pill className="h-4 w-4" />
-                      <span className="font-bold text-lg">{totalDoses}</span>
-                      {medCount > 1 && (
-                        <span className="text-xs bg-white/20 rounded-full px-2 py-1">
-                          {medCount} meds
-                        </span>
-                      )}
+                <div key={dayIndex} className="p-2 border-r border-white/10 last:border-r-0 min-h-16 flex items-center justify-center gap-1">
+                  {medsForTimeAndDay.map(({ medIndex, quantity }, index) => (
+                    <div 
+                      key={index}
+                      className={`${medColors[medIndex % medColors.length]} rounded-lg px-2 py-1 text-white text-sm font-medium flex items-center gap-1`}
+                    >
+                      <Pill className="h-3 w-3" />
+                      <span>{quantity}</span>
                     </div>
-                  )}
+                  ))}
                 </div>
               );
             })}
@@ -142,20 +119,17 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         {displayMedications.some(med => med.asNeeded) && (
           <div className="bg-yellow-500/20 border-t border-yellow-500/30">
             <div className="grid grid-cols-8">
-              <div className="p-4 font-medium text-yellow-400 border-r border-yellow-500/30 flex items-center">
-                <Clock className="h-4 w-4 mr-2" />
-                <div className="text-center">
-                  <div className="font-semibold">As</div>
-                  <div className="text-xs">Needed</div>
-                </div>
+              <div className="p-3 font-medium text-yellow-400 border-r border-yellow-500/30 text-center">
+                <div className="font-semibold">As</div>
+                <div className="text-xs">Needed</div>
               </div>
-              <div className="col-span-7 p-3 flex items-center justify-center">
-                <div className="bg-yellow-500/30 rounded-lg px-4 py-2 text-yellow-400 font-medium flex items-center gap-2">
-                  <Pill className="h-4 w-4" />
-                  <span>
-                    {displayMedications.filter(med => med.asNeeded).length} medication{displayMedications.filter(med => med.asNeeded).length !== 1 ? 's' : ''}
-                  </span>
-                </div>
+              <div className="col-span-7 p-2 flex items-center justify-center gap-1">
+                {displayMedications.filter(med => med.asNeeded).map((med, index) => (
+                  <div key={med.id} className={`${medColors[index % medColors.length]} rounded-lg px-2 py-1 text-white text-sm font-medium flex items-center gap-1`}>
+                    <Pill className="h-3 w-3" />
+                    <span>{med.asNeeded?.maxPerDay}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

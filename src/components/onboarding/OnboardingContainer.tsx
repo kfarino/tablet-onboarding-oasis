@@ -5,6 +5,7 @@ import WelcomeScreen from './WelcomeScreen';
 import AccountInfoScreen from './AccountInfoScreen';
 import HealthConditionsScreen from './HealthConditionsScreen';
 import MedicationsScreen from './MedicationsScreen';
+import SingleMedicationCaptureScreen from './SingleMedicationCaptureScreen';
 import ReviewScreen from './ReviewScreen';
 import CompleteScreen from './CompleteScreen';
 import ProgressIndicator from './ProgressIndicator';
@@ -27,6 +28,7 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
   const { currentStep, prevStep, updateUserProfile, userProfile } = useOnboarding();
   const [showExample, setShowExample] = useState(false);
   const [previewRole, setPreviewRole] = useState<UserRole | null>(null);
+  const [showSingleMedicationCapture, setShowSingleMedicationCapture] = useState(false);
 
   // Example data for populated view - expanded to 15 medications with various scenarios
   const exampleMedications = [
@@ -293,6 +295,16 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
   };
 
   const renderStep = () => {
+    // Show single medication capture screen when requested
+    if (showSingleMedicationCapture) {
+      return (
+        <SingleMedicationCaptureScreen
+          onComplete={() => setShowSingleMedicationCapture(false)}
+          onBack={() => setShowSingleMedicationCapture(false)}
+        />
+      );
+    }
+
     switch (currentStep) {
       case OnboardingStep.Welcome:
         return <WelcomeScreen />;
@@ -338,6 +350,14 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
             </Button>
             <h2 className="text-xl font-semibold text-white">Medication Schedule</h2>
           </div>
+          {currentStep === OnboardingStep.Medications && (
+            <Button
+              onClick={() => setShowSingleMedicationCapture(true)}
+              className="bg-highlight hover:bg-highlight/90 text-white"
+            >
+              Configure Last Medication
+            </Button>
+          )}
         </div>
         <div className="flex-1 p-4 overflow-hidden">
           <MedicationVisualization medications={medications} />

@@ -1,9 +1,8 @@
 
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { Pill, Eye, Calendar, AlertCircle, Plus } from 'lucide-react';
+import { Pill, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import MedicationVisualization from './MedicationVisualization';
 import { Medication } from '@/types/onboarding';
 
 interface MedicationsScreenProps {

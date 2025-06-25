@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState } from 'react';
 import { UserProfile, Medication, Dose, OnboardingStep, UserRole, AlertPreference } from '../types/onboarding';
 import { v4 as uuidv4 } from 'uuid';
@@ -10,7 +11,7 @@ interface OnboardingContextType {
   prevStep: () => void;
   updateUserProfile: <K extends keyof UserProfile>(key: K, value: UserProfile[K]) => void;
   addMedication: () => void;
-  updateMedication: (id: string, field: keyof Omit<Medication, 'id' | 'doses'>, value: string) => void;
+  updateMedication: (id: string, field: keyof Omit<Medication, 'id' | 'doses'>, value: any) => void;
   removeMedication: (id: string) => void;
   addDose: (medicationId: string) => void;
   updateDose: (medicationId: string, doseId: string, field: keyof Omit<Dose, 'id'>, value: any) => void;
@@ -93,7 +94,7 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     updateUserProfile('medications', [...userProfile.medications, newMedication]);
   };
 
-  const updateMedication = (id: string, field: keyof Omit<Medication, 'id' | 'doses'>, value: string) => {
+  const updateMedication = (id: string, field: keyof Omit<Medication, 'id' | 'doses'>, value: any) => {
     const updatedMedications = userProfile.medications.map(med => {
       if (med.id === id) {
         return { ...med, [field]: value };

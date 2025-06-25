@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import { Calendar, List, Grid, Sun, Clock, Pill, AlertCircle, Sunrise, Sunset, Moon, Calendar as CalendarIcon } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { format, startOfWeek, addDays } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface MedicationDose {
   id: string;
@@ -216,136 +216,138 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
     });
     
     return (
-      <div className="mt-4 space-y-4">
-        <div className="grid grid-cols-7 gap-1 text-center">
+      <div className="h-full max-h-[60vh]">
+        {/* Compact week header */}
+        <div className="grid grid-cols-7 gap-1 text-center mb-3">
           {weekDays.map((day) => (
             <div key={day.dayName} className="flex flex-col items-center">
-              <div className="text-white/80 font-medium mb-1">{day.dayName}</div>
-              <div className="bg-white/15 rounded-full h-8 w-8 flex items-center justify-center text-white font-medium">
+              <div className="text-white/60 text-xs font-medium mb-1">{day.dayName}</div>
+              <div className="bg-white/15 rounded-full h-6 w-6 flex items-center justify-center text-white text-sm font-medium">
                 {day.dayNumber}
               </div>
             </div>
           ))}
         </div>
         
-        {/* Everyday doses - shown as one row spanning the entire week */}
-        {sortedTimes.map(time => {
-          const everydayDoses = dosesByTime[time].filter(dose => 
-            dose.days.includes('everyday')
-          );
-          
-          if (everydayDoses.length === 0) return null;
-          
-          return (
-            <Card key={`everyday-${time}`} className="overflow-hidden border-white/10 bg-white/5">
-              <div className="bg-white/10 p-2 px-4 flex items-center gap-2">
-                <Clock className="h-4 w-4 text-highlight" />
-                <span className="text-base font-medium text-white">{time}</span>
-                <Badge variant="outline" className="ml-2 bg-white/5 text-white/70">Everyday</Badge>
-              </div>
-              <div className="p-3 grid grid-cols-1 gap-2">
-                {everydayDoses.map(dose => (
-                  <div key={`${dose.medId}-${dose.doseId}`} className="flex items-center bg-white/10 p-2 rounded-lg">
-                    <div className="h-8 w-8 rounded-full bg-highlight/20 flex items-center justify-center mr-3">
-                      <Pill className="h-4 w-4 text-highlight" />
-                    </div>
-                    <div>
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-sm font-medium text-white">{dose.medName}</span>
-                        {dose.strength && <span className="text-xs text-white/70">{dose.strength}</span>}
-                      </div>
-                      {dose.form && <span className="text-xs text-white/50">{dose.form}</span>}
-                    </div>
-                    <div className="ml-auto px-2 py-1 bg-white/10 rounded text-sm font-medium text-white">
-                      {dose.quantity}x
-                    </div>
+        <ScrollArea className="h-full">
+          <div className="space-y-2 pr-2">
+            {/* Everyday doses - shown as one row spanning the entire week */}
+            {sortedTimes.map(time => {
+              const everydayDoses = dosesByTime[time].filter(dose => 
+                dose.days.includes('everyday')
+              );
+              
+              if (everydayDoses.length === 0) return null;
+              
+              return (
+                <Card key={`everyday-${time}`} className="overflow-hidden border-white/10 bg-white/5">
+                  <div className="bg-white/10 p-2 flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-highlight" />
+                    <span className="text-sm font-medium text-white">{time}</span>
+                    <Badge variant="outline" className="ml-auto bg-white/5 text-white/70 text-xs py-0">Everyday</Badge>
                   </div>
-                ))}
-              </div>
-            </Card>
-          );
-        })}
-        
-        {/* Specific day doses */}
-        {sortedTimes.map(time => {
-          // Only get doses that are NOT everyday
-          const specificDayDoses = dosesByTime[time].filter(dose => 
-            !dose.days.includes('everyday') && dose.days.length > 0
-          );
-          
-          if (specificDayDoses.length === 0) return null;
-          
-          return (
-            <Card key={`specific-${time}`} className="overflow-hidden border-white/10 bg-white/5">
-              <div className="bg-white/10 p-2 px-4 flex items-center gap-2">
-                <Clock className="h-4 w-4 text-highlight" />
-                <span className="text-base font-medium text-white">{time}</span>
-                <Badge variant="outline" className="ml-2 bg-white/5 text-white/70">Specific Days</Badge>
-              </div>
-              <div className="grid grid-cols-7 gap-1">
-                {weekDays.map(day => {
-                  const dosesForDay = specificDayDoses.filter(dose => 
-                    dose.days.includes(day.fullDayName)
-                  );
-                  
-                  return (
-                    <div key={`${day.dayName}-${time}`} className="p-2 min-h-16 border-t border-white/5">
-                      {dosesForDay.length > 0 ? (
-                        <div className="space-y-2">
-                          {dosesForDay.map(dose => (
-                            <div key={`${dose.medId}-${day.dayName}`} className="bg-white/10 p-2 rounded text-center">
-                              <div className="text-xs font-medium text-white truncate" title={dose.medName}>
-                                {dose.medName}
-                              </div>
-                              <div className="text-xs text-white/70 mt-1">{dose.quantity}x</div>
+                  <div className="p-2 space-y-1">
+                    {everydayDoses.map(dose => (
+                      <div key={`${dose.medId}-${dose.doseId}`} className="flex items-center bg-white/5 p-2 rounded text-xs">
+                        <div className="h-6 w-6 rounded-full bg-highlight/20 flex items-center justify-center mr-2">
+                          <Pill className="h-3 w-3 text-highlight" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-baseline gap-1">
+                            <span className="font-medium text-white truncate">{dose.medName}</span>
+                            {dose.strength && <span className="text-white/70">{dose.strength}</span>}
+                          </div>
+                        </div>
+                        <div className="ml-2 px-2 py-1 bg-white/10 rounded text-xs font-medium text-white">
+                          {dose.quantity}x
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </Card>
+              );
+            })}
+            
+            {/* Specific day doses */}
+            {sortedTimes.map(time => {
+              const specificDayDoses = dosesByTime[time].filter(dose => 
+                !dose.days.includes('everyday') && dose.days.length > 0
+              );
+              
+              if (specificDayDoses.length === 0) return null;
+              
+              return (
+                <Card key={`specific-${time}`} className="overflow-hidden border-white/10 bg-white/5">
+                  <div className="bg-white/10 p-2 flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-highlight" />
+                    <span className="text-sm font-medium text-white">{time}</span>
+                    <Badge variant="outline" className="ml-auto bg-white/5 text-white/70 text-xs py-0">Specific Days</Badge>
+                  </div>
+                  <div className="grid grid-cols-7 gap-1 p-1">
+                    {weekDays.map(day => {
+                      const dosesForDay = specificDayDoses.filter(dose => 
+                        dose.days.includes(day.fullDayName)
+                      );
+                      
+                      return (
+                        <div key={`${day.dayName}-${time}`} className="p-1 min-h-12 border border-white/5 rounded">
+                          {dosesForDay.length > 0 ? (
+                            <div className="space-y-1">
+                              {dosesForDay.map(dose => (
+                                <div key={`${dose.medId}-${day.dayName}`} className="bg-white/10 p-1 rounded text-center">
+                                  <div className="text-xs font-medium text-white truncate" title={dose.medName}>
+                                    {dose.medName.length > 8 ? dose.medName.substring(0, 8) + '...' : dose.medName}
+                                  </div>
+                                  <div className="text-xs text-white/70">{dose.quantity}x</div>
+                                </div>
+                              ))}
                             </div>
-                          ))}
+                          ) : (
+                            <div className="flex items-center justify-center h-full">
+                              <span className="text-white/30 text-xs">-</span>
+                            </div>
+                          )}
                         </div>
-                      ) : (
-                        <div className="flex items-center justify-center h-full">
-                          <span className="text-white/30 text-xs">-</span>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </Card>
-          );
-        })}
-
-        {/* As Needed Medications */}
-        {medications.some(med => med.asNeeded) && (
-          <Card className="overflow-hidden border-white/10 bg-white/5 mt-4">
-            <div className="bg-yellow-500/20 p-2 px-4 flex items-center gap-2">
-              <AlertCircle className="h-4 w-4 text-yellow-500" />
-              <span className="text-base font-medium text-white">As Needed</span>
-            </div>
-            <div className="p-3 grid grid-cols-1 gap-2">
-              {medications
-                .filter(med => med.asNeeded)
-                .map(med => (
-                  <div key={med.id} className="flex items-center bg-white/10 p-2 rounded-lg border-l-2 border-yellow-500/30">
-                    <div className="h-8 w-8 rounded-full bg-yellow-500/20 flex items-center justify-center mr-3">
-                      <Pill className="h-4 w-4 text-yellow-500" />
-                    </div>
-                    <div>
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-sm font-medium text-white">{med.name}</span>
-                        {med.strength && <span className="text-xs text-white/70">{med.strength}</span>}
-                      </div>
-                      {med.form && <span className="text-xs text-white/50">{med.form}</span>}
-                    </div>
-                    {med.asNeeded && (
-                      <div className="ml-auto text-xs text-yellow-400 font-medium">
-                        Max {med.asNeeded.maxPerDay}/day
-                      </div>
-                    )}
+                      );
+                    })}
                   </div>
-                ))}
-            </div>
-          </Card>
-        )}
+                </Card>
+              );
+            })}
+
+            {/* As Needed Medications - Compact */}
+            {medications.some(med => med.asNeeded) && (
+              <Card className="overflow-hidden border-white/10 bg-white/5">
+                <div className="bg-yellow-500/20 p-2 flex items-center gap-2">
+                  <AlertCircle className="h-4 w-4 text-yellow-500" />
+                  <span className="text-sm font-medium text-white">As Needed</span>
+                </div>
+                <div className="p-2 space-y-1">
+                  {medications
+                    .filter(med => med.asNeeded)
+                    .map(med => (
+                      <div key={med.id} className="flex items-center bg-white/5 p-2 rounded border-l-2 border-yellow-500/30">
+                        <div className="h-6 w-6 rounded-full bg-yellow-500/20 flex items-center justify-center mr-2">
+                          <Pill className="h-3 w-3 text-yellow-500" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-baseline gap-1">
+                            <span className="text-sm font-medium text-white truncate">{med.name}</span>
+                            {med.strength && <span className="text-xs text-white/70">{med.strength}</span>}
+                          </div>
+                        </div>
+                        {med.asNeeded && (
+                          <div className="ml-2 text-xs text-yellow-400 font-medium">
+                            Max {med.asNeeded.maxPerDay}/day
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                </div>
+              </Card>
+            )}
+          </div>
+        </ScrollArea>
       </div>
     );
   };
@@ -558,42 +560,48 @@ const MedicationVisualization: React.FC<MedicationVisualizationProps> = ({ medic
   };
 
   return (
-    <div className="animate-fade-in bg-white/5 rounded-lg p-6 h-full overflow-auto">
-      <h3 className="text-2xl font-bold text-white mb-6">Medication Schedule</h3>
-      <Tabs defaultValue="timeline" className="w-full">
-        <TabsList className="bg-white/10 mb-6 w-full grid grid-cols-4 p-1 rounded-lg">
-          <TabsTrigger value="timeline" className="data-[state=active]:bg-white/15 py-3 rounded-md">
-            <Clock className="h-5 w-5" />
-            <span className="sr-only md:not-sr-only md:ml-2">Timeline</span>
+    <div className="animate-fade-in bg-white/5 rounded-lg p-4 h-full overflow-hidden flex flex-col">
+      <h3 className="text-xl font-bold text-white mb-4">Medication Schedule</h3>
+      <Tabs defaultValue="timeline" className="w-full flex-1 flex flex-col min-h-0">
+        <TabsList className="bg-white/10 mb-4 w-full grid grid-cols-4 p-1 rounded-lg flex-shrink-0">
+          <TabsTrigger value="timeline" className="data-[state=active]:bg-white/15 py-2 rounded-md">
+            <Clock className="h-4 w-4" />
+            <span className="sr-only md:not-sr-only md:ml-2 text-sm">Timeline</span>
           </TabsTrigger>
-          <TabsTrigger value="calendar" className="data-[state=active]:bg-white/15 py-3 rounded-md">
-            <Calendar className="h-5 w-5" />
-            <span className="sr-only md:not-sr-only md:ml-2">Calendar</span>
+          <TabsTrigger value="calendar" className="data-[state=active]:bg-white/15 py-2 rounded-md">
+            <Calendar className="h-4 w-4" />
+            <span className="sr-only md:not-sr-only md:ml-2 text-sm">Calendar</span>
           </TabsTrigger>
-          <TabsTrigger value="cards" className="data-[state=active]:bg-white/15 py-3 rounded-md">
-            <Pill className="h-5 w-5" />
-            <span className="sr-only md:not-sr-only md:ml-2">Cards</span>
+          <TabsTrigger value="cards" className="data-[state=active]:bg-white/15 py-2 rounded-md">
+            <Pill className="h-4 w-4" />
+            <span className="sr-only md:not-sr-only md:ml-2 text-sm">Cards</span>
           </TabsTrigger>
-          <TabsTrigger value="timeofday" className="data-[state=active]:bg-white/15 py-3 rounded-md">
-            <Sun className="h-5 w-5" />
-            <span className="sr-only md:not-sr-only md:ml-2">Day Parts</span>
+          <TabsTrigger value="timeofday" className="data-[state=active]:bg-white/15 py-2 rounded-md">
+            <Sun className="h-4 w-4" />
+            <span className="sr-only md:not-sr-only md:ml-2 text-sm">Day Parts</span>
           </TabsTrigger>
         </TabsList>
         
-        <TabsContent value="timeline" className="mt-0 focus-visible:outline-none focus-visible:ring-0">
-          {renderTimelineView()}
+        <TabsContent value="timeline" className="mt-0 focus-visible:outline-none focus-visible:ring-0 flex-1 min-h-0">
+          <ScrollArea className="h-full">
+            {renderTimelineView()}
+          </ScrollArea>
         </TabsContent>
         
-        <TabsContent value="calendar" className="mt-0 focus-visible:outline-none focus-visible:ring-0">
+        <TabsContent value="calendar" className="mt-0 focus-visible:outline-none focus-visible:ring-0 flex-1 min-h-0">
           {renderCalendarView()}
         </TabsContent>
         
-        <TabsContent value="cards" className="mt-0 focus-visible:outline-none focus-visible:ring-0">
-          {renderMedicationCardsView()}
+        <TabsContent value="cards" className="mt-0 focus-visible:outline-none focus-visible:ring-0 flex-1 min-h-0">
+          <ScrollArea className="h-full">
+            {renderMedicationCardsView()}
+          </ScrollArea>
         </TabsContent>
         
-        <TabsContent value="timeofday" className="mt-0 focus-visible:outline-none focus-visible:ring-0">
-          {renderTimeOfDayView()}
+        <TabsContent value="timeofday" className="mt-0 focus-visible:outline-none focus-visible:ring-0 flex-1 min-h-0">
+          <ScrollArea className="h-full">
+            {renderTimeOfDayView()}
+          </ScrollArea>
         </TabsContent>
       </Tabs>
     </div>

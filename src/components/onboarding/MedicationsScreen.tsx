@@ -2,7 +2,6 @@
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Pill, Clock, Calendar as CalendarIcon } from 'lucide-react';
-import { format, startOfWeek, addDays } from 'date-fns';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Medication } from '@/types/onboarding';
@@ -26,18 +25,12 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   // Show the first medication for now
   const currentMedication = displayMedications[0];
 
-  const renderCalendarView = () => {
-    const [currentDate] = React.useState(new Date());
-    const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 });
-    const weekDays = Array.from({ length: 7 }, (_, i) => {
-      const day = addDays(weekStart, i);
-      return {
-        date: day,
-        dayName: format(day, 'EEE'),
-        dayNumber: format(day, 'd'),
-        fullDayName: format(day, 'EEEE').toLowerCase(),
-      };
-    });
+  const renderCompactCalendarView = () => {
+    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const dayMapping = {
+      'sunday': 0, 'monday': 1, 'tuesday': 2, 'wednesday': 3, 
+      'thursday': 4, 'friday': 5, 'saturday': 6
+    };
 
     // Create a flattened array of all medication doses from ALL medications
     const allDoses: Array<{
@@ -51,10 +44,10 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
     
     // Define colors for different medications
     const medicationColors = [
-      'bg-blue-500',
-      'bg-green-500', 
+      'bg-green-500',
+      'bg-orange-500', 
       'bg-purple-500',
-      'bg-yellow-500',
+      'bg-blue-500',
       'bg-pink-500',
       'bg-indigo-500'
     ];
@@ -77,7 +70,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
       });
     });
 
-    // Group doses by time
+    // Group doses by time and sort
     const dosesByTime: Record<string, typeof allDoses> = {};
     allDoses.forEach(dose => {
       if (!dosesByTime[dose.time]) {
@@ -99,106 +92,82 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
     });
 
     return (
-      <div className="space-y-3">
-        {/* Week header */}
-        <div className="grid grid-cols-7 gap-1 text-center">
-          {weekDays.map((day) => (
-            <div key={day.dayName} className="flex flex-col items-center">
-              <div className="text-white/60 text-xs font-medium mb-1">{day.dayName}</div>
-              <div className="bg-white/15 rounded-full h-6 w-6 flex items-center justify-center text-white text-sm font-medium">
-                {day.dayNumber}
-              </div>
+      <div className="bg-white/5 rounded-lg overflow-hidden border border-white/10">
+        {/* Header with days of week */}
+        <div className="grid grid-cols-8 bg-blue-600">
+          <div className="p-3 font-semibold text-white text-center border-r border-blue-500">
+            Time
+          </div>
+          {daysOfWeek.map(day => (
+            <div key={day} className="p-3 font-semibold text-white text-center border-r border-blue-500 last:border-r-0">
+              {day}
             </div>
           ))}
         </div>
 
-        {/* Time slots */}
-        <div className="space-y-2">
-          {sortedTimes.map(time => {
-            const everydayDoses = dosesByTime[time].filter(dose => 
-              dose.days.includes('everyday')
-            );
-            const specificDayDoses = dosesByTime[time].filter(dose => 
-              !dose.days.includes('everyday') && dose.days.length > 0
-            );
+        {/* Time rows */}
+        {sortedTimes.map((time, timeIndex) => (
+          <div key={time} className={`grid grid-cols-8 border-b border-white/10 ${timeIndex % 2 === 0 ? 'bg-white/5' : 'bg-white/10'}`}>
+            {/* Time column */}
+            <div className="p-4 font-medium text-white border-r border-white/10 flex items-center">
+              <Clock className="h-4 w-4 mr-2 text-white/70" />
+              {time}
+            </div>
+            
+            {/* Day columns */}
+            {daysOfWeek.map((_, dayIndex) => {
+              const dayName = Object.keys(dayMapping).find(key => dayMapping[key as keyof typeof dayMapping] === dayIndex);
+              
+              // Find doses for this time and day
+              const dosesForTimeAndDay = dosesByTime[time].filter(dose => 
+                dose.days.includes('everyday') || 
+                dose.days.includes(dayName || '')
+              );
 
-            return (
-              <div key={time} className="space-y-1">
-                {/* Everyday doses */}
-                {everydayDoses.length > 0 && (
-                  <Card className="overflow-hidden border-white/10 bg-white/5">
-                    <div className="bg-white/10 p-3 flex items-center gap-2">
-                      <Clock className="h-4 w-4 text-highlight" />
-                      <span className="text-sm font-medium text-white">{time}</span>
-                      <Badge variant="outline" className="ml-auto bg-white/5 text-white/70 text-xs">
-                        Every day
-                      </Badge>
+              return (
+                <div key={dayIndex} className="p-2 border-r border-white/10 last:border-r-0 min-h-16 flex flex-col gap-1">
+                  {dosesForTimeAndDay.map(dose => (
+                    <div 
+                      key={`${dose.medId}-${dayIndex}`}
+                      className={`${dose.color} rounded-lg p-2 text-white text-xs font-medium flex items-center justify-between`}
+                    >
+                      <div className="flex items-center gap-1">
+                        <Pill className="h-3 w-3" />
+                        <span className="truncate max-w-12" title={dose.medName}>
+                          {dose.medName.length > 8 ? dose.medName.substring(0, 8) + '...' : dose.medName}
+                        </span>
+                      </div>
+                      <span className="font-bold">{dose.quantity}x</span>
                     </div>
-                    <div className="p-2 space-y-1">
-                      {everydayDoses.map(dose => (
-                        <div key={`${dose.medId}-${time}`} className="flex items-center bg-white/5 p-2 rounded text-xs">
-                          <div className={`h-6 w-6 rounded-full ${dose.color}/20 flex items-center justify-center mr-2`}>
-                            <Pill className={`h-3 w-3 ${dose.color.replace('bg-', 'text-')}`} />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <span className="font-medium text-white truncate">{dose.medName}</span>
-                          </div>
-                          <div className="ml-2 px-2 py-1 bg-white/10 rounded text-xs font-medium text-white">
-                            {dose.quantity}x
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </Card>
-                )}
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+        ))}
 
-                {/* Specific day doses */}
-                {specificDayDoses.length > 0 && (
-                  <Card className="overflow-hidden border-white/10 bg-white/5">
-                    <div className="bg-white/10 p-3 flex items-center gap-2">
-                      <Clock className="h-4 w-4 text-highlight" />
-                      <span className="text-sm font-medium text-white">{time}</span>
-                      <Badge variant="outline" className="ml-auto bg-white/5 text-white/70 text-xs">
-                        Specific days
-                      </Badge>
-                    </div>
-                    <div className="grid grid-cols-7 gap-1 p-2">
-                      {weekDays.map(day => {
-                        const dosesForDay = specificDayDoses.filter(dose => 
-                          dose.days.includes(day.fullDayName)
-                        );
-                        
-                        return (
-                          <div key={day.dayName} className="p-1 min-h-12 border border-white/5 rounded">
-                            {dosesForDay.length > 0 ? (
-                              <div className="space-y-1">
-                                {dosesForDay.map(dose => (
-                                  <div key={`${dose.medId}-${day.dayName}`} className="bg-white/10 p-1 rounded text-center">
-                                    <div className={`h-3 w-3 mx-auto ${dose.color} rounded-full flex items-center justify-center mb-1`}>
-                                      <Pill className="h-1.5 w-1.5 text-white" />
-                                    </div>
-                                    <div className="text-xs font-medium text-white truncate" title={dose.medName}>
-                                      {dose.medName.length > 6 ? dose.medName.substring(0, 6) + '...' : dose.medName}
-                                    </div>
-                                    <div className="text-xs text-white/70">{dose.quantity}x</div>
-                                  </div>
-                                ))}
-                              </div>
-                            ) : (
-                              <div className="flex items-center justify-center h-full">
-                                <span className="text-white/30 text-xs">-</span>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </Card>
-                )}
+        {/* As needed section if applicable */}
+        {displayMedications.some(med => med.asNeeded) && (
+          <div className="bg-yellow-500/20 border-t border-yellow-500/30">
+            <div className="grid grid-cols-8">
+              <div className="p-4 font-medium text-yellow-400 border-r border-yellow-500/30 flex items-center">
+                <Clock className="h-4 w-4 mr-2" />
+                As Needed
               </div>
-            );
-          })}
-        </div>
+              <div className="col-span-7 p-2 flex flex-wrap gap-2">
+                {displayMedications
+                  .filter(med => med.asNeeded)
+                  .map(med => (
+                    <div key={med.id} className="bg-yellow-500/30 rounded-lg p-2 text-yellow-400 text-xs font-medium flex items-center gap-1">
+                      <Pill className="h-3 w-3" />
+                      <span>{med.name}</span>
+                      <span className="font-bold">Max {med.asNeeded?.maxPerDay}/day</span>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   };
@@ -265,7 +234,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         </div>
       </Card>
 
-      {/* Calendar View */}
+      {/* Compact Calendar View */}
       <div className="space-y-4">
         <div className="flex items-center gap-2">
           <CalendarIcon className="h-5 w-5 text-white" />
@@ -276,7 +245,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
             </Badge>
           )}
         </div>
-        {renderCalendarView()}
+        {renderCompactCalendarView()}
       </div>
     </div>
   );

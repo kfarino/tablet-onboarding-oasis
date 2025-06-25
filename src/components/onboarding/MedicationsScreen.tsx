@@ -26,7 +26,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   // Show the first medication for now
   const currentMedication = displayMedications[0];
 
-  const renderCalendarView = (medication: Medication) => {
+  const renderCalendarView = () => {
     const [currentDate] = React.useState(new Date());
     const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 });
     const weekDays = Array.from({ length: 7 }, (_, i) => {
@@ -39,22 +39,41 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
       };
     });
 
-    // Create a flattened array of all medication doses
+    // Create a flattened array of all medication doses from ALL medications
     const allDoses: Array<{
+      medId: string,
+      medName: string,
       time: string,
       days: string[],
-      quantity: number
+      quantity: number,
+      color: string
     }> = [];
     
-    medication.doses.forEach(dose => {
-      dose.times.forEach(time => {
-        if (time.toLowerCase() !== "as needed") {
-          allDoses.push({
-            time,
-            days: dose.days,
-            quantity: dose.quantity
-          });
-        }
+    // Define colors for different medications
+    const medicationColors = [
+      'bg-blue-500',
+      'bg-green-500', 
+      'bg-purple-500',
+      'bg-yellow-500',
+      'bg-pink-500',
+      'bg-indigo-500'
+    ];
+    
+    displayMedications.forEach((med, medIndex) => {
+      const color = medicationColors[medIndex % medicationColors.length];
+      med.doses.forEach(dose => {
+        dose.times.forEach(time => {
+          if (time.toLowerCase() !== "as needed") {
+            allDoses.push({
+              medId: med.id,
+              medName: med.name,
+              time,
+              days: dose.days,
+              quantity: dose.quantity,
+              color
+            });
+          }
+        });
       });
     });
 
@@ -112,14 +131,20 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                       <Clock className="h-4 w-4 text-highlight" />
                       <span className="text-sm font-medium text-white">{time}</span>
                       <Badge variant="outline" className="ml-auto bg-white/5 text-white/70 text-xs">
-                        Every day • {everydayDoses[0].quantity}x
+                        Every day
                       </Badge>
                     </div>
-                    <div className="grid grid-cols-7 gap-1 p-2">
-                      {weekDays.map(day => (
-                        <div key={day.dayName} className="p-2 bg-highlight/20 rounded text-center">
-                          <div className="h-4 w-4 mx-auto bg-highlight rounded-full flex items-center justify-center">
-                            <Pill className="h-2 w-2 text-white" />
+                    <div className="p-2 space-y-1">
+                      {everydayDoses.map(dose => (
+                        <div key={`${dose.medId}-${time}`} className="flex items-center bg-white/5 p-2 rounded text-xs">
+                          <div className={`h-6 w-6 rounded-full ${dose.color}/20 flex items-center justify-center mr-2`}>
+                            <Pill className={`h-3 w-3 ${dose.color.replace('bg-', 'text-')}`} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className="font-medium text-white truncate">{dose.medName}</span>
+                          </div>
+                          <div className="ml-2 px-2 py-1 bg-white/10 rounded text-xs font-medium text-white">
+                            {dose.quantity}x
                           </div>
                         </div>
                       ))}
@@ -134,26 +159,34 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                       <Clock className="h-4 w-4 text-highlight" />
                       <span className="text-sm font-medium text-white">{time}</span>
                       <Badge variant="outline" className="ml-auto bg-white/5 text-white/70 text-xs">
-                        Specific days • {specificDayDoses[0].quantity}x
+                        Specific days
                       </Badge>
                     </div>
                     <div className="grid grid-cols-7 gap-1 p-2">
                       {weekDays.map(day => {
-                        const hasdose = specificDayDoses.some(dose => 
+                        const dosesForDay = specificDayDoses.filter(dose => 
                           dose.days.includes(day.fullDayName)
                         );
                         
                         return (
-                          <div key={day.dayName} className={`p-2 rounded text-center ${
-                            hasdose ? 'bg-highlight/20' : 'bg-white/5'
-                          }`}>
-                            {hasdose ? (
-                              <div className="h-4 w-4 mx-auto bg-highlight rounded-full flex items-center justify-center">
-                                <Pill className="h-2 w-2 text-white" />
+                          <div key={day.dayName} className="p-1 min-h-12 border border-white/5 rounded">
+                            {dosesForDay.length > 0 ? (
+                              <div className="space-y-1">
+                                {dosesForDay.map(dose => (
+                                  <div key={`${dose.medId}-${day.dayName}`} className="bg-white/10 p-1 rounded text-center">
+                                    <div className={`h-3 w-3 mx-auto ${dose.color} rounded-full flex items-center justify-center mb-1`}>
+                                      <Pill className="h-1.5 w-1.5 text-white" />
+                                    </div>
+                                    <div className="text-xs font-medium text-white truncate" title={dose.medName}>
+                                      {dose.medName.length > 6 ? dose.medName.substring(0, 6) + '...' : dose.medName}
+                                    </div>
+                                    <div className="text-xs text-white/70">{dose.quantity}x</div>
+                                  </div>
+                                ))}
                               </div>
                             ) : (
-                              <div className="h-4 w-4 mx-auto flex items-center justify-center">
-                                <span className="text-white/30 text-xs">–</span>
+                              <div className="flex items-center justify-center h-full">
+                                <span className="text-white/30 text-xs">-</span>
                               </div>
                             )}
                           </div>
@@ -237,8 +270,13 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         <div className="flex items-center gap-2">
           <CalendarIcon className="h-5 w-5 text-white" />
           <h4 className="text-lg font-semibold text-white">Weekly Schedule</h4>
+          {displayMedications.length > 1 && (
+            <Badge variant="outline" className="bg-white/10 text-white/70 text-xs">
+              All {displayMedications.length} medications
+            </Badge>
+          )}
         </div>
-        {renderCalendarView(currentMedication)}
+        {renderCalendarView()}
       </div>
     </div>
   );

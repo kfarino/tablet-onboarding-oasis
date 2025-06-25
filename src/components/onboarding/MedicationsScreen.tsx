@@ -31,21 +31,45 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
       'thursday': 4, 'friday': 5, 'saturday': 6
     };
 
-    // Get all unique times that have doses
-    const allTimes = new Set<string>();
+    // Get all unique times that have doses and aggregate pill counts
+    const timeSlotData: Record<string, Record<number, number>> = {};
     
     displayMedications.forEach(med => {
       med.doses.forEach(dose => {
         dose.times.forEach(time => {
           if (time.toLowerCase() !== "as needed") {
-            allTimes.add(time);
+            if (!timeSlotData[time]) {
+              timeSlotData[time] = {};
+            }
+            
+            // For each day this dose applies to
+            dose.days.forEach(day => {
+              if (day === 'everyday') {
+                // Add to all days
+                for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
+                  if (!timeSlotData[time][dayIndex]) {
+                    timeSlotData[time][dayIndex] = 0;
+                  }
+                  timeSlotData[time][dayIndex] += dose.quantity;
+                }
+              } else {
+                // Add to specific day
+                const dayIndex = dayMapping[day.toLowerCase() as keyof typeof dayMapping];
+                if (dayIndex !== undefined) {
+                  if (!timeSlotData[time][dayIndex]) {
+                    timeSlotData[time][dayIndex] = 0;
+                  }
+                  timeSlotData[time][dayIndex] += dose.quantity;
+                }
+              }
+            });
           }
         });
       });
     });
 
     // Sort times
-    const sortedTimes = Array.from(allTimes).sort((a, b) => {
+    const sortedTimes = Object.keys(timeSlotData).sort((a, b) => {
       const parseTime = (timeStr: string) => {
         const [time, meridiem] = timeStr.split(' ');
         let [hours, minutes] = time.split(':').map(Number);
@@ -55,9 +79,6 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
       };
       return parseTime(a) - parseTime(b);
     });
-
-    // Colors for different medications
-    const medColors = ['bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-orange-500', 'bg-pink-500'];
 
     return (
       <div className="bg-white/5 rounded-lg overflow-hidden border border-white/10">
@@ -84,31 +105,16 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
             
             {/* Day columns */}
             {daysOfWeek.map((_, dayIndex) => {
-              const dayName = Object.keys(dayMapping).find(key => dayMapping[key as keyof typeof dayMapping] === dayIndex);
-              
-              // Find medications that have doses for this time and day
-              const medsForTimeAndDay: Array<{ medIndex: number, quantity: number }> = [];
-              
-              displayMedications.forEach((med, medIndex) => {
-                med.doses.forEach(dose => {
-                  if (dose.times.includes(time) && 
-                      (dose.days.includes('everyday') || dose.days.includes(dayName || ''))) {
-                    medsForTimeAndDay.push({ medIndex, quantity: dose.quantity });
-                  }
-                });
-              });
+              const totalPills = timeSlotData[time][dayIndex] || 0;
 
               return (
-                <div key={dayIndex} className="p-2 border-r border-white/10 last:border-r-0 min-h-16 flex items-center justify-center gap-1">
-                  {medsForTimeAndDay.map(({ medIndex, quantity }, index) => (
-                    <div 
-                      key={index}
-                      className={`${medColors[medIndex % medColors.length]} rounded-lg px-2 py-1 text-white text-sm font-medium flex items-center gap-1`}
-                    >
+                <div key={dayIndex} className="p-2 border-r border-white/10 last:border-r-0 min-h-16 flex items-center justify-center">
+                  {totalPills > 0 && (
+                    <div className="bg-blue-500 rounded-lg px-3 py-2 text-white text-sm font-medium flex items-center gap-1">
                       <Pill className="h-3 w-3" />
-                      <span>{quantity}</span>
+                      <span>{totalPills}</span>
                     </div>
-                  ))}
+                  )}
                 </div>
               );
             })}
@@ -123,13 +129,11 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                 <div className="font-semibold">As</div>
                 <div className="text-xs">Needed</div>
               </div>
-              <div className="col-span-7 p-2 flex items-center justify-center gap-1">
-                {displayMedications.filter(med => med.asNeeded).map((med, index) => (
-                  <div key={med.id} className={`${medColors[index % medColors.length]} rounded-lg px-2 py-1 text-white text-sm font-medium flex items-center gap-1`}>
-                    <Pill className="h-3 w-3" />
-                    <span>{med.asNeeded?.maxPerDay}</span>
-                  </div>
-                ))}
+              <div className="col-span-7 p-2 flex items-center justify-center">
+                <div className="bg-yellow-500 rounded-lg px-3 py-2 text-white text-sm font-medium flex items-center gap-1">
+                  <Pill className="h-3 w-3" />
+                  <span>{displayMedications.filter(med => med.asNeeded).reduce((sum, med) => sum + (med.asNeeded?.maxPerDay || 0), 0)}</span>
+                </div>
               </div>
             </div>
           </div>

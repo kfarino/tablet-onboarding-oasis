@@ -1,9 +1,9 @@
+
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { OnboardingStep, UserRole } from '@/types/onboarding';
 import WelcomeScreen from './WelcomeScreen';
 import AccountInfoScreen from './AccountInfoScreen';
-import HealthConditionsScreen from './HealthConditionsScreen';
 import MedicationsScreen from './MedicationsScreen';
 import SingleMedicationCaptureScreen from './SingleMedicationCaptureScreen';
 import ReviewScreen from './ReviewScreen';
@@ -311,8 +311,13 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
       case OnboardingStep.PersonalInfo:
         return <AccountInfoScreen showExample={showExample} previewRole={previewRole} />;
       case OnboardingStep.HealthConditions:
-        // Skip health conditions - now merged with PersonalInfo
-        return <AccountInfoScreen showExample={showExample} previewRole={previewRole} />;
+        // Skip health conditions - go directly to medications
+        return <MedicationsScreen 
+                 showExample={showExample} 
+                 showMedicationSchedule={showMedicationSchedule}
+                 setShowMedicationSchedule={setShowMedicationSchedule}
+                 exampleMedications={exampleMedications}
+               />;
       case OnboardingStep.Medications:
         return <MedicationsScreen 
                  showExample={showExample} 

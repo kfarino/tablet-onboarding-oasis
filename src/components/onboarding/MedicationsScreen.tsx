@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Pill } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Medication } from '@/types/onboarding';
+import { Badge } from '@/components/ui/badge';
 
 interface MedicationsScreenProps {
   showExample?: boolean;
@@ -219,17 +219,13 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               }}>
                 As-needed
               </div>
-              <div className="col-span-7 p-2 flex flex-wrap items-center gap-1">
+              <div className="col-span-7 p-2 flex flex-wrap items-center gap-2">
                 {displayMedications
                   .filter(med => med.asNeeded)
                   .map(med => (
-                    <div 
-                      key={med.id} 
-                      className="rounded px-2 py-1 text-xs font-medium flex items-center gap-1 cursor-pointer hover:brightness-110 transition-all" 
-                      style={{ 
-                        backgroundColor: '#E6C229',
-                        color: '#111827'
-                      }}
+                    <Badge
+                      key={med.id}
+                      className="bg-white/10 hover:bg-white/20 text-white text-sm py-1 px-3 cursor-pointer transition-colors"
                       onClick={() => setSelectedDose({
                         medName: med.name,
                         strength: med.strength,
@@ -238,9 +234,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                         dayPattern: 'as needed'
                       })}
                     >
-                      <span className="truncate">{med.name}</span>
-                      <span style={{ color: '#374151' }}>({med.asNeeded?.maxPerDay}/day)</span>
-                    </div>
+                      {med.name} ({med.asNeeded?.maxPerDay}/day)
+                    </Badge>
                   ))}
               </div>
             </div>

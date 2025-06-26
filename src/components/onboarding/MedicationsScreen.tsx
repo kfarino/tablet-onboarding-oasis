@@ -242,7 +242,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
     );
   };
 
-  if (!displayMedications || displayMedications.length === 0) {
+  // Check if we should show empty state - only when not showing example AND no real medications
+  if (!showExample && (!displayMedications || displayMedications.length === 0)) {
     return (
       <div className="animate-fade-in px-6 pb-10 space-y-6">
         {/* Current medication container */}

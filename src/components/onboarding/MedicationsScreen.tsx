@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { Pill, Calendar as CalendarIcon } from 'lucide-react';
+import { Calendar as CalendarIcon } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Medication } from '@/types/onboarding';
@@ -147,20 +147,22 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
 
               return (
                 <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[50px] flex items-center justify-center" style={{ borderColor: '#E5E7EB' }}>
-                  {applicableSchedules.map((schedule, scheduleIndex) => (
-                    <div 
-                      key={scheduleIndex}
-                      className={`rounded w-full h-8 relative ${
-                        schedule.isCurrentMedSchedule ? 'ring-2 ring-offset-1' : ''
-                      }`}
-                      style={{ 
-                        backgroundColor: schedule.color,
-                        ringColor: schedule.isCurrentMedSchedule ? '#F26C3A' : undefined,
-                        ringOffsetColor: schedule.isCurrentMedSchedule ? '#FFFFFF' : undefined
-                      }}
-                      title={schedule.medications.join(', ')}
-                    />
-                  ))}
+                  <div className="flex gap-1 w-full">
+                    {applicableSchedules.map((schedule, scheduleIndex) => (
+                      <div 
+                        key={scheduleIndex}
+                        className={`rounded flex-1 h-8 relative ${
+                          schedule.isCurrentMedSchedule ? 'border-2' : ''
+                        }`}
+                        style={{ 
+                          backgroundColor: schedule.color,
+                          borderColor: schedule.isCurrentMedSchedule ? '#DC2626' : undefined,
+                          boxShadow: schedule.isCurrentMedSchedule ? '0 0 0 1px #DC2626' : undefined
+                        }}
+                        title={schedule.medications.join(', ')}
+                      />
+                    ))}
+                  </div>
                 </div>
               );
             })}
@@ -188,7 +190,6 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                       backgroundColor: '#E6C229',
                       color: '#FFFFFF'
                     }}>
-                      <Pill className="h-3 w-3" />
                       <span className="truncate">{med.name}</span>
                       <span style={{ color: '#FEF3C7' }}>({med.asNeeded?.maxPerDay}/day)</span>
                     </div>
@@ -211,7 +212,12 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         }}>
           <div className="flex items-center justify-center py-8">
             <div className="text-center">
-              <Pill className="h-12 w-12 mx-auto mb-3" style={{ color: '#F26C3A' }} />
+              <div className="h-12 w-12 mx-auto mb-3 rounded-full flex items-center justify-center text-xl font-bold" style={{ 
+                backgroundColor: '#F26C3A',
+                color: '#FFFFFF'
+              }}>
+                0
+              </div>
               <h3 className="text-lg font-semibold text-white mb-2">No medications added yet</h3>
               <p style={{ color: 'rgba(255, 255, 255, 0.6)' }}>Add your first medication to get started with your schedule.</p>
             </div>
@@ -229,11 +235,12 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         borderColor: 'rgba(242, 108, 58, 0.4)'
       }}>
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-10 h-10 rounded-full border" style={{ 
-            backgroundColor: 'rgba(242, 108, 58, 0.2)',
-            borderColor: 'rgba(242, 108, 58, 0.4)'
+          <div className="flex items-center justify-center w-10 h-10 rounded-full border text-lg font-bold" style={{ 
+            backgroundColor: '#F26C3A',
+            borderColor: 'rgba(242, 108, 58, 0.4)',
+            color: '#FFFFFF'
           }}>
-            <Pill className="h-5 w-5" style={{ color: '#F26C3A' }} />
+            {displayMedications.length}
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 text-white">
@@ -259,21 +266,6 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
           </Badge>
         </div>
       </Card>
-
-      {/* Schedule header */}
-      <div className="flex items-center gap-2 px-1">
-        <CalendarIcon className="h-4 w-4" style={{ color: '#F26C3A' }} />
-        <h3 className="text-lg font-bold text-white">
-          Medications Schedule
-        </h3>
-        <Badge variant="outline" className="text-xs border" style={{ 
-          backgroundColor: 'rgba(242, 108, 58, 0.1)',
-          borderColor: 'rgba(242, 108, 58, 0.3)',
-          color: '#F26C3A'
-        }}>
-          {displayMedications.length} medications
-        </Badge>
-      </div>
 
       {/* Consolidated schedule */}
       {renderConsolidatedSchedule()}

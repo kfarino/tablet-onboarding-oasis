@@ -57,7 +57,7 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
             quantity: 2
           }
         ],
-        asNeeded: null
+        asNeeded: { maxPerDay: 8 }
       }
     ],
     lovedOne: {

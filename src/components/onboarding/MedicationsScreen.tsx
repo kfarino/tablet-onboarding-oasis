@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Pill } from 'lucide-react';
@@ -148,8 +149,9 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         borderColor: '#F26C3A', 
         backgroundColor: '#000000' 
       }}>
-        {/* Header */}
-        <div className="grid grid-cols-8 text-xs" style={{ 
+        {/* Header - updated grid with wider first column */}
+        <div className="grid text-xs" style={{ 
+          gridTemplateColumns: '120px repeat(7, 1fr)',
           background: 'linear-gradient(to right, rgba(242, 108, 58, 0.15), rgba(255, 138, 92, 0.15))',
           backgroundColor: '#374151'
         }}>
@@ -165,7 +167,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
 
         {/* Time rows */}
         {sortedTimes.map((time, timeIndex) => (
-          <div key={time} className={`grid grid-cols-8 border-b`} style={{ 
+          <div key={time} className="grid border-b" style={{ 
+            gridTemplateColumns: '120px repeat(7, 1fr)',
             borderColor: '#4B5563',
             backgroundColor: '#000000'
           }}>
@@ -206,9 +209,10 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
           </div>
         ))}
 
-        {/* As needed row - redesigned to match grid structure */}
+        {/* As needed row - redesigned to match grid structure with wider first column */}
         {asNeededMeds.length > 0 && (
-          <div className="grid grid-cols-8 border-t" style={{ 
+          <div className="grid border-t" style={{ 
+            gridTemplateColumns: '120px repeat(7, 1fr)',
             backgroundColor: '#000000', 
             borderColor: '#4B5563' 
           }}>
@@ -217,7 +221,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               borderColor: '#4B5563',
               color: '#E5E7EB'
             }}>
-              <div className="text-sm font-semibold">PRN</div>
+              <div className="text-sm font-semibold">As-needed</div>
             </div>
             
             {/* Span across all day columns for as-needed meds */}
@@ -296,7 +300,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                   {currentMedication && (
                     <>
                       <span style={{ color: 'rgba(255, 255, 255, 0.6)' }}>•</span>
-                      <span className="text-sm capitalize" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>{currentMedication.form}</span>
+                      <span className="text-2xl font-bold capitalize" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>{currentMedication.form}</span>
                     </>
                   )}
                 </div>

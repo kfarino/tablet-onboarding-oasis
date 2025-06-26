@@ -60,7 +60,7 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
           quantity: 1
         }
       ],
-      asNeeded: null
+      asNeeded: { maxPerDay: 4 }
     },
     // Albuterol - current medication being worked on
     {

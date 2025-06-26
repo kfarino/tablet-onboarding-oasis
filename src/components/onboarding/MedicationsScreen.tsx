@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Pill } from 'lucide-react';
@@ -32,12 +31,12 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
 }) => {
   const { userProfile, addMedication } = useOnboarding();
   
-  // Fix: Properly determine which medications to display
+  // Fix: Only show example medications when showExample is true
   const displayMedications = showExample ? exampleMedications : (userProfile.medications || []);
   const [selectedSchedule, setSelectedSchedule] = useState<DoseSchedule | null>(null);
   
-  // Current medication being worked on (last one in the list)
-  const currentMedication = displayMedications[displayMedications.length - 1];
+  // Current medication being worked on (last one in the list) - only if showing example
+  const currentMedication = showExample ? displayMedications[displayMedications.length - 1] : null;
 
   // More distinct color palette with better contrast
   const scheduleColors = [
@@ -254,7 +253,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
     );
   };
 
-  // Check if we should show empty state - only when not showing example AND no real medications
+  // Check if we should show empty state - when not showing example AND no real medications
   if (!showExample && displayMedications.length === 0) {
     return (
       <div className="animate-fade-in px-6 pb-10 space-y-6">
@@ -314,8 +313,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
           </div>
         </Card>
 
-        {/* Consolidated schedule */}
-        {renderConsolidatedSchedule()}
+        {/* Consolidated schedule - only show if we have medications */}
+        {displayMedications.length > 0 && renderConsolidatedSchedule()}
       </div>
 
       {/* Dose Details Dialog */}

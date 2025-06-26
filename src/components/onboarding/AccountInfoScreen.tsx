@@ -323,7 +323,7 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
                     </div>
                   )}
                   
-                  {!showExample && (
+                  {!showExample && showExample && (
                     <div className="flex gap-2 mt-2">
                       <Input
                         value={newCondition}

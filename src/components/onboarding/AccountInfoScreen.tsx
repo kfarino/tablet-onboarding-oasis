@@ -1,304 +1,427 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { User, Calendar, Phone, BellRing, Columns, Heart, Plus, X } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { USER_ROLES, UserRole, RELATIONSHIP_OPTIONS, ALERT_PREFERENCES, AlertPreference } from '@/types/onboarding';
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
-import { CaretSortIcon, CheckIcon, PlusCircle, User2 } from 'lucide-react';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from '@/components/ui/command';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
-import { UserRole, AlertPreference } from '@/types/onboarding';
+import { Input } from '@/components/ui/input';
 
 interface AccountInfoScreenProps {
   showExample?: boolean;
   previewRole?: UserRole | null;
 }
 
-const relationships = [
-  {
-    value: 'spouse',
-    label: 'Spouse',
-  },
-  {
-    value: 'child',
-    label: 'Child',
-  },
-  {
-    value: 'parent',
-    label: 'Parent',
-  },
-  {
-    value: 'sibling',
-    label: 'Sibling',
-  },
-  {
-    value: 'friend',
-    label: 'Friend',
-  },
-  {
-    value: 'other',
-    label: 'Other',
-  },
-];
+type LayoutType = 'dashboard' | 'split';
 
-const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = false, previewRole = null }) => {
+const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = false, previewRole }) => {
   const { userProfile, updateUserProfile, addHealthCondition, removeHealthCondition } = useOnboarding();
-  const [date, setDate] = useState<Date | undefined>(userProfile.dateOfBirth ? new Date(userProfile.dateOfBirth) : undefined);
+  const [layout, setLayout] = useState<LayoutType>('split');
   const [newCondition, setNewCondition] = useState('');
-  const [open, setOpen] = useState(false);
-  const [alert, setAlert] = useState(userProfile.alertPreference || null);
 
-  useEffect(() => {
-    if (date) {
-      updateUserProfile('dateOfBirth', date.toISOString());
+  // Example data for populated view
+  const exampleProfile = {
+    firstName: "Elizabeth Alexandra",
+    lastName: "Smith-Worthington",
+    role: UserRole.Caregiver,
+    relationship: "child",
+    phoneNumber: "(555) 123-4567",
+  };
+
+  // Example for primary user
+  const examplePrimaryUser = {
+    firstName: "Christopher Frederick",
+    lastName: "Johnson-Williams",
+    role: UserRole.PrimaryUser,
+    dateOfBirth: "05/12/1945",
+    phoneNumber: "(555) 987-6543",
+  };
+
+  // Example health conditions - primary user conditions
+  const examplePrimaryUserConditions = ["Diabetes Type 2", "Hypertension", "Arthritis"];
+  // Example health conditions - loved one conditions (for caregiver view)
+  const exampleLovedOneConditions = ["High Blood Pressure", "Osteoporosis"];
+
+  // Determine which role to display
+  const displayRole = previewRole || userProfile.role || UserRole.PrimaryUser;
+
+  const getRelationshipLabel = (relationship: string): string => {
+    switch (relationship) {
+      case 'spouse': return 'Spouse';
+      case 'child': return 'Child';
+      case 'parent': return 'Parent';
+      case 'sibling': return 'Sibling';
+      case 'friend': return 'Friend';
+      case 'other': return 'Other';
+      default: return 'Relationship';
     }
-  }, [date, updateUserProfile]);
+  };
 
-  useEffect(() => {
-    updateUserProfile('alertPreference', alert);
-  }, [alert, updateUserProfile]);
+  const getAlertPreferenceLabel = (preference: string): string => {
+    switch (preference) {
+      case 'text': return 'Text Message';
+      case 'phone_call': return 'Phone Call';
+      case 'app_notification': return 'App Notification';
+      default: return 'Not set';
+    }
+  };
 
   const handleAddCondition = () => {
-    if (newCondition.trim() !== '') {
+    if (newCondition.trim()) {
       addHealthCondition(newCondition.trim());
       setNewCondition('');
     }
   };
 
-  const handleRemoveCondition = (index: number) => {
-    removeHealthCondition(index);
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleAddCondition();
+    }
   };
 
-  return (
-    <div className="animate-fade-in px-6 pb-10 space-y-6">
-      {/* Account Information */}
-      <div className="space-y-2">
-        <h2 className="text-2xl font-bold text-white">Account Information</h2>
-        <p className="text-muted-foreground">
-          {showExample
-            ? `This is how ${previewRole === UserRole.Caregiver ? 'a loved one' : 'you'} will appear to others.`
-            : 'Tell us a little bit about yourself.'}
-        </p>
+  // Determine which conditions to display based on role and context
+  const getPrimaryUserConditions = () => {
+    return showExample ? examplePrimaryUserConditions : userProfile.healthConditions;
+  };
+
+  const getLovedOneConditions = () => {
+    return showExample ? exampleLovedOneConditions : (userProfile.lovedOne?.healthConditions || []);
+  };
+
+  // Layout toggle buttons
+  const layoutToggle = (
+    <div className="absolute top-2 right-2 flex space-x-2">
+      <button 
+        onClick={() => setLayout('dashboard')} 
+        className={`p-1 rounded-md ${layout === 'dashboard' ? 'bg-gray-700' : ''}`}
+      >
+        <BellRing size={16} className="text-white" />
+      </button>
+      <button 
+        onClick={() => setLayout('split')} 
+        className={`p-1 rounded-md ${layout === 'split' ? 'bg-gray-700' : ''}`}
+      >
+        <Columns size={16} className="text-white" />
+      </button>
+    </div>
+  );
+
+  // Dashboard Layout
+  const dashboardLayout = (
+    <div className="flex flex-col space-y-4">
+      <div className="rounded-lg border border-white/10 bg-white/5 p-4 flex items-center">
+        <div className="w-1/2 flex items-center">
+          <User className="text-highlight h-10 w-10 mr-3 flex-shrink-0" />
+          <div>
+            <p className="text-white text-xl font-bold break-words hyphens-auto">
+              {showExample || userProfile.firstName || userProfile.lastName
+                ? `${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.firstName : examplePrimaryUser.firstName) : userProfile.firstName || ""} ${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.lastName : examplePrimaryUser.lastName) : userProfile.lastName || ""}`
+                : "Name"}
+            </p>
+            <p className="text-highlight text-lg font-medium">
+              {displayRole === UserRole.Caregiver 
+                ? (showExample || userProfile.relationship 
+                    ? (showExample ? "Child" : getRelationshipLabel(userProfile.relationship)) 
+                    : "Relationship")
+                : 'Primary User'}
+            </p>
+            {/* Health Conditions in Dashboard Layout - only for Primary User */}
+            {displayRole === UserRole.PrimaryUser && (
+              <div className="mt-3">
+                {getPrimaryUserConditions().length === 0 ? (
+                  <p className="text-white/40 text-sm">No health conditions</p>
+                ) : (
+                  <div className="flex flex-wrap gap-1">
+                    {getPrimaryUserConditions().map((condition, index) => (
+                      <Badge 
+                        key={index} 
+                        className="bg-white/10 hover:bg-white/20 text-white text-xs py-1 px-2 flex items-center gap-1"
+                      >
+                        {condition}
+                        {!showExample && (
+                          <X 
+                            className="h-2 w-2 cursor-pointer hover:text-red-300" 
+                            onClick={() => removeHealthCondition(index)}
+                          />
+                        )}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+                
+                {!showExample && (
+                  <div className="flex gap-2 mt-2">
+                    <Input
+                      value={newCondition}
+                      onChange={(e) => setNewCondition(e.target.value)}
+                      onKeyPress={handleKeyPress}
+                      placeholder="Add condition"
+                      className="bg-white/10 border-white/20 text-white text-sm h-8"
+                    />
+                    <Button onClick={handleAddCondition} size="sm" className="bg-highlight hover:bg-highlight/90 h-8">
+                      <Plus className="h-3 w-3" />
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="w-1/2 flex items-center justify-end space-x-8">
+          {displayRole === UserRole.PrimaryUser && (
+            <div className="flex flex-col items-end">
+              <p className="text-white text-xl font-bold text-right">
+                {showExample || userProfile.dateOfBirth
+                  ? (showExample ? examplePrimaryUser.dateOfBirth : userProfile.dateOfBirth)
+                  : ""}
+              </p>
+              <p className="text-white/70 text-lg">Date of Birth</p>
+            </div>
+          )}
+          
+          <div className="flex flex-col items-end">
+            <p className="text-white text-xl font-bold whitespace-nowrap">
+              {showExample || userProfile.phoneNumber
+                ? (showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.phoneNumber : examplePrimaryUser.phoneNumber) : userProfile.phoneNumber)
+                : ""}
+            </p>
+            <p className="text-white/70 text-lg">Phone</p>
+          </div>
+        </div>
       </div>
 
-      {/* First Name */}
-      <div className="space-y-1">
-        <Label htmlFor="firstName" className="text-white">
-          First Name
-        </Label>
-        <Input
-          id="firstName"
-          placeholder="Enter your first name"
-          value={userProfile.firstName}
-          onChange={(e) => updateUserProfile('firstName', e.target.value)}
-          className="bg-white/5 border-white/20 text-white placeholder-white/50"
-        />
-      </div>
-
-      {/* Last Name */}
-      <div className="space-y-1">
-        <Label htmlFor="lastName" className="text-white">
-          Last Name
-        </Label>
-        <Input
-          id="lastName"
-          placeholder="Enter your last name"
-          value={userProfile.lastName}
-          onChange={(e) => updateUserProfile('lastName', e.target.value)}
-          className="bg-white/5 border-white/20 text-white placeholder-white/50"
-        />
-      </div>
-
-      {/* Role Selection */}
-      <div className="space-y-1">
-        <Label htmlFor="role" className="text-white">
-          I am a...
-        </Label>
-        <Select
-          defaultValue={userProfile.role}
-          onValueChange={(value) => updateUserProfile('role', value as UserRole)}
-        >
-          <SelectTrigger className="bg-white/5 border-white/20 text-white placeholder-white/50">
-            <SelectValue placeholder="Select a role" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value={UserRole.PrimaryUser}>Patient</SelectItem>
-            <SelectItem value={UserRole.Caregiver}>Caregiver</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Relationship (Only show if Caregiver is selected) */}
-      {userProfile.role === UserRole.Caregiver && (
-        <div className="space-y-1">
-          <Label htmlFor="relationship" className="text-white">
-            Relationship to Patient
-          </Label>
-          <Select
-            defaultValue={userProfile.relationship}
-            onValueChange={(value) => updateUserProfile('relationship', value)}
-          >
-            <SelectTrigger className="bg-white/5 border-white/20 text-white placeholder-white/50">
-              <SelectValue placeholder="Select relationship" />
-            </SelectTrigger>
-            <SelectContent>
-              {relationships.map((relationship) => (
-                <SelectItem key={relationship.value} value={relationship.value}>
-                  {relationship.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+      {displayRole === UserRole.Caregiver && (
+        <div className="rounded-lg border border-white/10 bg-white/5 p-4 flex items-center">
+          <div className="w-1/2 flex items-center">
+            <User className="text-highlight h-10 w-10 mr-3 flex-shrink-0" />
+            <div>
+              <p className="text-white text-xl font-bold break-words hyphens-auto">
+                {showExample || userProfile.lovedOne?.firstName || userProfile.lovedOne?.lastName
+                  ? (showExample ? "Margaret Eleanor Thompson" : `${userProfile.lovedOne?.firstName || ""} ${userProfile.lovedOne?.lastName || ""}`)
+                  : "Loved One's Name"}
+              </p>
+              <p className="text-highlight text-lg font-medium">
+                {showExample || userProfile.relationship
+                  ? (showExample ? "Parent" : getRelationshipLabel(userProfile.relationship))
+                  : "Relationship"}
+              </p>
+              {/* Health Conditions for Loved One in Dashboard Layout */}
+              <div className="mt-3">
+                {getLovedOneConditions().length === 0 ? (
+                  <p className="text-white/40 text-sm">No health conditions</p>
+                ) : (
+                  <div className="flex flex-wrap gap-1">
+                    {getLovedOneConditions().map((condition, index) => (
+                      <Badge 
+                        key={index} 
+                        className="bg-white/10 hover:bg-white/20 text-white text-xs py-1 px-2 flex items-center gap-1"
+                      >
+                        {condition}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+          
+          <div className="w-1/2 flex items-center justify-end space-x-8">
+            <div className="flex flex-col items-end">
+              <p className="text-white text-xl font-bold text-right">
+                {showExample || userProfile.lovedOne?.dateOfBirth
+                  ? (showExample ? "01/01/1970" : userProfile.lovedOne?.dateOfBirth)
+                  : ""}
+              </p>
+              <p className="text-white/70 text-lg">Date of Birth</p>
+            </div>
+            
+            <div className="flex flex-col items-end">
+              <p className="text-white text-xl font-bold whitespace-nowrap">
+                {showExample || userProfile.lovedOne?.phoneNumber
+                  ? (showExample ? "(555) 987-6543" : userProfile.lovedOne?.phoneNumber)
+                  : ""}
+              </p>
+              <p className="text-white/70 text-lg">
+                {showExample || userProfile.lovedOne?.alertPreference
+                  ? (showExample ? "Text Message" : getAlertPreferenceLabel(userProfile.lovedOne?.alertPreference))
+                  : "Alert Preference"}
+              </p>
+            </div>
+          </div>
         </div>
       )}
+    </div>
+  );
 
-      {/* Date of Birth */}
-      <div className="space-y-1">
-        <Label htmlFor="dateOfBirth" className="text-white">
-          Date of Birth
-        </Label>
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant={'outline'}
-              className={cn(
-                'w-full justify-start text-left font-normal bg-white/5 border-white/20 text-white placeholder-white/50',
-                !date && 'text-muted-foreground'
-              )}
-            >
-              {date ? format(date, 'PPP') : <span>Pick a date</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0 mt-4" align="start">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={setDate}
-              disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
-              initialFocus
-            />
-          </PopoverContent>
-        </Popover>
-      </div>
-
-      {/* Phone Number */}
-      <div className="space-y-1">
-        <Label htmlFor="phoneNumber" className="text-white">
-          Phone Number
-        </Label>
-        <Input
-          id="phoneNumber"
-          type="tel"
-          placeholder="Enter your phone number"
-          value={userProfile.phoneNumber}
-          onChange={(e) => updateUserProfile('phoneNumber', e.target.value)}
-          className="bg-white/5 border-white/20 text-white placeholder-white/50"
-        />
-      </div>
-
-      {/* Alert Preference */}
-      <div className="space-y-1">
-        <Label htmlFor="alertPreference" className="text-white">
-          Preferred Alert Method
-        </Label>
-        <Command>
-          <CommandTrigger className="flex h-11 w-full items-center justify-between rounded-md border border-white/20 bg-white/5 px-3 text-sm text-white placeholder:text-white/50 focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50">
-            {alert ? (
-              <div className="flex items-center gap-1">
-                {alert === AlertPreference.SMS ? 'SMS' : 'Voice'}
+  // Split Layout
+  const splitLayout = (
+    <div className="flex h-full">
+      {/* User Profile - Takes full width for Primary User, half width for Caregiver */}
+      <div className={`${displayRole === UserRole.PrimaryUser ? 'w-full' : 'w-1/2 pr-2'} flex flex-col space-y-4`}>
+        <div className="rounded-lg border border-white/10 bg-white/5 p-4 flex-1">
+          <div className="mb-4">
+            <p className="text-white text-3xl font-bold break-words">
+              {showExample || userProfile.firstName || userProfile.lastName
+                ? `${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.firstName : examplePrimaryUser.firstName) : userProfile.firstName || ""} ${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.lastName : examplePrimaryUser.lastName) : userProfile.lastName || ""}`
+                : "Name"}
+            </p>
+            <p className="text-highlight text-xl">
+              {displayRole === UserRole.Caregiver 
+                ? (showExample || userProfile.relationship 
+                    ? (showExample ? "Child" : getRelationshipLabel(userProfile.relationship)) 
+                    : "Relationship")
+                : 'Primary User'}
+            </p>
+          </div>
+          
+          <div className="space-y-3 ml-1">
+            <div className="flex items-center">
+              <Phone className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+              <p className="text-white text-xl whitespace-nowrap overflow-hidden text-ellipsis">
+                {showExample || userProfile.phoneNumber
+                  ? (showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.phoneNumber : examplePrimaryUser.phoneNumber) : userProfile.phoneNumber)
+                  : "Not provided"}
+              </p>
+            </div>
+            
+            {displayRole === UserRole.PrimaryUser && (
+              <div className="flex items-center">
+                <Calendar className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+                <p className="text-white text-xl">
+                  {showExample || userProfile.dateOfBirth
+                    ? (showExample ? examplePrimaryUser.dateOfBirth : userProfile.dateOfBirth)
+                    : "Not provided"}
+                </p>
               </div>
-            ) : (
-              'Select alert preference'
             )}
-            <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </CommandTrigger>
-          <CommandList>
-            <CommandInput placeholder="Type a few letters to filter..." />
-            <CommandEmpty>No preference found.</CommandEmpty>
-            <CommandGroup>
-              <CommandItem
-                value="SMS"
-                onSelect={() => {
-                  setAlert(AlertPreference.SMS);
-                }}
-              >
-                <CheckIcon
-                  className={cn(
-                    'mr-2 h-4 w-4',
-                    alert === AlertPreference.SMS ? 'opacity-100' : 'opacity-0'
-                  )}
-                />
-                SMS
-              </CommandItem>
-              <CommandItem
-                value="Voice"
-                onSelect={() => {
-                  setAlert(AlertPreference.Voice);
-                }}
-              >
-                <CheckIcon
-                  className={cn(
-                    'mr-2 h-4 w-4',
-                    alert === AlertPreference.Voice ? 'opacity-100' : 'opacity-0'
-                  )}
-                />
-                Voice
-              </CommandItem>
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </div>
 
-      {/* Health Conditions */}
-      <div className="space-y-1">
-        <Label className="text-white">Health Conditions</Label>
-        <ScrollArea className="rounded-md border border-white/20 h-32 p-2 bg-white/5">
-          <div className="grid grid-cols-1 gap-2">
-            {userProfile.healthConditions.map((condition, index) => (
-              <Badge key={index} variant="secondary" className="gap-x-2 text-white items-center">
-                {condition}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="hover:bg-white/10 text-white -mr-2"
-                  onClick={() => handleRemoveCondition(index)}
-                >
-                  <PlusCircle className="h-4 w-4 rotate-45" />
-                </Button>
-              </Badge>
-            ))}
+            {/* Health Conditions Section - only for Primary User in split layout */}
+            {displayRole === UserRole.PrimaryUser && (
+              <div className="flex items-center">
+                <Heart className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+                <div className="flex-1">
+                  {getPrimaryUserConditions().length === 0 ? (
+                    <p className="text-white text-xl">No health conditions</p>
+                  ) : (
+                    <div className="flex flex-wrap gap-2">
+                      {getPrimaryUserConditions().map((condition, index) => (
+                        <Badge 
+                          key={index} 
+                          className="bg-white/10 hover:bg-white/20 text-white text-base py-1 px-3 flex items-center gap-2"
+                        >
+                          {condition}
+                          {!showExample && (
+                            <X 
+                              className="h-3 w-3 cursor-pointer hover:text-red-300" 
+                              onClick={() => removeHealthCondition(index)}
+                            />
+                          )}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {!showExample && showExample && (
+                    <div className="flex gap-2 mt-2">
+                      <Input
+                        value={newCondition}
+                        onChange={(e) => setNewCondition(e.target.value)}
+                        onKeyPress={handleKeyPress}
+                        placeholder="Add health condition"
+                        className="bg-white/10 border-white/20 text-white flex-1"
+                      />
+                      <Button onClick={handleAddCondition} size="sm" className="bg-highlight hover:bg-highlight/90">
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
-        </ScrollArea>
-        
-        {showExample && (
-          <div className="flex gap-2 mt-2">
-            <Input
-              value={newCondition}
-              onChange={(e) => setNewCondition(e.target.value)}
-              placeholder="Enter health condition"
-              className="flex-1 bg-white/5 border-white/20 text-white placeholder-white/50"
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  handleAddCondition();
-                }
-              }}
-            />
-            <Button
-              onClick={handleAddCondition}
-              disabled={!newCondition.trim()}
-              size="sm"
-              className="bg-highlight hover:bg-highlight/90 text-white"
-            >
-              Add
-            </Button>
-          </div>
-        )}
+        </div>
       </div>
+      
+      {/* Right Half - Loved One Profile (only for caregivers) */}
+      {displayRole === UserRole.Caregiver && (
+        <div className="w-1/2 pl-2 flex flex-col">
+          <div className="rounded-lg border border-white/10 bg-white/5 p-4">
+            <div className="mb-4">
+              <p className="text-white text-3xl font-bold break-words">
+                {showExample || userProfile.lovedOne?.firstName || userProfile.lovedOne?.lastName
+                  ? (showExample ? "Margaret Eleanor Thompson" : `${userProfile.lovedOne?.firstName || ""} ${userProfile.lovedOne?.lastName || ""}`)
+                  : "Loved One's Name"}
+              </p>
+              <p className="text-highlight text-xl">
+                {showExample || userProfile.relationship
+                  ? (showExample ? "Parent" : getRelationshipLabel(userProfile.relationship))
+                  : "Relationship"}
+              </p>
+            </div>
+            
+            <div className="space-y-3 ml-1">
+              <div className="flex items-center">
+                <Phone className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+                <p className="text-white text-xl whitespace-nowrap overflow-hidden text-ellipsis">
+                  {showExample || userProfile.lovedOne?.phoneNumber
+                    ? (showExample ? "(555) 987-6543" : userProfile.lovedOne?.phoneNumber)
+                    : "Not provided"}
+                </p>
+              </div>
+              
+              <div className="flex items-center">
+                <Calendar className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+                <p className="text-white text-xl">
+                  {showExample || userProfile.lovedOne?.dateOfBirth
+                    ? (showExample ? "01/01/1970" : userProfile.lovedOne?.dateOfBirth)
+                    : "Not provided"}
+                </p>
+              </div>
+              
+              <div className="flex items-center">
+                <BellRing className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+                <p className="text-white text-xl">
+                  {showExample || userProfile.lovedOne?.alertPreference
+                    ? (showExample ? "Text Message" : getAlertPreferenceLabel(userProfile.lovedOne?.alertPreference))
+                    : "Not provided"}
+                </p>
+              </div>
+
+              {/* Health Conditions Section for Loved One */}
+              <div className="flex items-center">
+                <Heart className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+                <div className="flex-1">
+                  {getLovedOneConditions().length === 0 ? (
+                    <p className="text-white text-xl">No health conditions</p>
+                  ) : (
+                    <div className="flex flex-wrap gap-2">
+                      {getLovedOneConditions().map((condition, index) => (
+                        <Badge 
+                          key={index} 
+                          className="bg-white/10 hover:bg-white/20 text-white text-base py-1 px-3 flex items-center gap-2"
+                        >
+                          {condition}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  return (
+    <div className="animate-fade-in flex flex-col h-full px-6 py-2 relative">
+      {layoutToggle}
+      
+      {layout === 'dashboard' && dashboardLayout}
+      {layout === 'split' && splitLayout}
     </div>
   );
 };

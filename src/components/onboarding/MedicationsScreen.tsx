@@ -111,12 +111,15 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
     });
 
     return (
-      <div className="rounded-lg overflow-hidden border" style={{ 
-        borderColor: '#374151', 
-        backgroundColor: '#1F2937' 
+      <div className="rounded-lg overflow-hidden border-2" style={{ 
+        borderColor: '#F26C3A', 
+        backgroundColor: '#000000' 
       }}>
-        {/* Header */}
-        <div className="grid grid-cols-8 text-xs" style={{ backgroundColor: '#374151' }}>
+        {/* Header - same background as current med container */}
+        <div className="grid grid-cols-8 text-xs" style={{ 
+          background: 'linear-gradient(to right, rgba(242, 108, 58, 0.15), rgba(255, 138, 92, 0.15))',
+          backgroundColor: '#1F2937'
+        }}>
           <div className="p-2 font-semibold text-white text-center border-r" style={{ borderColor: '#4B5563' }}>
             Time
           </div>
@@ -127,11 +130,11 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
           ))}
         </div>
 
-        {/* Time rows */}
+        {/* Time rows - black background */}
         {sortedTimes.map((time, timeIndex) => (
           <div key={time} className={`grid grid-cols-8 border-b`} style={{ 
             borderColor: '#4B5563',
-            backgroundColor: timeIndex % 2 === 0 ? '#1F2937' : '#111827'
+            backgroundColor: '#000000'
           }}>
             {/* Time column */}
             <div className="p-2 text-center min-h-[50px] flex items-center justify-center border-r" style={{ 
@@ -158,7 +161,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                         className="rounded flex-1 h-8 relative"
                         style={{ 
                           backgroundColor: schedule.color,
-                          opacity: schedule.isCurrentMedSchedule ? 1 : 0.5
+                          opacity: schedule.isCurrentMedSchedule ? 1 : 0.3
                         }}
                         title={schedule.medications.join(', ')}
                       />
@@ -173,7 +176,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         {/* As needed section */}
         {displayMedications.some(med => med.asNeeded) && (
           <div className="border-t" style={{ 
-            backgroundColor: '#374151', 
+            backgroundColor: '#000000', 
             borderColor: '#4B5563' 
           }}>
             <div className="grid grid-cols-8 text-xs">
@@ -181,7 +184,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                 color: '#E5E7EB',
                 borderColor: '#4B5563'
               }}>
-                PRN
+                As-needed
               </div>
               <div className="col-span-7 p-2 flex flex-wrap items-center gap-1">
                 {displayMedications

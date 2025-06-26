@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Pill, Calendar as CalendarIcon } from 'lucide-react';
@@ -143,52 +142,14 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
     const daysOfWeek = ['Su', 'M', 'T', 'W', 'Th', 'F', 'Sa'];
     const fullDayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
-    // Create consolidated dose groups with color coding
-    const doseGroups: Array<{
-      id: string;
-      time: string;
-      days: string[];
-      medications: Array<{
-        name: string;
-        strength: string;
-        quantity: number;
-      }>;
-      color: string;
-    }> = [];
-
-    // Color mapping based on day patterns
-    const getColorForDayPattern = (days: string[]): string => {
-      const daySet = new Set(days);
-      
-      // Everyday - green
-      if (daySet.has('everyday')) return 'bg-green-500';
-      
-      // Weekend only (Sunday + Saturday) - red
-      if (daySet.size === 2 && daySet.has('sunday') && daySet.has('saturday')) return 'bg-red-500';
-      
-      // Tuesday + Thursday - blue
-      if (daySet.size === 2 && daySet.has('tuesday') && daySet.has('thursday')) return 'bg-blue-500';
-      
-      // Sunday + Monday - purple
-      if (daySet.size === 2 && daySet.has('sunday') && daySet.has('monday')) return 'bg-purple-500';
-      
-      // Default colors for other patterns
-      return 'bg-gray-500';
-    };
-
-    // Group doses by time and day pattern
-    const timeGroups: Record<string, Record<string, Array<{
-      medName: string;
-      medStrength: string;
-      quantity: number;
-      days: string[];
-    }>>> = {};
+    // Group medications by time and day pattern
+    const timeGroups: Record<string, Record<string, string[]>> = {};
 
     displayMedications.forEach(med => {
       med.doses.forEach(dose => {
         dose.times.forEach(time => {
           if (time.toLowerCase() !== "as needed") {
-            const dayPattern = dose.days.join(',');
+            const dayPattern = dose.days.sort().join(',');
             
             if (!timeGroups[time]) {
               timeGroups[time] = {};
@@ -197,51 +158,27 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               timeGroups[time][dayPattern] = [];
             }
             
-            timeGroups[time][dayPattern].push({
-              medName: med.name,
-              medStrength: med.strength || '',
-              quantity: dose.quantity,
-              days: dose.days
-            });
+            // Add medication name to this time/day pattern group
+            timeGroups[time][dayPattern].push(med.name);
           }
         });
       });
     });
 
-    // Convert to display format
-    Object.keys(timeGroups).forEach(time => {
-      Object.keys(timeGroups[time]).forEach(dayPattern => {
-        const meds = timeGroups[time][dayPattern];
-        const days = meds[0].days;
-        
-        doseGroups.push({
-          id: `${time}-${dayPattern}`,
-          time: time,
-          days: days,
-          medications: meds.map(med => ({
-            name: med.medName,
-            strength: med.medStrength,
-            quantity: med.quantity
-          })),
-          color: getColorForDayPattern(days)
-        });
-      });
-    });
+    // Get color for day pattern
+    const getColorForDayPattern = (days: string[]): string => {
+      const daySet = new Set(days);
+      
+      if (daySet.has('everyday')) return 'bg-green-500';
+      if (daySet.size === 2 && daySet.has('sunday') && daySet.has('saturday')) return 'bg-red-500';
+      if (daySet.size === 2 && daySet.has('tuesday') && daySet.has('thursday')) return 'bg-blue-500';
+      if (daySet.size === 2 && daySet.has('sunday') && daySet.has('monday')) return 'bg-purple-500';
+      
+      return 'bg-gray-500';
+    };
 
-    // Sort groups by time
-    const sortedGroups = doseGroups.sort((a, b) => {
-      const parseTime = (timeStr: string) => {
-        const [time, meridiem] = timeStr.split(' ');
-        let [hours, minutes] = time.split(':').map(Number);
-        if (meridiem === 'PM' && hours !== 12) hours += 12;
-        if (meridiem === 'AM' && hours === 12) hours = 0;
-        return hours * 60 + (minutes || 0);
-      };
-      return parseTime(a.time) - parseTime(b.time);
-    });
-
-    // Get unique times
-    const uniqueTimes = [...new Set(sortedGroups.map(group => group.time))].sort((a, b) => {
+    // Sort times
+    const sortedTimes = Object.keys(timeGroups).sort((a, b) => {
       const parseTime = (timeStr: string) => {
         const [time, meridiem] = timeStr.split(' ');
         let [hours, minutes] = time.split(':').map(Number);
@@ -254,7 +191,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
 
     return (
       <div className="bg-white/5 rounded-md overflow-hidden border border-white/10">
-        {/* Compact header */}
+        {/* Header */}
         <div className="grid grid-cols-8 bg-blue-600 text-xs">
           <div className="p-2 font-semibold text-white text-center border-r border-blue-500">
             Time
@@ -267,7 +204,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         </div>
 
         {/* Time rows */}
-        {uniqueTimes.map((time, timeIndex) => (
+        {sortedTimes.map((time, timeIndex) => (
           <div key={time} className={`grid grid-cols-8 border-b border-white/10 ${timeIndex % 2 === 0 ? 'bg-white/2' : 'bg-white/5'}`}>
             {/* Time column */}
             <div className="p-2 text-white border-r border-white/10 text-center min-h-[60px] flex flex-col justify-center">
@@ -277,31 +214,36 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
             
             {/* Day columns */}
             {daysOfWeek.map((_, dayIndex) => {
-              const groupsForThisTimeAndDay = sortedGroups.filter(group => {
-                if (group.time !== time) return false;
-                if (group.days.includes('everyday')) return true;
-                const fullDayName = fullDayNames[dayIndex];
-                return group.days.includes(fullDayName);
+              const fullDayName = fullDayNames[dayIndex];
+              const dayPatterns = Object.keys(timeGroups[time]).filter(dayPattern => {
+                const days = dayPattern.split(',');
+                return days.includes('everyday') || days.includes(fullDayName);
               });
 
               return (
                 <div key={dayIndex} className="p-1 border-r border-white/10 last:border-r-0 min-h-[60px] flex flex-col gap-1 justify-center">
-                  {groupsForThisTimeAndDay.map(group => (
-                    <div key={group.id} className="space-y-1">
-                      {group.medications.map((med, medIndex) => (
-                        <div 
-                          key={`${group.id}-${medIndex}`}
-                          className={`${group.color} rounded px-2 py-1 text-white text-xs font-medium flex items-center gap-1 justify-center`}
-                          title={`${med.name} ${med.strength} - ${med.quantity}x`}
-                        >
-                          <Pill className="h-3 w-3 flex-shrink-0" />
-                          <span className="truncate text-center">
-                            {med.name.length > 10 ? med.name.substring(0, 10) + '...' : med.name}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  ))}
+                  {dayPatterns.map(dayPattern => {
+                    const days = dayPattern.split(',');
+                    const medNames = timeGroups[time][dayPattern];
+                    const color = getColorForDayPattern(days);
+                    
+                    return (
+                      <div key={dayPattern} className="space-y-1">
+                        {medNames.map((medName, medIndex) => (
+                          <div 
+                            key={`${dayPattern}-${medIndex}`}
+                            className={`${color} rounded px-2 py-1 text-white text-xs font-medium flex items-center gap-1 justify-center`}
+                            title={medName}
+                          >
+                            <Pill className="h-3 w-3 flex-shrink-0" />
+                            <span className="truncate text-center">
+                              {medName.length > 8 ? medName.substring(0, 8) + '...' : medName}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  })}
                 </div>
               );
             })}
@@ -350,7 +292,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
       <div className="flex items-center gap-2 px-1">
         <CalendarIcon className="h-4 w-4 text-white" />
         <h3 className="text-lg font-bold text-white">
-          Consolidated Medication Schedule
+          Medications
         </h3>
         <Badge variant="outline" className="bg-white/10 text-white/70 text-xs">
           {displayMedications.length} medications

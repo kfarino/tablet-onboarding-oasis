@@ -23,6 +23,20 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   const { userProfile, addMedication } = useOnboarding();
   const displayMedications = showExample ? exampleMedications : userProfile.medications;
 
+  // Create a color palette for dose schedules
+  const scheduleColors = [
+    'bg-blue-500',
+    'bg-green-500', 
+    'bg-purple-500',
+    'bg-red-500',
+    'bg-yellow-500',
+    'bg-indigo-500',
+    'bg-pink-500',
+    'bg-orange-500',
+    'bg-teal-500',
+    'bg-cyan-500'
+  ];
+
   // Group medications by time and day pattern to create dose schedules
   const createDoseSchedules = () => {
     const schedules: Record<string, {
@@ -31,6 +45,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
       medications: string[];
       color: string;
     }> = {};
+
+    let colorIndex = 0;
 
     displayMedications.forEach(med => {
       med.doses.forEach(dose => {
@@ -44,8 +60,9 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                 time,
                 dayPattern,
                 medications: [],
-                color: getColorForDayPattern(dose.days)
+                color: scheduleColors[colorIndex % scheduleColors.length]
               };
+              colorIndex++;
             }
             
             schedules[scheduleKey].medications.push(med.name);

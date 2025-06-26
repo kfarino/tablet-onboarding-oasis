@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Wifi, ArrowLeft, ArrowRight, Eye } from 'lucide-react';
 import { format } from 'date-fns';
@@ -38,28 +37,29 @@ const Header: React.FC<HeaderProps> = ({
     return () => clearInterval(interval);
   }, []);
 
+  const canGoBack = () => {
+    if (showMedicationSchedule) return false;
+    return currentStep > OnboardingStep.Welcome && currentStep !== OnboardingStep.Complete;
+  };
+
   const getStepTitle = () => {
-    if (currentStep === undefined) return "";
-    
     switch (currentStep) {
       case OnboardingStep.Welcome:
-        return "Welcome";
+        return 'Welcome';
       case OnboardingStep.PersonalInfo:
-        return "Account";
-      case OnboardingStep.HealthConditions:
-        return "Health Conditions";
+        return 'Account Details';
       case OnboardingStep.Medications:
-        return "Medications";
+        return 'Medications';
       case OnboardingStep.Review:
-        return "Review";
+        return 'Review';
       case OnboardingStep.Complete:
-        return "Setup Complete";
+        return 'Complete!';
       default:
-        return "";
+        return '';
     }
   };
 
-  const showBackButton = currentStep !== undefined && 
+  const showBackButton = canGoBack() && 
     currentStep !== OnboardingStep.Welcome && 
     currentStep !== OnboardingStep.Complete;
     

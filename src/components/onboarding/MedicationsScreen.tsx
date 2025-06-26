@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Pill } from 'lucide-react';
@@ -30,7 +31,9 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   exampleMedications = []
 }) => {
   const { userProfile, addMedication } = useOnboarding();
-  const displayMedications = showExample ? exampleMedications : userProfile.medications;
+  
+  // Fix: Properly determine which medications to display
+  const displayMedications = showExample ? exampleMedications : (userProfile.medications || []);
   const [selectedSchedule, setSelectedSchedule] = useState<DoseSchedule | null>(null);
   
   // Current medication being worked on (last one in the list)
@@ -141,12 +144,12 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
     return (
       <div className="rounded-lg overflow-hidden border-2" style={{ 
         borderColor: '#F26C3A', 
-        backgroundColor: '#000000' 
+        backgroundColor: '#374151' 
       }}>
-        {/* Header - same background as current med container */}
+        {/* Header */}
         <div className="grid grid-cols-8 text-xs" style={{ 
           background: 'linear-gradient(to right, rgba(242, 108, 58, 0.15), rgba(255, 138, 92, 0.15))',
-          backgroundColor: '#1F2937'
+          backgroundColor: '#374151'
         }}>
           <div className="p-2 font-semibold text-white text-center border-r" style={{ borderColor: '#4B5563' }}>
             Time
@@ -158,11 +161,11 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
           ))}
         </div>
 
-        {/* Time rows - black background */}
+        {/* Time rows */}
         {sortedTimes.map((time, timeIndex) => (
           <div key={time} className={`grid grid-cols-8 border-b`} style={{ 
             borderColor: '#4B5563',
-            backgroundColor: '#000000'
+            backgroundColor: '#374151'
           }}>
             {/* Time column */}
             <div className="p-2 text-center min-h-[50px] flex items-center justify-center border-r" style={{ 
@@ -204,7 +207,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         {/* As needed section */}
         {displayMedications.some(med => med.asNeeded) && (
           <div className="border-t" style={{ 
-            backgroundColor: '#000000', 
+            backgroundColor: '#374151', 
             borderColor: '#4B5563' 
           }}>
             <div className="grid grid-cols-8 text-xs">
@@ -243,14 +246,14 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   };
 
   // Check if we should show empty state - only when not showing example AND no real medications
-  if (!showExample && (!displayMedications || displayMedications.length === 0)) {
+  if (!showExample && displayMedications.length === 0) {
     return (
       <div className="animate-fade-in px-6 pb-10 space-y-6">
         {/* Current medication container */}
         <Card className="border p-4" style={{ 
           background: 'linear-gradient(to right, rgba(242, 108, 58, 0.1), rgba(255, 138, 92, 0.1))',
           borderColor: 'rgba(242, 108, 58, 0.3)',
-          backgroundColor: '#1F2937'
+          backgroundColor: '#374151'
         }}>
           <div className="flex items-center justify-center py-8">
             <div className="text-center">
@@ -276,7 +279,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         <Card className="border p-3" style={{ 
           background: 'linear-gradient(to right, rgba(242, 108, 58, 0.15), rgba(255, 138, 92, 0.15))',
           borderColor: 'rgba(242, 108, 58, 0.4)',
-          backgroundColor: '#1F2937'
+          backgroundColor: '#374151'
         }}>
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center w-10 h-10 rounded-full border" style={{ 

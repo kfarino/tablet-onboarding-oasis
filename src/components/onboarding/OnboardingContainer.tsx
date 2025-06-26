@@ -6,7 +6,6 @@ import WelcomeScreen from './WelcomeScreen';
 import AccountInfoScreen from './AccountInfoScreen';
 import MedicationsScreen from './MedicationsScreen';
 import SingleMedicationCaptureScreen from './SingleMedicationCaptureScreen';
-import ReviewScreen from './ReviewScreen';
 import CompleteScreen from './CompleteScreen';
 import ProgressIndicator from './ProgressIndicator';
 import Header from '../Header';
@@ -208,13 +207,6 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
         return <AccountInfoScreen showExample={showExample} previewRole={previewRole} />;
       case OnboardingStep.Medications:
         return <MedicationsScreen 
-                 showExample={showExample} 
-                 showMedicationSchedule={showMedicationSchedule}
-                 setShowMedicationSchedule={setShowMedicationSchedule}
-                 exampleMedications={exampleMedications}
-               />;
-      case OnboardingStep.Review:
-        return <ReviewScreen 
                  showExample={showExample} 
                  showMedicationSchedule={showMedicationSchedule}
                  setShowMedicationSchedule={setShowMedicationSchedule}

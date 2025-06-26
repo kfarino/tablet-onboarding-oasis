@@ -141,13 +141,20 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
       ],
       asNeeded: null
     },
-    // As-needed medication
+    // Both scheduled and as-needed medication
     {
       id: uuidv4(),
       name: "Tylenol",
       strength: "500mg",
       form: "tablet",
-      doses: [],
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["8:00 AM", "6:00 PM"],
+          quantity: 1
+        }
+      ],
       asNeeded: { maxPerDay: 6 }
     }
   ];

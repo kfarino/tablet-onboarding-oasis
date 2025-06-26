@@ -22,6 +22,9 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
 }) => {
   const { userProfile, addMedication } = useOnboarding();
   const displayMedications = showExample ? exampleMedications : userProfile.medications;
+  
+  // Current medication being worked on (last one in the list)
+  const currentMedication = displayMedications[displayMedications.length - 1];
 
   // Create a color palette for dose schedules
   const scheduleColors = [
@@ -44,6 +47,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
       dayPattern: string;
       medications: string[];
       color: string;
+      isCurrentMedSchedule?: boolean;
     }> = {};
 
     let colorIndex = 0;
@@ -60,12 +64,18 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                 time,
                 dayPattern,
                 medications: [],
-                color: scheduleColors[colorIndex % scheduleColors.length]
+                color: scheduleColors[colorIndex % scheduleColors.length],
+                isCurrentMedSchedule: false
               };
               colorIndex++;
             }
             
             schedules[scheduleKey].medications.push(med.name);
+            
+            // Check if this schedule contains the current medication
+            if (currentMedication && med.id === currentMedication.id) {
+              schedules[scheduleKey].isCurrentMedSchedule = true;
+            }
           }
         });
       });
@@ -146,7 +156,9 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                   {applicableSchedules.map((schedule, scheduleIndex) => (
                     <div 
                       key={scheduleIndex}
-                      className={`${schedule.color} rounded w-full h-8`}
+                      className={`${schedule.color} rounded w-full h-8 relative ${
+                        schedule.isCurrentMedSchedule ? 'ring-2 ring-highlight ring-offset-1 ring-offset-charcoal' : ''
+                      }`}
                       title={schedule.medications.join(', ')}
                     />
                   ))}
@@ -212,11 +224,22 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
       {/* Current medication container */}
       <Card className="bg-white/5 border-white/10 p-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <Pill className="h-5 w-5 text-white" />
-            <h3 className="text-lg font-semibold text-white">Current Medication</h3>
+            <div className="flex flex-col">
+              <h3 className="text-lg font-semibold text-white">
+                {currentMedication?.name || 'New Medication'}
+              </h3>
+              {currentMedication && (
+                <div className="flex items-center gap-2 text-sm text-white/70">
+                  <span>{currentMedication.strength}</span>
+                  <span>•</span>
+                  <span className="capitalize">{currentMedication.form}</span>
+                </div>
+              )}
+            </div>
             <Badge variant="outline" className="bg-white/10 text-white/70 text-xs">
-              Working on: {displayMedications[displayMedications.length - 1]?.name || 'New medication'}
+              Working on this
             </Badge>
           </div>
           <Button 

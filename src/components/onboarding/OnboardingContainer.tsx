@@ -29,7 +29,7 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
   const [previewRole, setPreviewRole] = useState<UserRole | null>(null);
   const [showSingleMedicationCapture, setShowSingleMedicationCapture] = useState(false);
 
-  // Simplified example medications - 8 total with cleaner patterns
+  // Simplified example medications - 9 total with cleaner patterns
   const exampleMedications = [
     // Everyday morning medications
     {
@@ -58,6 +58,22 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
           days: ["everyday"],
           times: ["8:00 AM", "6:00 PM"],
           quantity: 1
+        }
+      ],
+      asNeeded: null
+    },
+    // Albuterol - current medication being worked on
+    {
+      id: uuidv4(),
+      name: "Albuterol",
+      strength: "90mcg",
+      form: "inhaler",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["8:00 AM", "6:00 PM"],
+          quantity: 2
         }
       ],
       asNeeded: null
@@ -125,7 +141,7 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
       ],
       asNeeded: null
     },
-    // As-needed medications
+    // As-needed medication
     {
       id: uuidv4(),
       name: "Tylenol",
@@ -133,14 +149,6 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
       form: "tablet",
       doses: [],
       asNeeded: { maxPerDay: 6 }
-    },
-    {
-      id: uuidv4(),
-      name: "Albuterol",
-      strength: "90mcg",
-      form: "inhaler",
-      doses: [],
-      asNeeded: { maxPerDay: 8 }
     }
   ];
 

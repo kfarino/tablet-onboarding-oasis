@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { OnboardingStep, UserRole } from '@/types/onboarding';
@@ -152,6 +153,12 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
           id: uuidv4(),
           days: ["saturday", "sunday"],
           times: ["8:00 AM"],
+          quantity: 1
+        },
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["6:00 PM"],
           quantity: 1
         }
       ],

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Input } from '@/components/ui/input';
@@ -9,7 +8,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
-import { ChevronDown, CheckIcon, PlusCircle, User2 } from 'lucide-react';
+import { CaretSortIcon, CheckIcon, PlusCircle, User2 } from 'lucide-react';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from '@/components/ui/command';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
@@ -47,13 +46,12 @@ const relationships = [
   },
 ];
 
-const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = true, previewRole = UserRole.PrimaryUser }) => {
+const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = false, previewRole = null }) => {
   const { userProfile, updateUserProfile, addHealthCondition, removeHealthCondition } = useOnboarding();
   const [date, setDate] = useState<Date | undefined>(userProfile.dateOfBirth ? new Date(userProfile.dateOfBirth) : undefined);
   const [newCondition, setNewCondition] = useState('');
   const [open, setOpen] = useState(false);
   const [alert, setAlert] = useState(userProfile.alertPreference || null);
-  const [commandOpen, setCommandOpen] = useState(false);
 
   useEffect(() => {
     if (date) {
@@ -208,81 +206,52 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = tru
         <Label htmlFor="alertPreference" className="text-white">
           Preferred Alert Method
         </Label>
-        <Popover open={commandOpen} onOpenChange={setCommandOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              role="combobox"
-              aria-expanded={commandOpen}
-              className="w-full justify-between bg-white/5 border-white/20 text-white placeholder-white/50"
-            >
-              {alert ? (
-                <div className="flex items-center gap-1">
-                  {alert === AlertPreference.Text ? 'Text Message' : 
-                   alert === AlertPreference.PhoneCall ? 'Phone Call' : 'App Notification'}
-                </div>
-              ) : (
-                'Select alert preference'
-              )}
-              <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-full p-0">
-            <Command>
-              <CommandInput placeholder="Type a few letters to filter..." />
-              <CommandEmpty>No preference found.</CommandEmpty>
-              <CommandList>
-                <CommandGroup>
-                  <CommandItem
-                    value="text"
-                    onSelect={() => {
-                      setAlert(AlertPreference.Text);
-                      setCommandOpen(false);
-                    }}
-                  >
-                    <CheckIcon
-                      className={cn(
-                        'mr-2 h-4 w-4',
-                        alert === AlertPreference.Text ? 'opacity-100' : 'opacity-0'
-                      )}
-                    />
-                    Text Message
-                  </CommandItem>
-                  <CommandItem
-                    value="phone_call"
-                    onSelect={() => {
-                      setAlert(AlertPreference.PhoneCall);
-                      setCommandOpen(false);
-                    }}
-                  >
-                    <CheckIcon
-                      className={cn(
-                        'mr-2 h-4 w-4',
-                        alert === AlertPreference.PhoneCall ? 'opacity-100' : 'opacity-0'
-                      )}
-                    />
-                    Phone Call
-                  </CommandItem>
-                  <CommandItem
-                    value="app_notification"
-                    onSelect={() => {
-                      setAlert(AlertPreference.AppNotification);
-                      setCommandOpen(false);
-                    }}
-                  >
-                    <CheckIcon
-                      className={cn(
-                        'mr-2 h-4 w-4',
-                        alert === AlertPreference.AppNotification ? 'opacity-100' : 'opacity-0'
-                      )}
-                    />
-                    App Notification
-                  </CommandItem>
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
+        <Command>
+          <CommandTrigger className="flex h-11 w-full items-center justify-between rounded-md border border-white/20 bg-white/5 px-3 text-sm text-white placeholder:text-white/50 focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50">
+            {alert ? (
+              <div className="flex items-center gap-1">
+                {alert === AlertPreference.SMS ? 'SMS' : 'Voice'}
+              </div>
+            ) : (
+              'Select alert preference'
+            )}
+            <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </CommandTrigger>
+          <CommandList>
+            <CommandInput placeholder="Type a few letters to filter..." />
+            <CommandEmpty>No preference found.</CommandEmpty>
+            <CommandGroup>
+              <CommandItem
+                value="SMS"
+                onSelect={() => {
+                  setAlert(AlertPreference.SMS);
+                }}
+              >
+                <CheckIcon
+                  className={cn(
+                    'mr-2 h-4 w-4',
+                    alert === AlertPreference.SMS ? 'opacity-100' : 'opacity-0'
+                  )}
+                />
+                SMS
+              </CommandItem>
+              <CommandItem
+                value="Voice"
+                onSelect={() => {
+                  setAlert(AlertPreference.Voice);
+                }}
+              >
+                <CheckIcon
+                  className={cn(
+                    'mr-2 h-4 w-4',
+                    alert === AlertPreference.Voice ? 'opacity-100' : 'opacity-0'
+                  )}
+                />
+                Voice
+              </CommandItem>
+            </CommandGroup>
+          </CommandList>
+        </Command>
       </div>
 
       {/* Health Conditions */}
@@ -306,27 +275,29 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = tru
           </div>
         </ScrollArea>
         
-        <div className="flex gap-2 mt-2">
-          <Input
-            value={newCondition}
-            onChange={(e) => setNewCondition(e.target.value)}
-            placeholder="Enter health condition"
-            className="flex-1 bg-white/5 border-white/20 text-white placeholder-white/50"
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                handleAddCondition();
-              }
-            }}
-          />
-          <Button
-            onClick={handleAddCondition}
-            disabled={!newCondition.trim()}
-            size="sm"
-            className="bg-highlight hover:bg-highlight/90 text-white"
-          >
-            Add
-          </Button>
-        </div>
+        {showExample && (
+          <div className="flex gap-2 mt-2">
+            <Input
+              value={newCondition}
+              onChange={(e) => setNewCondition(e.target.value)}
+              placeholder="Enter health condition"
+              className="flex-1 bg-white/5 border-white/20 text-white placeholder-white/50"
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  handleAddCondition();
+                }
+              }}
+            />
+            <Button
+              onClick={handleAddCondition}
+              disabled={!newCondition.trim()}
+              size="sm"
+              className="bg-highlight hover:bg-highlight/90 text-white"
+            >
+              Add
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

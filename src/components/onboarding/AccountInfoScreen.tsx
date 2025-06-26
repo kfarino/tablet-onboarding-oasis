@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { User, Calendar, Phone, BellRing, Columns, Heart, Plus, X } from 'lucide-react';
@@ -248,7 +247,7 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
             </p>
           </div>
           
-          <div className="space-y-3 ml-1 mb-6">
+          <div className="space-y-3 ml-1">
             <div className="flex items-center">
               <Phone className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
               <p className="text-white text-xl whitespace-nowrap overflow-hidden text-ellipsis">
@@ -268,51 +267,47 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
                 </p>
               </div>
             )}
-          </div>
 
-          {/* Health Conditions Section in Split Layout - now integrated */}
-          <div className="border-t border-white/10 pt-4">
-            <h3 className="text-lg font-medium text-white/90 mb-3 flex items-center">
-              <Heart className="h-5 w-5 mr-2 text-highlight" />
-              Health Conditions
-            </h3>
-            
-            <div className="space-y-3">
-              {displayConditions.length === 0 ? (
-                <p className="text-white/40 text-lg">No health conditions added</p>
-              ) : (
-                <div className="flex flex-wrap gap-2">
-                  {displayConditions.map((condition, index) => (
-                    <Badge 
-                      key={index} 
-                      className="bg-white/10 hover:bg-white/20 text-white text-base py-1 px-3 flex items-center gap-2"
-                    >
-                      {condition}
-                      {!showExample && (
-                        <X 
-                          className="h-3 w-3 cursor-pointer hover:text-red-300" 
-                          onClick={() => removeHealthCondition(index)}
-                        />
-                      )}
-                    </Badge>
-                  ))}
-                </div>
-              )}
-              
-              {!showExample && (
-                <div className="flex gap-2 mt-3">
-                  <Input
-                    value={newCondition}
-                    onChange={(e) => setNewCondition(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                    placeholder="Add health condition"
-                    className="bg-white/10 border-white/20 text-white flex-1"
-                  />
-                  <Button onClick={handleAddCondition} size="sm" className="bg-highlight hover:bg-highlight/90">
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
-              )}
+            {/* Health Conditions Section - now integrated as a regular row */}
+            <div className="flex items-center">
+              <Heart className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+              <div className="flex-1">
+                {displayConditions.length === 0 ? (
+                  <p className="text-white text-xl">No health conditions</p>
+                ) : (
+                  <div className="flex flex-wrap gap-2">
+                    {displayConditions.map((condition, index) => (
+                      <Badge 
+                        key={index} 
+                        className="bg-white/10 hover:bg-white/20 text-white text-base py-1 px-3 flex items-center gap-2"
+                      >
+                        {condition}
+                        {!showExample && (
+                          <X 
+                            className="h-3 w-3 cursor-pointer hover:text-red-300" 
+                            onClick={() => removeHealthCondition(index)}
+                          />
+                        )}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+                
+                {!showExample && (
+                  <div className="flex gap-2 mt-2">
+                    <Input
+                      value={newCondition}
+                      onChange={(e) => setNewCondition(e.target.value)}
+                      onKeyPress={handleKeyPress}
+                      placeholder="Add health condition"
+                      className="bg-white/10 border-white/20 text-white flex-1"
+                    />
+                    <Button onClick={handleAddCondition} size="sm" className="bg-highlight hover:bg-highlight/90">
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

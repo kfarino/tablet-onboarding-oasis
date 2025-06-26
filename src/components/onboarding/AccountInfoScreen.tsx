@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { User, Calendar, Phone, BellRing, Columns, Heart, Plus, X } from 'lucide-react';
@@ -37,8 +38,10 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
     phoneNumber: "(555) 987-6543",
   };
 
-  // Example health conditions
-  const exampleConditions = ["Diabetes Type 2", "Hypertension", "Arthritis"];
+  // Example health conditions - primary user conditions
+  const examplePrimaryUserConditions = ["Diabetes Type 2", "Hypertension", "Arthritis"];
+  // Example health conditions - loved one conditions (for caregiver view)
+  const exampleLovedOneConditions = ["High Blood Pressure", "Osteoporosis"];
 
   // Determine which role to display
   const displayRole = previewRole || userProfile.role || UserRole.PrimaryUser;
@@ -77,7 +80,14 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
     }
   };
 
-  const displayConditions = showExample ? exampleConditions : userProfile.healthConditions;
+  // Determine which conditions to display based on role and context
+  const getPrimaryUserConditions = () => {
+    return showExample ? examplePrimaryUserConditions : userProfile.healthConditions;
+  };
+
+  const getLovedOneConditions = () => {
+    return showExample ? exampleLovedOneConditions : (userProfile.lovedOne?.healthConditions || []);
+  };
 
   // Layout toggle buttons
   const layoutToggle = (
@@ -116,44 +126,46 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
                     : "Relationship")
                 : 'Primary User'}
             </p>
-            {/* Health Conditions in Dashboard Layout */}
-            <div className="mt-3">
-              {displayConditions.length === 0 ? (
-                <p className="text-white/40 text-sm">No health conditions</p>
-              ) : (
-                <div className="flex flex-wrap gap-1">
-                  {displayConditions.map((condition, index) => (
-                    <Badge 
-                      key={index} 
-                      className="bg-white/10 hover:bg-white/20 text-white text-xs py-1 px-2 flex items-center gap-1"
-                    >
-                      {condition}
-                      {!showExample && (
-                        <X 
-                          className="h-2 w-2 cursor-pointer hover:text-red-300" 
-                          onClick={() => removeHealthCondition(index)}
-                        />
-                      )}
-                    </Badge>
-                  ))}
-                </div>
-              )}
-              
-              {!showExample && (
-                <div className="flex gap-2 mt-2">
-                  <Input
-                    value={newCondition}
-                    onChange={(e) => setNewCondition(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                    placeholder="Add condition"
-                    className="bg-white/10 border-white/20 text-white text-sm h-8"
-                  />
-                  <Button onClick={handleAddCondition} size="sm" className="bg-highlight hover:bg-highlight/90 h-8">
-                    <Plus className="h-3 w-3" />
-                  </Button>
-                </div>
-              )}
-            </div>
+            {/* Health Conditions in Dashboard Layout - only for Primary User */}
+            {displayRole === UserRole.PrimaryUser && (
+              <div className="mt-3">
+                {getPrimaryUserConditions().length === 0 ? (
+                  <p className="text-white/40 text-sm">No health conditions</p>
+                ) : (
+                  <div className="flex flex-wrap gap-1">
+                    {getPrimaryUserConditions().map((condition, index) => (
+                      <Badge 
+                        key={index} 
+                        className="bg-white/10 hover:bg-white/20 text-white text-xs py-1 px-2 flex items-center gap-1"
+                      >
+                        {condition}
+                        {!showExample && (
+                          <X 
+                            className="h-2 w-2 cursor-pointer hover:text-red-300" 
+                            onClick={() => removeHealthCondition(index)}
+                          />
+                        )}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+                
+                {!showExample && (
+                  <div className="flex gap-2 mt-2">
+                    <Input
+                      value={newCondition}
+                      onChange={(e) => setNewCondition(e.target.value)}
+                      onKeyPress={handleKeyPress}
+                      placeholder="Add condition"
+                      className="bg-white/10 border-white/20 text-white text-sm h-8"
+                    />
+                    <Button onClick={handleAddCondition} size="sm" className="bg-highlight hover:bg-highlight/90 h-8">
+                      <Plus className="h-3 w-3" />
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -195,6 +207,23 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
                   ? (showExample ? "Parent" : getRelationshipLabel(userProfile.relationship))
                   : "Relationship"}
               </p>
+              {/* Health Conditions for Loved One in Dashboard Layout */}
+              <div className="mt-3">
+                {getLovedOneConditions().length === 0 ? (
+                  <p className="text-white/40 text-sm">No health conditions</p>
+                ) : (
+                  <div className="flex flex-wrap gap-1">
+                    {getLovedOneConditions().map((condition, index) => (
+                      <Badge 
+                        key={index} 
+                        className="bg-white/10 hover:bg-white/20 text-white text-xs py-1 px-2 flex items-center gap-1"
+                      >
+                        {condition}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
           
@@ -268,47 +297,49 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
               </div>
             )}
 
-            {/* Health Conditions Section - now integrated as a regular row */}
-            <div className="flex items-center">
-              <Heart className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
-              <div className="flex-1">
-                {displayConditions.length === 0 ? (
-                  <p className="text-white text-xl">No health conditions</p>
-                ) : (
-                  <div className="flex flex-wrap gap-2">
-                    {displayConditions.map((condition, index) => (
-                      <Badge 
-                        key={index} 
-                        className="bg-white/10 hover:bg-white/20 text-white text-base py-1 px-3 flex items-center gap-2"
-                      >
-                        {condition}
-                        {!showExample && (
-                          <X 
-                            className="h-3 w-3 cursor-pointer hover:text-red-300" 
-                            onClick={() => removeHealthCondition(index)}
-                          />
-                        )}
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-                
-                {!showExample && (
-                  <div className="flex gap-2 mt-2">
-                    <Input
-                      value={newCondition}
-                      onChange={(e) => setNewCondition(e.target.value)}
-                      onKeyPress={handleKeyPress}
-                      placeholder="Add health condition"
-                      className="bg-white/10 border-white/20 text-white flex-1"
-                    />
-                    <Button onClick={handleAddCondition} size="sm" className="bg-highlight hover:bg-highlight/90">
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
+            {/* Health Conditions Section - only for Primary User in split layout */}
+            {displayRole === UserRole.PrimaryUser && (
+              <div className="flex items-center">
+                <Heart className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+                <div className="flex-1">
+                  {getPrimaryUserConditions().length === 0 ? (
+                    <p className="text-white text-xl">No health conditions</p>
+                  ) : (
+                    <div className="flex flex-wrap gap-2">
+                      {getPrimaryUserConditions().map((condition, index) => (
+                        <Badge 
+                          key={index} 
+                          className="bg-white/10 hover:bg-white/20 text-white text-base py-1 px-3 flex items-center gap-2"
+                        >
+                          {condition}
+                          {!showExample && (
+                            <X 
+                              className="h-3 w-3 cursor-pointer hover:text-red-300" 
+                              onClick={() => removeHealthCondition(index)}
+                            />
+                          )}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {!showExample && (
+                    <div className="flex gap-2 mt-2">
+                      <Input
+                        value={newCondition}
+                        onChange={(e) => setNewCondition(e.target.value)}
+                        onKeyPress={handleKeyPress}
+                        placeholder="Add health condition"
+                        className="bg-white/10 border-white/20 text-white flex-1"
+                      />
+                      <Button onClick={handleAddCondition} size="sm" className="bg-highlight hover:bg-highlight/90">
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
@@ -356,6 +387,27 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
                     ? (showExample ? "Text Message" : getAlertPreferenceLabel(userProfile.lovedOne?.alertPreference))
                     : "Not provided"}
                 </p>
+              </div>
+
+              {/* Health Conditions Section for Loved One */}
+              <div className="flex items-center">
+                <Heart className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+                <div className="flex-1">
+                  {getLovedOneConditions().length === 0 ? (
+                    <p className="text-white text-xl">No health conditions</p>
+                  ) : (
+                    <div className="flex flex-wrap gap-2">
+                      {getLovedOneConditions().map((condition, index) => (
+                        <Badge 
+                          key={index} 
+                          className="bg-white/10 hover:bg-white/20 text-white text-base py-1 px-3 flex items-center gap-2"
+                        >
+                          {condition}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>

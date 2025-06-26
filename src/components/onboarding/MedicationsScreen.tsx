@@ -13,12 +13,14 @@ interface MedicationsScreenProps {
   exampleMedications?: Medication[];
 }
 
-interface DoseDetail {
-  medName: string;
-  strength: string;
-  quantity: number;
+interface DoseSchedule {
   time: string;
   dayPattern: string;
+  medications: Array<{
+    name: string;
+    strength: string;
+    quantity: number;
+  }>;
 }
 
 const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ 
@@ -29,7 +31,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
 }) => {
   const { userProfile, addMedication } = useOnboarding();
   const displayMedications = showExample ? exampleMedications : userProfile.medications;
-  const [selectedDose, setSelectedDose] = useState<DoseDetail | null>(null);
+  const [selectedSchedule, setSelectedSchedule] = useState<DoseSchedule | null>(null);
   
   // Current medication being worked on (last one in the list)
   const currentMedication = displayMedications[displayMedications.length - 1];
@@ -103,18 +105,11 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   };
 
   const handleDoseClick = (schedule: any) => {
-    // For now, show the first medication in the schedule
-    // In a real app, you might want to show all medications at this time
-    const firstMed = schedule.medications[0];
-    if (firstMed) {
-      setSelectedDose({
-        medName: firstMed.name,
-        strength: firstMed.strength,
-        quantity: firstMed.quantity,
-        time: schedule.time,
-        dayPattern: schedule.dayPattern
-      });
-    }
+    setSelectedSchedule({
+      time: schedule.time,
+      dayPattern: schedule.dayPattern,
+      medications: schedule.medications
+    });
   };
 
   const renderConsolidatedSchedule = () => {
@@ -226,12 +221,14 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                     <Badge
                       key={med.id}
                       className="bg-white/10 hover:bg-white/20 text-white text-sm py-1 px-3 cursor-pointer transition-colors"
-                      onClick={() => setSelectedDose({
-                        medName: med.name,
-                        strength: med.strength,
-                        quantity: med.asNeeded?.maxPerDay || 0,
+                      onClick={() => setSelectedSchedule({
                         time: 'As needed',
-                        dayPattern: 'as needed'
+                        dayPattern: 'as needed',
+                        medications: [{
+                          name: med.name,
+                          strength: med.strength,
+                          quantity: med.asNeeded?.maxPerDay || 0,
+                        }]
                       })}
                     >
                       {med.name} ({med.asNeeded?.maxPerDay}/day)
@@ -318,52 +315,43 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
       </div>
 
       {/* Dose Details Dialog */}
-      <Dialog open={!!selectedDose} onOpenChange={() => setSelectedDose(null)}>
+      <Dialog open={!!selectedSchedule} onOpenChange={() => setSelectedSchedule(null)}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Dose Details</DialogTitle>
+            <DialogTitle>Dose Details - {selectedSchedule?.time}</DialogTitle>
           </DialogHeader>
-          {selectedDose && (
+          {selectedSchedule && (
             <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-12 h-12 rounded-full" style={{ backgroundColor: '#F26C3A' }}>
-                  <Pill size={24} className="text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-white">{selectedDose.medName}</h3>
-                  <p className="text-white/70">{selectedDose.strength}</p>
-                </div>
+              <div className="space-y-3">
+                {selectedSchedule.medications.map((med, index) => (
+                  <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-white/5">
+                    <div className="flex items-center justify-center w-12 h-12 rounded-full" style={{ backgroundColor: '#F26C3A' }}>
+                      <Pill size={24} className="text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold text-white">{med.name}</h3>
+                      <p className="text-white/70">{med.strength}</p>
+                      <p className="text-white/70">
+                        {med.quantity} {med.quantity === 1 ? 'dose' : 'doses'}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
               
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span className="text-white/70">Time:</span>
-                  <p className="text-white font-medium">{selectedDose.time}</p>
-                </div>
-                <div>
-                  <span className="text-white/70">Quantity:</span>
+              <div className="pt-2 border-t border-white/10">
+                <div className="text-sm">
+                  <span className="text-white/70">Schedule:</span>
                   <p className="text-white font-medium">
-                    {selectedDose.dayPattern === 'as needed' 
-                      ? `Up to ${selectedDose.quantity} per day`
-                      : `${selectedDose.quantity} ${selectedDose.quantity === 1 ? 'dose' : 'doses'}`
-                    }
-                  </p>
-                </div>
-              </div>
-
-              {selectedDose.dayPattern !== 'as needed' && (
-                <div>
-                  <span className="text-white/70 text-sm">Schedule:</span>
-                  <p className="text-white font-medium">
-                    {selectedDose.dayPattern === 'everyday' 
+                    {selectedSchedule.dayPattern === 'everyday' 
                       ? 'Every day'
-                      : selectedDose.dayPattern.split(',').map(day => 
+                      : selectedSchedule.dayPattern.split(',').map(day => 
                           day.charAt(0).toUpperCase() + day.slice(1)
                         ).join(', ')
                     }
                   </p>
                 </div>
-              )}
+              </div>
             </div>
           )}
         </DialogContent>

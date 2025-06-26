@@ -150,8 +150,8 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
       doses: [
         {
           id: uuidv4(),
-          days: ["everyday"],
-          times: ["8:00 AM", "6:00 PM"],
+          days: ["saturday", "sunday"],
+          times: ["8:00 AM"],
           quantity: 1
         }
       ],

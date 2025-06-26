@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Pill, Calendar as CalendarIcon } from 'lucide-react';
@@ -14,7 +15,7 @@ interface MedicationsScreenProps {
 
 // Mock medications with varied schedules
 const mockMedications: Medication[] = [
-  // Regular daily medications
+  // Everyday medications
   {
     id: '1',
     name: 'Lisinopril',
@@ -27,80 +28,80 @@ const mockMedications: Medication[] = [
     name: 'Metformin',
     strength: '500mg',
     form: 'tablet',
-    doses: [{ id: '2a', days: ['everyday'], times: ['8:00 AM', '6:00 PM'], quantity: 1 }],
+    doses: [{ id: '2a', days: ['everyday'], times: ['8:00 AM', '4:45 PM'], quantity: 1 }],
   },
   {
     id: '3',
     name: 'Atorvastatin',
     strength: '20mg', 
     form: 'tablet',
-    doses: [{ id: '3a', days: ['everyday'], times: ['9:00 PM'], quantity: 1 }],
+    doses: [{ id: '3a', days: ['everyday'], times: ['8:45 PM'], quantity: 1 }],
   },
   {
     id: '4',
     name: 'Levothyroxine',
     strength: '75mcg',
     form: 'tablet', 
-    doses: [{ id: '4a', days: ['everyday'], times: ['6:30 AM'], quantity: 1 }],
+    doses: [{ id: '4a', days: ['everyday'], times: ['8:00 AM'], quantity: 1 }],
   },
-  // Twice daily medications
   {
     id: '5',
     name: 'Amlodipine',
     strength: '5mg',
     form: 'tablet',
-    doses: [{ id: '5a', days: ['everyday'], times: ['9:00 AM', '9:00 PM'], quantity: 1 }],
+    doses: [{ id: '5a', days: ['everyday'], times: ['4:45 PM'], quantity: 1 }],
   },
+  // Weekend only medications
   {
     id: '6',
-    name: 'Omeprazole', 
-    strength: '20mg',
-    form: 'capsule',
-    doses: [{ id: '6a', days: ['everyday'], times: ['7:00 AM'], quantity: 1 }],
-  },
-  // Specific day schedules
-  {
-    id: '7',
     name: 'Vitamin D3',
     strength: '2000 IU',
     form: 'tablet',
-    doses: [{ id: '7a', days: ['monday', 'wednesday', 'friday'], times: ['8:00 AM'], quantity: 1 }],
+    doses: [{ id: '6a', days: ['sunday', 'saturday'], times: ['8:00 AM'], quantity: 1 }],
   },
+  {
+    id: '7',
+    name: 'Fish Oil',
+    strength: '1000mg',
+    form: 'capsule',
+    doses: [{ id: '7a', days: ['sunday', 'saturday'], times: ['8:00 AM'], quantity: 1 }],
+  },
+  // Tuesday and Thursday medications
   {
     id: '8',
     name: 'Calcium',
     strength: '500mg',
     form: 'tablet', 
-    doses: [{ id: '8a', days: ['tuesday', 'thursday', 'saturday'], times: ['12:00 PM'], quantity: 2 }],
+    doses: [{ id: '8a', days: ['tuesday', 'thursday'], times: ['10:00 AM'], quantity: 2 }],
   },
   {
     id: '9',
-    name: 'Fish Oil',
-    strength: '1000mg',
-    form: 'capsule',
-    doses: [{ id: '9a', days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'], times: ['8:00 AM'], quantity: 1 }],
+    name: 'Iron',
+    strength: '65mg',
+    form: 'tablet',
+    doses: [{ id: '9a', days: ['tuesday', 'thursday'], times: ['10:00 AM'], quantity: 1 }],
   },
-  // Multiple doses per day
+  // Sunday and Monday medications
   {
     id: '10',
-    name: 'Gabapentin',
-    strength: '300mg', 
+    name: 'B-Complex',
+    strength: '50mg', 
     form: 'capsule',
-    doses: [{ id: '10a', days: ['everyday'], times: ['8:00 AM', '2:00 PM', '8:00 PM'], quantity: 1 }],
+    doses: [{ id: '10a', days: ['sunday', 'monday'], times: ['10:45 AM'], quantity: 1 }],
   },
   {
     id: '11',
-    name: 'Hydrochlorothiazide',
-    strength: '25mg',
+    name: 'Magnesium',
+    strength: '400mg',
     form: 'tablet',
-    doses: [{ id: '11a', days: ['everyday'], times: ['10:00 AM'], quantity: 1 }],
+    doses: [{ id: '11a', days: ['sunday', 'monday'], times: ['10:45 AM'], quantity: 1 }],
   },
   {
     id: '12',
-    name: 'Sertraline',
-    strength: '50mg',
-    form: 'tablet', 
-    doses: [{ id: '12a', days: ['everyday'], times: ['7:30 AM'], quantity: 1 }],
+    name: 'CoQ10',
+    strength: '100mg',
+    form: 'capsule', 
+    doses: [{ id: '12a', days: ['everyday'], times: ['8:45 PM'], quantity: 1 }],
   },
   // As-needed medications
   {
@@ -138,47 +139,91 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   const { userProfile } = useOnboarding();
   const displayMedications = showExample ? (exampleMedications.length > 0 ? exampleMedications : mockMedications) : userProfile.medications;
 
-  const renderUltraCompactSchedule = () => {
-    const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  const renderConsolidatedSchedule = () => {
+    const daysOfWeek = ['Su', 'M', 'T', 'W', 'Th', 'F', 'Sa'];
     const fullDayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
-    // Create unique dose groups with medication info
+    // Create consolidated dose groups with color coding
     const doseGroups: Array<{
       id: string;
       time: string;
       days: string[];
-      quantity: number;
-      medName: string;
-      medStrength: string;
+      medications: Array<{
+        name: string;
+        strength: string;
+        quantity: number;
+      }>;
       color: string;
     }> = [];
 
-    const colors = [
-      'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-orange-500', 
-      'bg-pink-500', 'bg-teal-500', 'bg-red-500', 'bg-yellow-500',
-      'bg-indigo-500', 'bg-cyan-500', 'bg-rose-500', 'bg-emerald-500',
-      'bg-violet-500', 'bg-amber-500', 'bg-lime-500'
-    ];
+    // Color mapping based on day patterns
+    const getColorForDayPattern = (days: string[]): string => {
+      const daySet = new Set(days);
+      
+      // Everyday - green
+      if (daySet.has('everyday')) return 'bg-green-500';
+      
+      // Weekend only (Sunday + Saturday) - red
+      if (daySet.size === 2 && daySet.has('sunday') && daySet.has('saturday')) return 'bg-red-500';
+      
+      // Tuesday + Thursday - blue
+      if (daySet.size === 2 && daySet.has('tuesday') && daySet.has('thursday')) return 'bg-blue-500';
+      
+      // Sunday + Monday - purple
+      if (daySet.size === 2 && daySet.has('sunday') && daySet.has('monday')) return 'bg-purple-500';
+      
+      // Default colors for other patterns
+      return 'bg-gray-500';
+    };
 
-    let colorIndex = 0;
+    // Group doses by time and day pattern
+    const timeGroups: Record<string, Record<string, Array<{
+      medName: string;
+      medStrength: string;
+      quantity: number;
+      days: string[];
+    }>>> = {};
 
     displayMedications.forEach(med => {
       med.doses.forEach(dose => {
         dose.times.forEach(time => {
           if (time.toLowerCase() !== "as needed") {
-            const groupId = `${med.id}-${dose.id}-${time}`;
+            const dayPattern = dose.days.join(',');
             
-            doseGroups.push({
-              id: groupId,
-              time: time,
-              days: dose.days,
-              quantity: dose.quantity,
+            if (!timeGroups[time]) {
+              timeGroups[time] = {};
+            }
+            if (!timeGroups[time][dayPattern]) {
+              timeGroups[time][dayPattern] = [];
+            }
+            
+            timeGroups[time][dayPattern].push({
               medName: med.name,
-              medStrength: med.strength,
-              color: colors[colorIndex % colors.length]
+              medStrength: med.strength || '',
+              quantity: dose.quantity,
+              days: dose.days
             });
-            colorIndex++;
           }
+        });
+      });
+    });
+
+    // Convert to display format
+    Object.keys(timeGroups).forEach(time => {
+      Object.keys(timeGroups[time]).forEach(dayPattern => {
+        const meds = timeGroups[time][dayPattern];
+        const days = meds[0].days;
+        
+        doseGroups.push({
+          id: `${time}-${dayPattern}`,
+          time: time,
+          days: days,
+          medications: meds.map(med => ({
+            name: med.medName,
+            strength: med.medStrength,
+            quantity: med.quantity
+          })),
+          color: getColorForDayPattern(days)
         });
       });
     });
@@ -209,25 +254,25 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
 
     return (
       <div className="bg-white/5 rounded-md overflow-hidden border border-white/10">
-        {/* Ultra-compact header */}
-        <div className="grid grid-cols-8 bg-blue-600 text-[10px]">
-          <div className="p-1 font-semibold text-white text-center border-r border-blue-500">
+        {/* Compact header */}
+        <div className="grid grid-cols-8 bg-blue-600 text-xs">
+          <div className="p-2 font-semibold text-white text-center border-r border-blue-500">
             Time
           </div>
           {daysOfWeek.map((day) => (
-            <div key={day} className="p-1 font-semibold text-white text-center border-r border-blue-500 last:border-r-0">
+            <div key={day} className="p-2 font-semibold text-white text-center border-r border-blue-500 last:border-r-0">
               {day}
             </div>
           ))}
         </div>
 
-        {/* Time rows - ultra compact */}
+        {/* Time rows */}
         {uniqueTimes.map((time, timeIndex) => (
           <div key={time} className={`grid grid-cols-8 border-b border-white/10 ${timeIndex % 2 === 0 ? 'bg-white/2' : 'bg-white/5'}`}>
             {/* Time column */}
-            <div className="p-1 text-white border-r border-white/10 text-center min-h-[32px] flex flex-col justify-center">
-              <div className="text-[10px] font-semibold leading-tight">{time.split(' ')[0]}</div>
-              <div className="text-[8px] text-white/70 leading-tight">{time.split(' ')[1]}</div>
+            <div className="p-2 text-white border-r border-white/10 text-center min-h-[60px] flex flex-col justify-center">
+              <div className="text-sm font-semibold leading-tight">{time.split(' ')[0]}</div>
+              <div className="text-xs text-white/70 leading-tight">{time.split(' ')[1]}</div>
             </div>
             
             {/* Day columns */}
@@ -240,18 +285,21 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               });
 
               return (
-                <div key={dayIndex} className="p-0.5 border-r border-white/10 last:border-r-0 min-h-[32px] flex flex-col gap-0.5 justify-center">
+                <div key={dayIndex} className="p-1 border-r border-white/10 last:border-r-0 min-h-[60px] flex flex-col gap-1 justify-center">
                   {groupsForThisTimeAndDay.map(group => (
-                    <div 
-                      key={group.id}
-                      className={`${group.color} rounded px-1 py-0.5 text-white text-[8px] font-medium flex items-center gap-0.5 justify-center`}
-                      title={`${group.medName} ${group.medStrength} - ${group.quantity}x`}
-                    >
-                      <Pill className="h-2 w-2" />
-                      <span className="truncate max-w-8" style={{ fontSize: '7px' }}>
-                        {group.medName.length > 6 ? group.medName.substring(0, 6) : group.medName}
-                      </span>
-                      <span>{group.quantity}</span>
+                    <div key={group.id} className="space-y-1">
+                      {group.medications.map((med, medIndex) => (
+                        <div 
+                          key={`${group.id}-${medIndex}`}
+                          className={`${group.color} rounded px-2 py-1 text-white text-xs font-medium flex items-center gap-1 justify-center`}
+                          title={`${med.name} ${med.strength} - ${med.quantity}x`}
+                        >
+                          <Pill className="h-3 w-3 flex-shrink-0" />
+                          <span className="truncate text-center">
+                            {med.name.length > 10 ? med.name.substring(0, 10) + '...' : med.name}
+                          </span>
+                        </div>
+                      ))}
                     </div>
                   ))}
                 </div>
@@ -260,21 +308,21 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
           </div>
         ))}
 
-        {/* As needed section - ultra compact */}
+        {/* As needed section */}
         {displayMedications.some(med => med.asNeeded) && (
           <div className="bg-yellow-500/20 border-t border-yellow-500/30">
-            <div className="grid grid-cols-8 text-[10px]">
-              <div className="p-1 font-medium text-yellow-400 border-r border-yellow-500/30 text-center">
+            <div className="grid grid-cols-8 text-xs">
+              <div className="p-2 font-medium text-yellow-400 border-r border-yellow-500/30 text-center">
                 PRN
               </div>
-              <div className="col-span-7 p-1 flex flex-wrap items-center gap-0.5">
+              <div className="col-span-7 p-2 flex flex-wrap items-center gap-1">
                 {displayMedications
                   .filter(med => med.asNeeded)
                   .map(med => (
-                    <div key={med.id} className="bg-yellow-500 rounded px-1 py-0.5 text-white text-[8px] font-medium flex items-center gap-0.5">
-                      <Pill className="h-2 w-2" />
-                      <span className="truncate max-w-12">{med.name}</span>
-                      <span>({med.asNeeded?.maxPerDay})</span>
+                    <div key={med.id} className="bg-yellow-500 rounded px-2 py-1 text-white text-xs font-medium flex items-center gap-1">
+                      <Pill className="h-3 w-3" />
+                      <span className="truncate">{med.name}</span>
+                      <span className="text-yellow-200">({med.asNeeded?.maxPerDay}/day)</span>
                     </div>
                   ))}
               </div>
@@ -298,23 +346,21 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
 
   return (
     <div className="animate-fade-in px-2 pb-2 space-y-2">
-      {/* Header with medication count */}
+      {/* Header */}
       <div className="flex items-center gap-2 px-1">
         <CalendarIcon className="h-4 w-4 text-white" />
         <h3 className="text-lg font-bold text-white">
-          {displayMedications[0]?.name || 'Medication'} Schedule
+          Consolidated Medication Schedule
         </h3>
-        {displayMedications.length > 1 && (
-          <Badge variant="outline" className="bg-white/10 text-white/70 text-xs">
-            +{displayMedications.length - 1} more
-          </Badge>
-        )}
+        <Badge variant="outline" className="bg-white/10 text-white/70 text-xs">
+          {displayMedications.length} medications
+        </Badge>
       </div>
 
-      {/* Ultra-compact schedule */}
-      {renderUltraCompactSchedule()}
+      {/* Consolidated schedule */}
+      {renderConsolidatedSchedule()}
 
-      {/* Medication count summary */}
+      {/* Summary */}
       <div className="flex items-center justify-between text-xs text-white/60 px-1">
         <span>{displayMedications.length} medications total</span>
         <span>

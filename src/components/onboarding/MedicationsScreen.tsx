@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Pill } from 'lucide-react';
@@ -281,30 +280,21 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   return (
     <>
       <div className="animate-fade-in px-2 pb-2 space-y-4">
-        {/* Current medication container - compact version */}
+        {/* Current medication container - updated header */}
         <Card className="border p-3" style={{ 
           background: 'linear-gradient(to right, rgba(242, 108, 58, 0.15), rgba(255, 138, 92, 0.15))',
           borderColor: 'rgba(242, 108, 58, 0.4)',
           backgroundColor: '#374151'
         }}>
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-10 h-10 rounded-full border" style={{ 
-              backgroundColor: '#F26C3A',
-              borderColor: 'rgba(242, 108, 58, 0.4)',
-              color: '#FFFFFF'
-            }}>
-              <Pill size={20} />
-            </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-white min-w-0 flex-1">
-                  <h3 className="text-lg font-semibold truncate">
-                    {currentMedication?.name || 'New Medication'}
+                  <h3 className="text-2xl font-bold truncate">
+                    {currentMedication ? `${currentMedication.name} ${currentMedication.strength}` : 'New Medication'}
                   </h3>
                   {currentMedication && (
                     <>
-                      <span style={{ color: 'rgba(255, 255, 255, 0.6)' }}>•</span>
-                      <span className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>{currentMedication.strength}</span>
                       <span style={{ color: 'rgba(255, 255, 255, 0.6)' }}>•</span>
                       <span className="text-sm capitalize" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>{currentMedication.form}</span>
                     </>

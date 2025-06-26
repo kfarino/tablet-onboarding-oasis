@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { Calendar as CalendarIcon } from 'lucide-react';
+import { Calendar as CalendarIcon, Pill, Star } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Medication } from '@/types/onboarding';
@@ -156,19 +156,20 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                     {applicableSchedules.map((schedule, scheduleIndex) => (
                       <div 
                         key={scheduleIndex}
-                        className="rounded flex-1 h-8 relative"
+                        className="rounded flex-1 h-8 relative flex items-center justify-center"
                         style={{ 
                           backgroundColor: schedule.color
                         }}
                         title={schedule.medications.join(', ')}
                       >
-                        {/* Bright highlight overlay for current medication schedules */}
+                        {/* Star icon overlay for current medication schedules */}
                         {schedule.isCurrentMedSchedule && (
-                          <div 
-                            className="absolute inset-0 rounded animate-pulse"
-                            style={{
-                              backgroundColor: 'rgba(255, 255, 255, 0.4)',
-                              boxShadow: '0 0 8px rgba(255, 255, 255, 0.6), inset 0 0 8px rgba(255, 255, 255, 0.3)'
+                          <Star 
+                            className="h-4 w-4 animate-pulse" 
+                            style={{ 
+                              color: '#FFFFFF',
+                              fill: '#FFFFFF',
+                              filter: 'drop-shadow(0 0 2px rgba(0,0,0,0.8))'
                             }}
                           />
                         )}
@@ -225,11 +226,10 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         }}>
           <div className="flex items-center justify-center py-8">
             <div className="text-center">
-              <div className="h-12 w-12 mx-auto mb-3 rounded-full flex items-center justify-center text-xl font-bold" style={{ 
-                backgroundColor: '#F26C3A',
-                color: '#FFFFFF'
+              <div className="h-12 w-12 mx-auto mb-3 rounded-full flex items-center justify-center" style={{ 
+                backgroundColor: '#F26C3A'
               }}>
-                0
+                <Pill className="h-6 w-6 text-white" />
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">No medications added yet</h3>
               <p style={{ color: 'rgba(255, 255, 255, 0.6)' }}>Add your first medication to get started with your schedule.</p>
@@ -249,12 +249,11 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         backgroundColor: '#1F2937'
       }}>
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-10 h-10 rounded-full border text-lg font-bold" style={{ 
+          <div className="flex items-center justify-center w-10 h-10 rounded-full border" style={{ 
             backgroundColor: '#F26C3A',
-            borderColor: 'rgba(242, 108, 58, 0.4)',
-            color: '#FFFFFF'
+            borderColor: 'rgba(242, 108, 58, 0.4)'
           }}>
-            {displayMedications.length}
+            <Pill className="h-5 w-5 text-white" />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
@@ -275,13 +274,6 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                 <span className="text-xs whitespace-nowrap" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
                   {displayMedications.length} total • {displayMedications.filter(m => m.asNeeded).length} PRN • {displayMedications.filter(m => !m.asNeeded).length} scheduled
                 </span>
-                <Badge variant="outline" className="text-xs whitespace-nowrap border" style={{ 
-                  backgroundColor: 'rgba(242, 108, 58, 0.2)',
-                  borderColor: 'rgba(242, 108, 58, 0.4)',
-                  color: '#F26C3A'
-                }}>
-                  Working on this
-                </Badge>
               </div>
             </div>
           </div>

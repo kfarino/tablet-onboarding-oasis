@@ -141,6 +141,9 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
       return parseTime(a) - parseTime(b);
     });
 
+    // Check if we have as-needed medications
+    const asNeededMeds = displayMedications.filter(med => med.asNeeded);
+
     return (
       <div className="rounded-lg overflow-hidden border-2" style={{ 
         borderColor: '#F26C3A', 
@@ -204,40 +207,43 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
           </div>
         ))}
 
-        {/* As needed section */}
-        {displayMedications.some(med => med.asNeeded) && (
-          <div className="border-t" style={{ 
+        {/* As needed row - redesigned to match grid structure */}
+        {asNeededMeds.length > 0 && (
+          <div className="grid grid-cols-8 border-t" style={{ 
             backgroundColor: '#000000', 
             borderColor: '#4B5563' 
           }}>
-            <div className="grid grid-cols-8 text-xs">
-              <div className="p-2 font-medium text-center border-r" style={{ 
-                color: '#E5E7EB',
-                borderColor: '#4B5563'
-              }}>
-                As-needed
-              </div>
-              <div className="col-span-7 p-2 flex flex-wrap items-center gap-2">
-                {displayMedications
-                  .filter(med => med.asNeeded)
-                  .map(med => (
-                    <Badge
-                      key={med.id}
-                      className="bg-white/10 hover:bg-white/20 text-white text-sm py-1 px-3 cursor-pointer transition-colors"
-                      onClick={() => setSelectedSchedule({
-                        time: 'As needed',
-                        dayPattern: 'as needed',
-                        medications: [{
-                          name: med.name,
-                          strength: med.strength,
-                          quantity: med.asNeeded?.maxPerDay || 0,
-                        }]
-                      })}
-                    >
-                      {med.name} ({med.asNeeded?.maxPerDay}/day)
-                    </Badge>
-                  ))}
-              </div>
+            {/* Time column for as-needed */}
+            <div className="p-2 text-center min-h-[50px] flex items-center justify-center border-r" style={{ 
+              borderColor: '#4B5563',
+              color: '#E5E7EB'
+            }}>
+              <div className="text-sm font-semibold">PRN</div>
+            </div>
+            
+            {/* Span across all day columns for as-needed meds */}
+            <div className="col-span-7 p-2 flex items-center gap-2 min-h-[50px]">
+              {asNeededMeds.map((med, index) => (
+                <div
+                  key={med.id}
+                  className="rounded h-8 px-3 flex items-center cursor-pointer hover:brightness-110 transition-all text-white text-sm font-medium"
+                  style={{ 
+                    backgroundColor: '#FF6B35',
+                    opacity: currentMedication && med.id === currentMedication.id ? 1 : 0.3
+                  }}
+                  onClick={() => setSelectedSchedule({
+                    time: 'As needed',
+                    dayPattern: 'as needed',
+                    medications: [{
+                      name: med.name,
+                      strength: med.strength,
+                      quantity: med.asNeeded?.maxPerDay || 0,
+                    }]
+                  })}
+                >
+                  {med.name} ({med.asNeeded?.maxPerDay}/day)
+                </div>
+              ))}
             </div>
           </div>
         )}

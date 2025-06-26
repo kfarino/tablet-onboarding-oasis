@@ -39,7 +39,7 @@ const Header: React.FC<HeaderProps> = ({
 
   const canGoBack = () => {
     if (showMedicationSchedule) return false;
-    return currentStep > OnboardingStep.Welcome && currentStep !== OnboardingStep.Complete;
+    return currentStep > OnboardingStep.Welcome;
   };
 
   const getStepTitle = () => {
@@ -50,23 +50,19 @@ const Header: React.FC<HeaderProps> = ({
         return 'Account Details';
       case OnboardingStep.Medications:
         return 'Medications';
-      case OnboardingStep.Complete:
-        return 'Complete!';
       default:
         return '';
     }
   };
 
   const showBackButton = canGoBack() && 
-    currentStep !== OnboardingStep.Welcome && 
-    currentStep !== OnboardingStep.Complete;
+    currentStep !== OnboardingStep.Welcome;
     
   const showNextButton = currentStep !== undefined && 
     currentStep !== OnboardingStep.Welcome && 
-    currentStep !== OnboardingStep.Complete;
+    currentStep !== OnboardingStep.Medications;
     
   const showPreviewButton = currentStep !== OnboardingStep.Welcome && 
-    currentStep !== OnboardingStep.Complete && 
     toggleExample !== undefined;
 
   // Keep the eye icon button separate

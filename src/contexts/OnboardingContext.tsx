@@ -73,7 +73,7 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   });
 
   const nextStep = () => {
-    if (currentStep < OnboardingStep.Complete) {
+    if (currentStep < OnboardingStep.Medications) {
       setCurrentStep(prevStep => (prevStep + 1) as OnboardingStep);
     }
   };

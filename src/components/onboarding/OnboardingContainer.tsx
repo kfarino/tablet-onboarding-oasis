@@ -5,7 +5,6 @@ import WelcomeScreen from './WelcomeScreen';
 import AccountInfoScreen from './AccountInfoScreen';
 import MedicationsScreen from './MedicationsScreen';
 import SingleMedicationCaptureScreen from './SingleMedicationCaptureScreen';
-import CompleteScreen from './CompleteScreen';
 import ProgressIndicator from './ProgressIndicator';
 import Header from '../Header';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -185,7 +184,7 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
   };
 
   const needsScrollArea = () => {
-    return currentStep !== OnboardingStep.Welcome && currentStep !== OnboardingStep.Complete;
+    return currentStep !== OnboardingStep.Welcome;
   };
 
   const renderStep = () => {
@@ -211,8 +210,6 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
                  setShowMedicationSchedule={setShowMedicationSchedule}
                  exampleMedications={exampleMedications}
                />;
-      case OnboardingStep.Complete:
-        return <CompleteScreen />;
       default:
         return <WelcomeScreen />;
     }

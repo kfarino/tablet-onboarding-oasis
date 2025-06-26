@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Pill, Calendar as CalendarIcon } from 'lucide-react';
@@ -12,123 +13,6 @@ interface MedicationsScreenProps {
   exampleMedications?: Medication[];
 }
 
-// Mock medications with varied schedules
-const mockMedications: Medication[] = [
-  // Everyday medications
-  {
-    id: '1',
-    name: 'Lisinopril',
-    strength: '10mg',
-    form: 'tablet',
-    doses: [{ id: '1a', days: ['everyday'], times: ['8:00 AM'], quantity: 1 }],
-  },
-  {
-    id: '2', 
-    name: 'Metformin',
-    strength: '500mg',
-    form: 'tablet',
-    doses: [{ id: '2a', days: ['everyday'], times: ['8:00 AM', '4:45 PM'], quantity: 1 }],
-  },
-  {
-    id: '3',
-    name: 'Atorvastatin',
-    strength: '20mg', 
-    form: 'tablet',
-    doses: [{ id: '3a', days: ['everyday'], times: ['8:45 PM'], quantity: 1 }],
-  },
-  {
-    id: '4',
-    name: 'Levothyroxine',
-    strength: '75mcg',
-    form: 'tablet', 
-    doses: [{ id: '4a', days: ['everyday'], times: ['8:00 AM'], quantity: 1 }],
-  },
-  {
-    id: '5',
-    name: 'Amlodipine',
-    strength: '5mg',
-    form: 'tablet',
-    doses: [{ id: '5a', days: ['everyday'], times: ['4:45 PM'], quantity: 1 }],
-  },
-  // Weekend only medications
-  {
-    id: '6',
-    name: 'Vitamin D3',
-    strength: '2000 IU',
-    form: 'tablet',
-    doses: [{ id: '6a', days: ['sunday', 'saturday'], times: ['8:00 AM'], quantity: 1 }],
-  },
-  {
-    id: '7',
-    name: 'Fish Oil',
-    strength: '1000mg',
-    form: 'capsule',
-    doses: [{ id: '7a', days: ['sunday', 'saturday'], times: ['8:00 AM'], quantity: 1 }],
-  },
-  // Tuesday and Thursday medications
-  {
-    id: '8',
-    name: 'Calcium',
-    strength: '500mg',
-    form: 'tablet', 
-    doses: [{ id: '8a', days: ['tuesday', 'thursday'], times: ['10:00 AM'], quantity: 2 }],
-  },
-  {
-    id: '9',
-    name: 'Iron',
-    strength: '65mg',
-    form: 'tablet',
-    doses: [{ id: '9a', days: ['tuesday', 'thursday'], times: ['10:00 AM'], quantity: 1 }],
-  },
-  // Sunday and Monday medications
-  {
-    id: '10',
-    name: 'B-Complex',
-    strength: '50mg', 
-    form: 'capsule',
-    doses: [{ id: '10a', days: ['sunday', 'monday'], times: ['10:45 AM'], quantity: 1 }],
-  },
-  {
-    id: '11',
-    name: 'Magnesium',
-    strength: '400mg',
-    form: 'tablet',
-    doses: [{ id: '11a', days: ['sunday', 'monday'], times: ['10:45 AM'], quantity: 1 }],
-  },
-  {
-    id: '12',
-    name: 'CoQ10',
-    strength: '100mg',
-    form: 'capsule', 
-    doses: [{ id: '12a', days: ['everyday'], times: ['8:45 PM'], quantity: 1 }],
-  },
-  // As-needed medications
-  {
-    id: '13',
-    name: 'Acetaminophen',
-    strength: '500mg',
-    form: 'tablet',
-    doses: [],
-    asNeeded: { maxPerDay: 6 }
-  },
-  {
-    id: '14', 
-    name: 'Ibuprofen',
-    strength: '200mg',
-    form: 'tablet',
-    doses: [],
-    asNeeded: { maxPerDay: 4 }
-  },
-  {
-    id: '15',
-    name: 'Lorazepam',
-    strength: '0.5mg', 
-    form: 'tablet',
-    doses: [],
-    asNeeded: { maxPerDay: 2 }
-  }
-];
-
 const MedicationsScreen: React.FC<MedicationsScreenProps> = ({ 
   showExample = false,
   showMedicationSchedule = false,
@@ -136,7 +20,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   exampleMedications = []
 }) => {
   const { userProfile } = useOnboarding();
-  const displayMedications = showExample ? (exampleMedications.length > 0 ? exampleMedications : mockMedications) : userProfile.medications;
+  const displayMedications = showExample ? exampleMedications : userProfile.medications;
 
   const renderConsolidatedSchedule = () => {
     const daysOfWeek = ['Su', 'M', 'T', 'W', 'Th', 'F', 'Sa'];
@@ -173,6 +57,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
       if (daySet.size === 2 && daySet.has('sunday') && daySet.has('saturday')) return 'bg-red-500';
       if (daySet.size === 2 && daySet.has('tuesday') && daySet.has('thursday')) return 'bg-blue-500';
       if (daySet.size === 2 && daySet.has('sunday') && daySet.has('monday')) return 'bg-purple-500';
+      if (daySet.size === 5 && ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'].every(day => daySet.has(day))) return 'bg-blue-600';
+      if (daySet.size === 2 && daySet.has('saturday') && daySet.has('sunday')) return 'bg-orange-500';
       
       return 'bg-gray-500';
     };

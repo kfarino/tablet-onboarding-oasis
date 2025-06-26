@@ -141,7 +141,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
     return (
       <div className="rounded-lg overflow-hidden border-2" style={{ 
         borderColor: '#F26C3A', 
-        backgroundColor: '#374151' 
+        backgroundColor: '#000000' 
       }}>
         {/* Header - same background as current med container */}
         <div className="grid grid-cols-8 text-xs" style={{ 
@@ -158,11 +158,11 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
           ))}
         </div>
 
-        {/* Time rows - grey background */}
+        {/* Time rows - black background */}
         {sortedTimes.map((time, timeIndex) => (
           <div key={time} className={`grid grid-cols-8 border-b`} style={{ 
             borderColor: '#4B5563',
-            backgroundColor: '#374151'
+            backgroundColor: '#000000'
           }}>
             {/* Time column */}
             <div className="p-2 text-center min-h-[50px] flex items-center justify-center border-r" style={{ 
@@ -204,7 +204,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         {/* As needed section */}
         {displayMedications.some(med => med.asNeeded) && (
           <div className="border-t" style={{ 
-            backgroundColor: '#374151', 
+            backgroundColor: '#000000', 
             borderColor: '#4B5563' 
           }}>
             <div className="grid grid-cols-8 text-xs">
@@ -218,9 +218,9 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                 {displayMedications
                   .filter(med => med.asNeeded)
                   .map(med => (
-                    <div
+                    <Badge
                       key={med.id}
-                      className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-white/10 text-white cursor-pointer hover:bg-white/20 transition-colors"
+                      className="bg-white/10 hover:bg-white/20 text-white text-sm py-1 px-3 cursor-pointer transition-colors"
                       onClick={() => setSelectedSchedule({
                         time: 'As needed',
                         dayPattern: 'as needed',
@@ -232,7 +232,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                       })}
                     >
                       {med.name} ({med.asNeeded?.maxPerDay}/day)
-                    </div>
+                    </Badge>
                   ))}
               </div>
             </div>

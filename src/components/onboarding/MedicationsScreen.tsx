@@ -25,18 +25,20 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   // Current medication being worked on (last one in the list)
   const currentMedication = displayMedications[displayMedications.length - 1];
 
-  // Create a color palette using the brand colors from the image
+  // More distinct color palette with better contrast
   const scheduleColors = [
-    '#F26C3A', // Tangerine 1
-    '#FF8A5C', // Tangerine 2  
-    '#FFB088', // Tangerine 3
-    '#E6C229', // Citron 1
-    '#F0D666', // Citron 2
-    '#F5E699', // Citron 3
-    '#FF6B35', // Orange 1
-    '#FF8A5C', // Orange 2
-    '#28A745', // Green 1
-    '#5CB85C'  // Green 2
+    '#FF6B35', // Vibrant Orange
+    '#E6C229', // Bright Yellow  
+    '#28A745', // Green
+    '#FF4757', // Red
+    '#5352ED', // Purple
+    '#FF9F43', // Light Orange
+    '#10AC84', // Teal
+    '#FF6348', // Coral
+    '#7B68EE', // Medium Slate Blue
+    '#20BF6B', // Mint Green
+    '#FA8231', // Orange
+    '#F0D666'  // Light Yellow
   ];
 
   // Group medications by time and day pattern to create dose schedules
@@ -110,14 +112,17 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
     });
 
     return (
-      <div className="rounded-lg overflow-hidden border" style={{ borderColor: '#6B7280', backgroundColor: '#F9FAFB' }}>
+      <div className="rounded-lg overflow-hidden border" style={{ 
+        borderColor: '#374151', 
+        backgroundColor: '#1F2937' 
+      }}>
         {/* Header */}
-        <div className="grid grid-cols-8 text-xs" style={{ backgroundColor: '#F26C3A' }}>
-          <div className="p-2 font-semibold text-white text-center border-r" style={{ borderColor: '#E55A2B' }}>
+        <div className="grid grid-cols-8 text-xs" style={{ backgroundColor: '#374151' }}>
+          <div className="p-2 font-semibold text-white text-center border-r" style={{ borderColor: '#4B5563' }}>
             Time
           </div>
           {daysOfWeek.map((day) => (
-            <div key={day} className="p-2 font-semibold text-white text-center border-r last:border-r-0" style={{ borderColor: '#E55A2B' }}>
+            <div key={day} className="p-2 font-semibold text-white text-center border-r last:border-r-0" style={{ borderColor: '#4B5563' }}>
               {day}
             </div>
           ))}
@@ -126,13 +131,13 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         {/* Time rows */}
         {sortedTimes.map((time, timeIndex) => (
           <div key={time} className={`grid grid-cols-8 border-b`} style={{ 
-            borderColor: '#E5E7EB',
-            backgroundColor: timeIndex % 2 === 0 ? '#FFFFFF' : '#F9FAFB'
+            borderColor: '#4B5563',
+            backgroundColor: timeIndex % 2 === 0 ? '#1F2937' : '#111827'
           }}>
             {/* Time column */}
             <div className="p-2 text-center min-h-[50px] flex items-center justify-center border-r" style={{ 
-              borderColor: '#E5E7EB',
-              color: '#374151'
+              borderColor: '#4B5563',
+              color: '#E5E7EB'
             }}>
               <div className="text-sm font-semibold">{time}</div>
             </div>
@@ -146,21 +151,28 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               });
 
               return (
-                <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[50px] flex items-center justify-center" style={{ borderColor: '#E5E7EB' }}>
+                <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[50px] flex items-center justify-center" style={{ borderColor: '#4B5563' }}>
                   <div className="flex gap-1 w-full">
                     {applicableSchedules.map((schedule, scheduleIndex) => (
                       <div 
                         key={scheduleIndex}
-                        className={`rounded flex-1 h-8 relative ${
-                          schedule.isCurrentMedSchedule ? 'border-2' : ''
-                        }`}
+                        className="rounded flex-1 h-8 relative"
                         style={{ 
-                          backgroundColor: schedule.color,
-                          borderColor: schedule.isCurrentMedSchedule ? '#DC2626' : undefined,
-                          boxShadow: schedule.isCurrentMedSchedule ? '0 0 0 1px #DC2626' : undefined
+                          backgroundColor: schedule.color
                         }}
                         title={schedule.medications.join(', ')}
-                      />
+                      >
+                        {/* Bright highlight overlay for current medication schedules */}
+                        {schedule.isCurrentMedSchedule && (
+                          <div 
+                            className="absolute inset-0 rounded animate-pulse"
+                            style={{
+                              backgroundColor: 'rgba(255, 255, 255, 0.4)',
+                              boxShadow: '0 0 8px rgba(255, 255, 255, 0.6), inset 0 0 8px rgba(255, 255, 255, 0.3)'
+                            }}
+                          />
+                        )}
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -172,13 +184,13 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         {/* As needed section */}
         {displayMedications.some(med => med.asNeeded) && (
           <div className="border-t" style={{ 
-            backgroundColor: '#FEF3C7', 
-            borderColor: '#F59E0B' 
+            backgroundColor: '#374151', 
+            borderColor: '#4B5563' 
           }}>
             <div className="grid grid-cols-8 text-xs">
               <div className="p-2 font-medium text-center border-r" style={{ 
-                color: '#92400E',
-                borderColor: '#F59E0B'
+                color: '#E5E7EB',
+                borderColor: '#4B5563'
               }}>
                 PRN
               </div>
@@ -188,10 +200,10 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                   .map(med => (
                     <div key={med.id} className="rounded px-2 py-1 text-xs font-medium flex items-center gap-1" style={{ 
                       backgroundColor: '#E6C229',
-                      color: '#FFFFFF'
+                      color: '#111827'
                     }}>
                       <span className="truncate">{med.name}</span>
-                      <span style={{ color: '#FEF3C7' }}>({med.asNeeded?.maxPerDay}/day)</span>
+                      <span style={{ color: '#374151' }}>({med.asNeeded?.maxPerDay}/day)</span>
                     </div>
                   ))}
               </div>
@@ -208,7 +220,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         {/* Current medication container */}
         <Card className="border p-4" style={{ 
           background: 'linear-gradient(to right, rgba(242, 108, 58, 0.1), rgba(255, 138, 92, 0.1))',
-          borderColor: 'rgba(242, 108, 58, 0.3)'
+          borderColor: 'rgba(242, 108, 58, 0.3)',
+          backgroundColor: '#1F2937'
         }}>
           <div className="flex items-center justify-center py-8">
             <div className="text-center">
@@ -232,7 +245,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
       {/* Current medication container - compact version */}
       <Card className="border p-3" style={{ 
         background: 'linear-gradient(to right, rgba(242, 108, 58, 0.15), rgba(255, 138, 92, 0.15))',
-        borderColor: 'rgba(242, 108, 58, 0.4)'
+        borderColor: 'rgba(242, 108, 58, 0.4)',
+        backgroundColor: '#1F2937'
       }}>
         <div className="flex items-center gap-3">
           <div className="flex items-center justify-center w-10 h-10 rounded-full border text-lg font-bold" style={{ 
@@ -243,41 +257,39 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
             {displayMedications.length}
           </div>
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 text-white">
-              <h3 className="text-lg font-semibold truncate">
-                {currentMedication?.name || 'New Medication'}
-              </h3>
-              {currentMedication && (
-                <>
-                  <span style={{ color: 'rgba(255, 255, 255, 0.6)' }}>•</span>
-                  <span className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>{currentMedication.strength}</span>
-                  <span style={{ color: 'rgba(255, 255, 255, 0.6)' }}>•</span>
-                  <span className="text-sm capitalize" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>{currentMedication.form}</span>
-                </>
-              )}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-white min-w-0 flex-1">
+                <h3 className="text-lg font-semibold truncate">
+                  {currentMedication?.name || 'New Medication'}
+                </h3>
+                {currentMedication && (
+                  <>
+                    <span style={{ color: 'rgba(255, 255, 255, 0.6)' }}>•</span>
+                    <span className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>{currentMedication.strength}</span>
+                    <span style={{ color: 'rgba(255, 255, 255, 0.6)' }}>•</span>
+                    <span className="text-sm capitalize" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>{currentMedication.form}</span>
+                  </>
+                )}
+              </div>
+              <div className="flex items-center gap-2 ml-2">
+                <span className="text-xs whitespace-nowrap" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                  {displayMedications.length} total • {displayMedications.filter(m => m.asNeeded).length} PRN • {displayMedications.filter(m => !m.asNeeded).length} scheduled
+                </span>
+                <Badge variant="outline" className="text-xs whitespace-nowrap border" style={{ 
+                  backgroundColor: 'rgba(242, 108, 58, 0.2)',
+                  borderColor: 'rgba(242, 108, 58, 0.4)',
+                  color: '#F26C3A'
+                }}>
+                  Working on this
+                </Badge>
+              </div>
             </div>
           </div>
-          <Badge variant="outline" className="text-xs whitespace-nowrap border" style={{ 
-            backgroundColor: 'rgba(242, 108, 58, 0.2)',
-            borderColor: 'rgba(242, 108, 58, 0.4)',
-            color: '#F26C3A'
-          }}>
-            Working on this
-          </Badge>
         </div>
       </Card>
 
       {/* Consolidated schedule */}
       {renderConsolidatedSchedule()}
-
-      {/* Summary */}
-      <div className="flex items-center justify-between text-xs px-1" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
-        <span>{displayMedications.length} medications total</span>
-        <span>
-          {displayMedications.filter(m => m.asNeeded).length} as-needed, {' '}
-          {displayMedications.filter(m => !m.asNeeded).length} scheduled
-        </span>
-      </div>
     </div>
   );
 };

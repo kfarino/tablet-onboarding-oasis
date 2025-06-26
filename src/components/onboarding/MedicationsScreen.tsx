@@ -1,10 +1,8 @@
-
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { Pill, Calendar as CalendarIcon, Plus } from 'lucide-react';
+import { Pill, Calendar as CalendarIcon } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Medication } from '@/types/onboarding';
 
 interface MedicationsScreenProps {
@@ -26,18 +24,18 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   // Current medication being worked on (last one in the list)
   const currentMedication = displayMedications[displayMedications.length - 1];
 
-  // Create a color palette for dose schedules
+  // Create a color palette for dose schedules with orange-based theme
   const scheduleColors = [
-    'bg-blue-500',
-    'bg-green-500', 
-    'bg-purple-500',
+    'bg-orange-500',
+    'bg-amber-500', 
     'bg-red-500',
     'bg-yellow-500',
-    'bg-indigo-500',
-    'bg-pink-500',
-    'bg-orange-500',
-    'bg-teal-500',
-    'bg-cyan-500'
+    'bg-orange-600',
+    'bg-amber-600',
+    'bg-red-600',
+    'bg-yellow-600',
+    'bg-orange-400',
+    'bg-amber-400'
   ];
 
   // Group medications by time and day pattern to create dose schedules
@@ -197,70 +195,55 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
     return (
       <div className="animate-fade-in px-6 pb-10 space-y-6">
         {/* Current medication container */}
-        <Card className="bg-white/5 border-white/10 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-white">Current Medication</h3>
-            <Button 
-              onClick={addMedication}
-              className="bg-highlight hover:bg-highlight/90 text-white"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add First Medication
-            </Button>
+        <Card className="bg-gradient-to-r from-highlight/10 to-orange-500/10 border-highlight/30 p-4">
+          <div className="flex items-center justify-center py-8">
+            <div className="text-center">
+              <Pill className="h-12 w-12 text-highlight mx-auto mb-3" />
+              <h3 className="text-lg font-semibold text-white mb-2">No medications added yet</h3>
+              <p className="text-white/60">Add your first medication to get started with your schedule.</p>
+            </div>
           </div>
-          <p className="text-white/60">Add your first medication to get started with your schedule.</p>
         </Card>
-
-        <div className="flex flex-col items-center justify-center py-12 border border-dashed border-white/20 rounded-lg">
-          <Pill className="h-16 w-16 text-white/30 mb-4" />
-          <p className="text-white/60 text-xl mb-2">No medications added yet</p>
-        </div>
       </div>
     );
   }
 
   return (
     <div className="animate-fade-in px-2 pb-2 space-y-4">
-      {/* Current medication container */}
-      <Card className="bg-white/5 border-white/10 p-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Pill className="h-5 w-5 text-white" />
-            <div className="flex flex-col">
-              <h3 className="text-lg font-semibold text-white">
+      {/* Current medication container - compact version */}
+      <Card className="bg-gradient-to-r from-highlight/15 to-orange-500/15 border-highlight/40 p-3">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-highlight/20 border border-highlight/40">
+            <Pill className="h-5 w-5 text-highlight" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 text-white">
+              <h3 className="text-lg font-semibold truncate">
                 {currentMedication?.name || 'New Medication'}
               </h3>
               {currentMedication && (
-                <div className="flex items-center gap-2 text-sm text-white/70">
-                  <span>{currentMedication.strength}</span>
-                  <span>•</span>
-                  <span className="capitalize">{currentMedication.form}</span>
-                </div>
+                <>
+                  <span className="text-white/60">•</span>
+                  <span className="text-sm text-white/80">{currentMedication.strength}</span>
+                  <span className="text-white/60">•</span>
+                  <span className="text-sm text-white/80 capitalize">{currentMedication.form}</span>
+                </>
               )}
             </div>
-            <Badge variant="outline" className="bg-white/10 text-white/70 text-xs">
-              Working on this
-            </Badge>
           </div>
-          <Button 
-            onClick={addMedication}
-            variant="outline"
-            size="sm"
-            className="border-white/20 text-white hover:bg-white/10"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Add Another
-          </Button>
+          <Badge variant="outline" className="bg-highlight/20 border-highlight/40 text-highlight text-xs whitespace-nowrap">
+            Working on this
+          </Badge>
         </div>
       </Card>
 
       {/* Schedule header */}
       <div className="flex items-center gap-2 px-1">
-        <CalendarIcon className="h-4 w-4 text-white" />
+        <CalendarIcon className="h-4 w-4 text-highlight" />
         <h3 className="text-lg font-bold text-white">
           Medications Schedule
         </h3>
-        <Badge variant="outline" className="bg-white/10 text-white/70 text-xs">
+        <Badge variant="outline" className="bg-highlight/10 border-highlight/30 text-highlight text-xs">
           {displayMedications.length} medications
         </Badge>
       </div>

@@ -1,18 +1,10 @@
 
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { CheckCircle2, ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { CheckCircle2 } from 'lucide-react';
 
 const CompleteScreen: React.FC = () => {
-  const { userProfile } = useOnboarding();
-
-  // In a real application, we would have a redirect function here
-  const goToDashboard = () => {
-    // This would navigate to the dashboard in a real app
-    console.log('Navigating to dashboard...');
-    window.location.href = '/dashboard';
-  };
+  const { prevStep } = useOnboarding();
 
   return (
     <div className="flex flex-col items-center px-6 py-6 h-full animate-fade-in">
@@ -22,21 +14,6 @@ const CompleteScreen: React.FC = () => {
         <h2 className="text-3xl font-bold text-white mb-4">
           Get ready to load your meds!
         </h2>
-        
-        <p className="text-white/80 text-xl mb-4">
-          Thank you {userProfile.firstName}, your health profile and medication schedule have been successfully created.
-        </p>
-        
-        <p className="text-white/70 text-lg mb-6">
-          You can now access your medication schedule and reminders in the main dashboard.
-        </p>
-        
-        <Button 
-          className="flex items-center gap-2 bg-highlight hover:bg-highlight/90 text-white px-6 py-3 rounded-full text-xl"
-          onClick={goToDashboard}
-        >
-          Go to Dashboard <ArrowRight className="h-5 w-5" />
-        </Button>
       </div>
     </div>
   );

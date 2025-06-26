@@ -184,14 +184,6 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
         return <WelcomeScreen />;
       case OnboardingStep.PersonalInfo:
         return <AccountInfoScreen showExample={showExample} previewRole={previewRole} />;
-      case OnboardingStep.HealthConditions:
-        // Skip health conditions - go directly to medications
-        return <MedicationsScreen 
-                 showExample={showExample} 
-                 showMedicationSchedule={showMedicationSchedule}
-                 setShowMedicationSchedule={setShowMedicationSchedule}
-                 exampleMedications={exampleMedications}
-               />;
       case OnboardingStep.Medications:
         return <MedicationsScreen 
                  showExample={showExample} 

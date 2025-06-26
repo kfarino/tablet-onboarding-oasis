@@ -43,10 +43,9 @@ export interface Dose {
 export enum OnboardingStep {
   Welcome = 0,
   PersonalInfo = 1,
-  HealthConditions = 2,
-  Medications = 3,
-  Review = 4,
-  Complete = 5
+  Medications = 2,
+  Review = 3,
+  Complete = 4
 }
 
 export enum UserRole {

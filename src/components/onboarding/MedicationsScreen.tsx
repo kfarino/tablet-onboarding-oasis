@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Calendar as CalendarIcon, Pill, Star } from 'lucide-react';
@@ -158,7 +157,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                         key={scheduleIndex}
                         className="rounded flex-1 h-8 relative flex items-center justify-center"
                         style={{ 
-                          backgroundColor: schedule.color
+                          backgroundColor: schedule.color,
+                          opacity: currentMedication && !schedule.isCurrentMedSchedule ? 0.3 : 1
                         }}
                         title={schedule.medications.join(', ')}
                       >
@@ -198,15 +198,23 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               <div className="col-span-7 p-2 flex flex-wrap items-center gap-1">
                 {displayMedications
                   .filter(med => med.asNeeded)
-                  .map(med => (
-                    <div key={med.id} className="rounded px-2 py-1 text-xs font-medium flex items-center gap-1" style={{ 
-                      backgroundColor: '#E6C229',
-                      color: '#111827'
-                    }}>
-                      <span className="truncate">{med.name}</span>
-                      <span style={{ color: '#374151' }}>({med.asNeeded?.maxPerDay}/day)</span>
-                    </div>
-                  ))}
+                  .map(med => {
+                    const isCurrentMed = currentMedication && med.id === currentMedication.id;
+                    return (
+                      <div 
+                        key={med.id} 
+                        className="rounded px-2 py-1 text-xs font-medium flex items-center gap-1" 
+                        style={{ 
+                          backgroundColor: '#E6C229',
+                          color: '#111827',
+                          opacity: currentMedication && !isCurrentMed ? 0.3 : 1
+                        }}
+                      >
+                        <span className="truncate">{med.name}</span>
+                        <span style={{ color: '#374151' }}>({med.asNeeded?.maxPerDay}/day)</span>
+                      </div>
+                    );
+                  })}
               </div>
             </div>
           </div>

@@ -50,8 +50,6 @@ const Header: React.FC<HeaderProps> = ({
         return 'Account Details';
       case OnboardingStep.Medications:
         return 'Medications';
-      case OnboardingStep.Review:
-        return 'Review';
       case OnboardingStep.Complete:
         return 'Complete!';
       default:

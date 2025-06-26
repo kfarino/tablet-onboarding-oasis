@@ -31,45 +31,66 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
       'thursday': 4, 'friday': 5, 'saturday': 6
     };
 
-    // Get all unique times that have doses and aggregate pill counts
-    const timeSlotData: Record<string, Record<number, number>> = {};
-    
+    // Create unique dose groups (time + frequency combination)
+    const doseGroups: Array<{
+      id: string;
+      time: string;
+      days: string[];
+      totalQuantity: number;
+      color: string;
+    }> = [];
+
+    const colors = [
+      'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-orange-500', 
+      'bg-pink-500', 'bg-teal-500', 'bg-red-500', 'bg-yellow-500',
+      'bg-indigo-500', 'bg-cyan-500'
+    ];
+
+    let colorIndex = 0;
+
     displayMedications.forEach(med => {
       med.doses.forEach(dose => {
         dose.times.forEach(time => {
           if (time.toLowerCase() !== "as needed") {
-            if (!timeSlotData[time]) {
-              timeSlotData[time] = {};
-            }
+            // Create a unique identifier for this dose group
+            const groupId = `${time}-${dose.days.sort().join('-')}`;
             
-            // For each day this dose applies to
-            dose.days.forEach(day => {
-              if (day === 'everyday') {
-                // Add to all days
-                for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
-                  if (!timeSlotData[time][dayIndex]) {
-                    timeSlotData[time][dayIndex] = 0;
-                  }
-                  timeSlotData[time][dayIndex] += dose.quantity;
-                }
-              } else {
-                // Add to specific day
-                const dayIndex = dayMapping[day.toLowerCase() as keyof typeof dayMapping];
-                if (dayIndex !== undefined) {
-                  if (!timeSlotData[time][dayIndex]) {
-                    timeSlotData[time][dayIndex] = 0;
-                  }
-                  timeSlotData[time][dayIndex] += dose.quantity;
-                }
-              }
-            });
+            // Check if this group already exists
+            let existingGroup = doseGroups.find(group => group.id === groupId);
+            
+            if (existingGroup) {
+              // Add quantity to existing group
+              existingGroup.totalQuantity += dose.quantity;
+            } else {
+              // Create new group
+              doseGroups.push({
+                id: groupId,
+                time: time,
+                days: dose.days,
+                totalQuantity: dose.quantity,
+                color: colors[colorIndex % colors.length]
+              });
+              colorIndex++;
+            }
           }
         });
       });
     });
 
-    // Sort times
-    const sortedTimes = Object.keys(timeSlotData).sort((a, b) => {
+    // Sort groups by time
+    const sortedGroups = doseGroups.sort((a, b) => {
+      const parseTime = (timeStr: string) => {
+        const [time, meridiem] = timeStr.split(' ');
+        let [hours, minutes] = time.split(':').map(Number);
+        if (meridiem === 'PM' && hours !== 12) hours += 12;
+        if (meridiem === 'AM' && hours === 12) hours = 0;
+        return hours * 60 + (minutes || 0);
+      };
+      return parseTime(a.time) - parseTime(b.time);
+    });
+
+    // Get all unique times that have doses
+    const uniqueTimes = [...new Set(sortedGroups.map(group => group.time))].sort((a, b) => {
       const parseTime = (timeStr: string) => {
         const [time, meridiem] = timeStr.split(' ');
         let [hours, minutes] = time.split(':').map(Number);
@@ -94,8 +115,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
           ))}
         </div>
 
-        {/* Only render rows for times that actually have doses */}
-        {sortedTimes.map((time, timeIndex) => (
+        {/* Render rows for each unique time */}
+        {uniqueTimes.map((time, timeIndex) => (
           <div key={time} className={`grid grid-cols-8 border-b border-white/10 ${timeIndex % 2 === 0 ? 'bg-white/5' : 'bg-white/10'}`}>
             {/* Time column */}
             <div className="p-3 font-medium text-white border-r border-white/10 text-center">
@@ -105,16 +126,33 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
             
             {/* Day columns */}
             {daysOfWeek.map((_, dayIndex) => {
-              const totalPills = timeSlotData[time][dayIndex] || 0;
+              // Find all dose groups for this time and day
+              const groupsForThisTimeAndDay = sortedGroups.filter(group => {
+                if (group.time !== time) return false;
+                
+                // Check if this group applies to this day
+                if (group.days.includes('everyday')) return true;
+                
+                const dayName = daysOfWeek[dayIndex].toLowerCase();
+                const fullDayName = {
+                  'sun': 'sunday', 'mon': 'monday', 'tue': 'tuesday', 'wed': 'wednesday',
+                  'thu': 'thursday', 'fri': 'friday', 'sat': 'saturday'
+                }[dayName];
+                
+                return group.days.includes(fullDayName || dayName);
+              });
 
               return (
-                <div key={dayIndex} className="p-2 border-r border-white/10 last:border-r-0 min-h-16 flex items-center justify-center">
-                  {totalPills > 0 && (
-                    <div className="bg-blue-500 rounded-lg px-3 py-2 text-white text-sm font-medium flex items-center gap-1">
+                <div key={dayIndex} className="p-2 border-r border-white/10 last:border-r-0 min-h-16 flex flex-col gap-1 justify-center">
+                  {groupsForThisTimeAndDay.map(group => (
+                    <div 
+                      key={group.id}
+                      className={`${group.color} rounded-lg px-3 py-2 text-white text-sm font-medium flex items-center gap-1 justify-center`}
+                    >
                       <Pill className="h-3 w-3" />
-                      <span>{totalPills}</span>
+                      <span>{group.totalQuantity}</span>
                     </div>
-                  )}
+                  ))}
                 </div>
               );
             })}

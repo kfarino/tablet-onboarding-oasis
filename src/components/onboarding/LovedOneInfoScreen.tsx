@@ -1,9 +1,10 @@
 
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { User, Calendar, BellRing, Phone } from 'lucide-react';
+import { User, Calendar, BellRing, Phone, Stethoscope } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ALERT_PREFERENCES, AlertPreference } from '@/types/onboarding';
+import { Badge } from "@/components/ui/badge";
 
 interface LovedOneInfoScreenProps {
   showExample?: boolean;
@@ -18,7 +19,8 @@ const LovedOneInfoScreen: React.FC<LovedOneInfoScreenProps> = ({ showExample = f
     lastName: "Smith",
     dateOfBirth: "06/12/1940",
     phoneNumber: "(555) 678-9012",
-    alertPreference: AlertPreference.PhoneCall
+    alertPreference: AlertPreference.PhoneCall,
+    healthConditions: ["Diabetes", "High Blood Pressure", "Arthritis"]
   };
 
   const handleAlertPreferenceChange = (value: string) => {
@@ -36,6 +38,10 @@ const LovedOneInfoScreen: React.FC<LovedOneInfoScreenProps> = ({ showExample = f
     };
     updateUserProfile('lovedOne', updatedLovedOne);
   };
+
+  const displayHealthConditions = showExample 
+    ? exampleLovedOne.healthConditions 
+    : userProfile.lovedOne.healthConditions || [];
 
   return (
     <div className="animate-fade-in flex flex-col h-full px-6 py-4">
@@ -101,6 +107,29 @@ const LovedOneInfoScreen: React.FC<LovedOneInfoScreenProps> = ({ showExample = f
                     ))}
                   </SelectContent>
                 </Select>
+              )}
+            </div>
+          </div>
+
+          <div className="voice-display-card p-4 h-28 col-span-2">
+            <Stethoscope className="text-highlight h-5 w-5" />
+            <div className="flex-1">
+              <p className="text-white/70 text-lg mb-2">Health Conditions</p>
+              {displayHealthConditions.length > 0 ? (
+                <div className="flex flex-wrap gap-1">
+                  {displayHealthConditions.slice(0, 4).map((condition, index) => (
+                    <Badge key={index} variant="secondary" className="bg-highlight/20 text-white text-sm">
+                      {condition}
+                    </Badge>
+                  ))}
+                  {displayHealthConditions.length > 4 && (
+                    <Badge variant="secondary" className="bg-white/20 text-white text-sm">
+                      +{displayHealthConditions.length - 4} more
+                    </Badge>
+                  )}
+                </div>
+              ) : (
+                <p className="text-2xl text-white">Listening...</p>
               )}
             </div>
           </div>

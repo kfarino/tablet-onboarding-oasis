@@ -20,7 +20,7 @@ const CompleteScreen: React.FC = () => {
         <CheckCircle2 className="text-highlight h-16 w-16 mb-6" />
         
         <h2 className="text-3xl font-bold text-white mb-4">
-          Your health profile is ready!
+          Get ready to load your meds!
         </h2>
         
         <p className="text-white/80 text-xl mb-4">

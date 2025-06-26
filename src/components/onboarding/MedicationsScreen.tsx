@@ -1,9 +1,8 @@
 
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { Calendar as CalendarIcon } from 'lucide-react';
+import { Pill } from 'lucide-react';
 import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Medication } from '@/types/onboarding';
 
 interface MedicationsScreenProps {
@@ -158,21 +157,11 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                         key={scheduleIndex}
                         className="rounded flex-1 h-8 relative"
                         style={{ 
-                          backgroundColor: schedule.color
+                          backgroundColor: schedule.color,
+                          opacity: schedule.isCurrentMedSchedule ? 1 : 0.5
                         }}
                         title={schedule.medications.join(', ')}
-                      >
-                        {/* Bright highlight overlay for current medication schedules */}
-                        {schedule.isCurrentMedSchedule && (
-                          <div 
-                            className="absolute inset-0 rounded animate-pulse"
-                            style={{
-                              backgroundColor: 'rgba(255, 255, 255, 0.4)',
-                              boxShadow: '0 0 8px rgba(255, 255, 255, 0.6), inset 0 0 8px rgba(255, 255, 255, 0.3)'
-                            }}
-                          />
-                        )}
-                      </div>
+                      />
                     ))}
                   </div>
                 </div>
@@ -249,12 +238,12 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         backgroundColor: '#1F2937'
       }}>
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-10 h-10 rounded-full border text-lg font-bold" style={{ 
+          <div className="flex items-center justify-center w-10 h-10 rounded-full border" style={{ 
             backgroundColor: '#F26C3A',
             borderColor: 'rgba(242, 108, 58, 0.4)',
             color: '#FFFFFF'
           }}>
-            {displayMedications.length}
+            <Pill size={20} />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
@@ -275,13 +264,6 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                 <span className="text-xs whitespace-nowrap" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
                   {displayMedications.length} total • {displayMedications.filter(m => m.asNeeded).length} PRN • {displayMedications.filter(m => !m.asNeeded).length} scheduled
                 </span>
-                <Badge variant="outline" className="text-xs whitespace-nowrap border" style={{ 
-                  backgroundColor: 'rgba(242, 108, 58, 0.2)',
-                  borderColor: 'rgba(242, 108, 58, 0.4)',
-                  color: '#F26C3A'
-                }}>
-                  Working on this
-                </Badge>
               </div>
             </div>
           </div>

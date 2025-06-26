@@ -144,7 +144,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
     return (
       <div className="rounded-lg overflow-hidden border-2" style={{ 
         borderColor: '#F26C3A', 
-        backgroundColor: '#374151' 
+        backgroundColor: '#000000' 
       }}>
         {/* Header */}
         <div className="grid grid-cols-8 text-xs" style={{ 
@@ -165,7 +165,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         {sortedTimes.map((time, timeIndex) => (
           <div key={time} className={`grid grid-cols-8 border-b`} style={{ 
             borderColor: '#4B5563',
-            backgroundColor: '#374151'
+            backgroundColor: '#000000'
           }}>
             {/* Time column */}
             <div className="p-2 text-center min-h-[50px] flex items-center justify-center border-r" style={{ 
@@ -207,7 +207,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         {/* As needed section */}
         {displayMedications.some(med => med.asNeeded) && (
           <div className="border-t" style={{ 
-            backgroundColor: '#374151', 
+            backgroundColor: '#000000', 
             borderColor: '#4B5563' 
           }}>
             <div className="grid grid-cols-8 text-xs">

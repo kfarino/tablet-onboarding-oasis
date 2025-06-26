@@ -66,6 +66,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
       }>;
       color: string;
       isCurrentMedSchedule?: boolean;
+      currentMedQuantity?: number;
     }> = {};
 
     let colorIndex = 0;
@@ -83,7 +84,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                 dayPattern,
                 medications: [],
                 color: scheduleColors[colorIndex % scheduleColors.length],
-                isCurrentMedSchedule: false
+                isCurrentMedSchedule: false,
+                currentMedQuantity: 0
               };
               colorIndex++;
             }
@@ -94,9 +96,10 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               quantity: dose.quantity
             });
             
-            // Check if this schedule contains the current medication
+            // Check if this schedule contains the current medication and store its quantity
             if (currentMedication && med.id === currentMedication.id) {
               schedules[scheduleKey].isCurrentMedSchedule = true;
+              schedules[scheduleKey].currentMedQuantity = dose.quantity;
             }
           }
         });
@@ -165,48 +168,60 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         </div>
 
         {/* Time rows */}
-        {sortedTimes.map((time, timeIndex) => (
-          <div key={time} className="grid border-b" style={{ 
-            gridTemplateColumns: '120px repeat(7, 1fr)',
-            borderColor: '#4B5563',
-            backgroundColor: '#000000'
-          }}>
-            {/* Time column */}
-            <div className="p-2 text-center min-h-[50px] flex items-center justify-center border-r" style={{ 
+        {sortedTimes.map((time, timeIndex) => {
+          // Find if current medication has doses at this time
+          const currentMedQuantityAtTime = timeGroups[time].find(schedule => schedule.isCurrentMedSchedule)?.currentMedQuantity;
+          
+          return (
+            <div key={time} className="grid border-b" style={{ 
+              gridTemplateColumns: '120px repeat(7, 1fr)',
               borderColor: '#4B5563',
-              color: '#E5E7EB'
+              backgroundColor: '#000000'
             }}>
-              <div className="text-sm font-semibold">{time}</div>
-            </div>
-            
-            {/* Day columns */}
-            {daysOfWeek.map((_, dayIndex) => {
-              const fullDayName = fullDayNames[dayIndex];
-              const applicableSchedules = timeGroups[time].filter(schedule => {
-                const days = schedule.dayPattern.split(',');
-                return days.includes('everyday') || days.includes(fullDayName);
-              });
-
-              return (
-                <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[50px] flex items-center justify-center" style={{ borderColor: '#4B5563' }}>
-                  <div className="flex gap-1 w-full">
-                    {applicableSchedules.map((schedule, scheduleIndex) => (
-                      <div 
-                        key={scheduleIndex}
-                        className="rounded flex-1 h-8 relative cursor-pointer hover:brightness-110 transition-all"
-                        style={{ 
-                          backgroundColor: schedule.color,
-                          opacity: schedule.isCurrentMedSchedule ? 1 : 0.3
-                        }}
-                        onClick={() => handleDoseClick(schedule)}
-                      />
-                    ))}
-                  </div>
+              {/* Time column with quantity if current med is present */}
+              <div className="p-2 text-center min-h-[50px] flex items-center justify-center border-r" style={{ 
+                borderColor: '#4B5563',
+                color: '#E5E7EB'
+              }}>
+                <div className="text-sm font-semibold">
+                  {time}
+                  {currentMedQuantityAtTime && (
+                    <span className="ml-1 text-xs" style={{ color: '#F26C3A' }}>
+                      ({currentMedQuantityAtTime}x)
+                    </span>
+                  )}
                 </div>
-              );
-            })}
-          </div>
-        ))}
+              </div>
+              
+              {/* Day columns */}
+              {daysOfWeek.map((_, dayIndex) => {
+                const fullDayName = fullDayNames[dayIndex];
+                const applicableSchedules = timeGroups[time].filter(schedule => {
+                  const days = schedule.dayPattern.split(',');
+                  return days.includes('everyday') || days.includes(fullDayName);
+                });
+
+                return (
+                  <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[50px] flex items-center justify-center" style={{ borderColor: '#4B5563' }}>
+                    <div className="flex gap-1 w-full">
+                      {applicableSchedules.map((schedule, scheduleIndex) => (
+                        <div 
+                          key={scheduleIndex}
+                          className="rounded flex-1 h-8 relative cursor-pointer hover:brightness-110 transition-all"
+                          style={{ 
+                            backgroundColor: schedule.color,
+                            opacity: schedule.isCurrentMedSchedule ? 1 : 0.3
+                          }}
+                          onClick={() => handleDoseClick(schedule)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )
+        })}
 
         {/* As needed row - redesigned to match grid structure with wider first column */}
         {asNeededMeds.length > 0 && (

@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState } from 'react';
 import { UserProfile, Medication, Dose, OnboardingStep, UserRole, AlertPreference } from '../types/onboarding';
 import { v4 as uuidv4 } from 'uuid';
@@ -43,23 +42,7 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     phoneNumber: '',
     alertPreference: null,
     healthConditions: [],
-    medications: [
-      {
-        id: uuidv4(),
-        name: 'Albuterol',
-        strength: '90mcg',
-        form: 'inhaler',
-        doses: [
-          {
-            id: uuidv4(),
-            days: ['everyday'],
-            times: ['8:00 AM', '6:00 PM'],
-            quantity: 2
-          }
-        ],
-        asNeeded: { maxPerDay: 8 }
-      }
-    ],
+    medications: [],
     lovedOne: {
       firstName: '',
       lastName: '',

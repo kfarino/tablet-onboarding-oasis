@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { OnboardingStep, UserRole } from '@/types/onboarding';
@@ -25,11 +24,11 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
   setShowMedicationSchedule = () => {}
 }) => {
   const { currentStep, prevStep, updateUserProfile, userProfile } = useOnboarding();
-  const [showExample, setShowExample] = useState(false);
-  const [previewRole, setPreviewRole] = useState<UserRole | null>(null);
+  const [showExample, setShowExample] = useState(true); // Changed to default to true
+  const [previewRole, setPreviewRole] = useState<UserRole | null>(UserRole.PrimaryUser); // Default to PrimaryUser
   const [showSingleMedicationCapture, setShowSingleMedicationCapture] = useState(false);
 
-  // Simplified example medications - 9 total with cleaner patterns
+  // Simplified example medications - 8 total (removed Albuterol)
   const exampleMedications = [
     // Everyday morning medications
     {
@@ -61,22 +60,6 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
         }
       ],
       asNeeded: { maxPerDay: 4 }
-    },
-    // Albuterol - current medication being worked on
-    {
-      id: uuidv4(),
-      name: "Albuterol",
-      strength: "90mcg",
-      form: "inhaler",
-      doses: [
-        {
-          id: uuidv4(),
-          days: ["everyday"],
-          times: ["8:00 AM", "6:00 PM"],
-          quantity: 2
-        }
-      ],
-      asNeeded: null
     },
     // Everyday evening medication
     {

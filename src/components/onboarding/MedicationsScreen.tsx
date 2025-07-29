@@ -130,11 +130,9 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
 
     return (
       <div className="rounded-lg overflow-hidden border border-white/10 bg-charcoal">
-        {/* Header matching AccountInfoScreen styling */}
-        <div className="grid text-xs" style={{ 
-          gridTemplateColumns: '120px repeat(7, 1fr)',
-          background: 'linear-gradient(to right, rgba(242, 108, 58, 0.15), rgba(255, 138, 92, 0.15))',
-          backgroundColor: 'rgba(255, 255, 255, 0.05)'
+        {/* Header */}
+        <div className="grid text-xs bg-charcoal" style={{ 
+          gridTemplateColumns: '120px repeat(7, 1fr)'
         }}>
           <div className="p-2 font-semibold text-white text-center border-r border-white/10">
             Time

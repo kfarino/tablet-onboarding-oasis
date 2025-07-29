@@ -110,7 +110,7 @@ const Header: React.FC<HeaderProps> = ({
           </Button>
         )}
         
-        {onTogglePreviewRole && showExample && (
+        {onTogglePreviewRole && (
           <Button
             variant="ghost"
             size="icon-circle"

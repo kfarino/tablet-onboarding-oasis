@@ -164,13 +164,7 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
   ];
 
   const toggleExample = () => {
-    if (showExample) {
-      setShowExample(false);
-      setPreviewRole(null);
-    } else {
-      setShowExample(true);
-      setPreviewRole(UserRole.PrimaryUser);
-    }
+    setShowExample(!showExample);
   };
 
   const togglePreviewRole = () => {
@@ -255,7 +249,7 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
         onBack={prevStep} 
         toggleExample={toggleExample}
         showExample={showExample}
-        onTogglePreviewRole={showExample ? togglePreviewRole : undefined}
+        onTogglePreviewRole={togglePreviewRole}
         previewRole={previewRole}
         showMedicationSchedule={showMedicationSchedule}
         setShowMedicationSchedule={currentStep === OnboardingStep.Medications ? setShowMedicationSchedule : undefined}

@@ -340,37 +340,39 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   return (
     <>
       <div className="animate-fade-in px-2 pb-2 space-y-4">
-        {/* Current medication container - matching AccountInfoScreen styling */}
-        <div className="rounded-lg border border-white/10 bg-white/5 px-4 py-4">
+        {/* Current medication header - clean and streamlined */}
+        <div className="space-y-3">
           <div className="flex items-center justify-between">
-            {/* Left: Medication name and details */}
+            {/* Medication name and details */}
             <div className="flex-1">
-              <p className={`text-xl font-bold break-words ${showExample || currentMedication ? 'text-white' : 'text-white/60 italic'}`}>
+              <h2 className="text-2xl font-bold text-white leading-tight">
                 {currentMedication ? 
-                  `${currentMedication.name} ${currentMedication.strength} • ${currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}` :
+                  `${currentMedication.name}` :
                   'New Medication'
                 }
-              </p>
+              </h2>
+              {currentMedication && (
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="text-white/80 font-medium">{currentMedication.strength}</span>
+                  <span className="text-white/60">•</span>
+                  <span className="text-white/80">{currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}</span>
+                  {currentMedication.asNeeded && (
+                    <>
+                      <span className="text-white/60">•</span>
+                      <span className="text-white/60 text-sm">As-needed: {currentMedication.asNeeded.maxPerDay}x/day</span>
+                    </>
+                  )}
+                </div>
+              )}
             </div>
             
-            {/* Center: As-needed info */}
-            {currentMedication && currentMedication.asNeeded && (
-              <div className="text-sm text-white/70 text-center">
-                As-needed: {currentMedication.asNeeded.maxPerDay}x/day
-              </div>
-            )}
-            
-            {/* Right: Total med count */}
-            <div className="flex items-center gap-2">
-              <div 
-                className="px-3 py-1.5 bg-white/10 hover:bg-white/15 rounded-full border border-white/20 hover:border-white/30 cursor-pointer transition-all duration-200 hover:scale-105" 
-                onClick={() => setShowAllMedicationsDialog(true)}
-              >
-                <span className="text-xs text-white/80 hover:text-white font-medium">
-                  {displayMedications.length} total meds
-                </span>
-              </div>
-            </div>
+            {/* Total medication count - subtle but accessible */}
+            <button 
+              className="px-4 py-2 text-sm text-white/70 hover:text-white border border-white/20 hover:border-white/40 rounded-lg transition-all duration-200 hover:bg-white/5" 
+              onClick={() => setShowAllMedicationsDialog(true)}
+            >
+              {displayMedications.length} {displayMedications.length === 1 ? 'medication' : 'medications'}
+            </button>
           </div>
         </div>
 

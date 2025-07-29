@@ -108,21 +108,6 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
       ],
       asNeeded: null
     },
-    {
-      id: uuidv4(),
-      name: "Fish Oil",
-      strength: "1000mg",
-      form: "capsule",
-      doses: [
-        {
-          id: uuidv4(),
-          days: ["saturday", "sunday"],
-          times: ["12:00 PM"],
-          quantity: 1
-        }
-      ],
-      asNeeded: null
-    },
     // Weekday medication
     {
       id: uuidv4(),

@@ -52,27 +52,20 @@ export const formatTimeDisplay = (time: string): string => {
 export const getTimeColor = (time: string): string => {
   if (time === "12:00 PM" || time === "Noon" || time === "12:00") return "text-white";
   
-  // Check if time has AM/PM
-  const hasAMPM = time.includes("AM") || time.includes("PM");
+  // Check if time has AM/PM - prioritize this
+  if (time.includes("AM")) {
+    return "text-orange-400"; // Morning - warm orange
+  } else if (time.includes("PM")) {
+    return "text-blue-400";   // Evening - cool blue
+  }
   
-  if (hasAMPM) {
-    const isAM = time.includes("AM");
-    const isPM = time.includes("PM");
-    
-    if (isAM) {
-      return "text-orange-400"; // Morning - warm orange
-    } else if (isPM) {
-      return "text-blue-400";   // Evening - cool blue
-    }
-  } else {
-    // For times without AM/PM, use logic to determine morning vs evening
-    const [hours] = time.split(':').map(Number);
-    
-    if (hours >= 6 && hours <= 11) {
-      return "text-orange-400"; // Morning - warm orange
-    } else if ((hours >= 1 && hours <= 5) || hours === 12) {
-      return "text-blue-400";   // Evening/Night - cool blue
-    }
+  // For times without AM/PM, use logical mapping
+  const [hours] = time.split(':').map(Number);
+  
+  if (hours >= 1 && hours <= 7) {
+    return "text-orange-400"; // Hours 1-7 are AM - warm orange
+  } else if (hours >= 8 && hours <= 11) {
+    return "text-blue-400";   // Hours 8-11 are PM - cool blue
   }
   
   // Fallback to white

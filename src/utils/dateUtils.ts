@@ -33,15 +33,15 @@ export const getDayAbbreviation = (day: string): string => {
 };
 
 /**
- * Formats time display to remove AM/PM and convert 12:00 PM to "Noon"
+ * Formats time display to include AM/PM on one line and convert 12:00 PM to "Noon"
  * @param time Time string like "8:00 AM", "12:00 PM", "6:00 PM"
- * @returns Formatted time like "8:00", "Noon", "6:00"
+ * @returns Formatted time like "8:00 AM", "Noon", "6:00 PM"
  */
 export const formatTimeDisplay = (time: string): string => {
   if (time === "12:00 PM") return "Noon";
   
-  // Remove AM/PM from the time
-  return time.replace(/\s*(AM|PM)$/i, '');
+  // Keep AM/PM in the time display
+  return time;
 };
 
 /**

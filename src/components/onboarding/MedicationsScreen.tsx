@@ -164,7 +164,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               {/* Time column with horizontal inline layout */}
               <div className="p-2 text-center h-[40px] flex items-center justify-center border-r border-white/10">
                 <div className="flex items-center gap-1">
-                  <span className="text-sm font-semibold text-white">
+                  <span className="text-sm font-bold text-primary">
                     {formatTimeDisplay(time)}
                   </span>
                   {hasCurrentMedication && currentMedication && (

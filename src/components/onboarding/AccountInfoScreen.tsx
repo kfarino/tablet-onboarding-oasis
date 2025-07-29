@@ -17,7 +17,6 @@ type LayoutType = 'dashboard' | 'split';
 
 const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = false, previewRole }) => {
   const { userProfile, updateUserProfile, addHealthCondition, removeHealthCondition } = useOnboarding();
-  const [layout, setLayout] = useState<LayoutType>('split');
   const [newCondition, setNewCondition] = useState('');
 
   // Example data for populated view
@@ -89,170 +88,7 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
     return showExample ? exampleLovedOneConditions : (userProfile.lovedOne?.healthConditions || []);
   };
 
-  // Layout toggle buttons
-  const layoutToggle = (
-    <div className="absolute top-2 right-2 flex space-x-2">
-      <button 
-        onClick={() => setLayout('dashboard')} 
-        className={`p-1 rounded-md ${layout === 'dashboard' ? 'bg-gray-700' : ''}`}
-      >
-        <BellRing size={16} className="text-white" />
-      </button>
-      <button 
-        onClick={() => setLayout('split')} 
-        className={`p-1 rounded-md ${layout === 'split' ? 'bg-gray-700' : ''}`}
-      >
-        <Columns size={16} className="text-white" />
-      </button>
-    </div>
-  );
 
-  // Dashboard Layout - Streamlined dark theme design
-  const dashboardLayout = (
-    <div className="flex flex-col space-y-4">
-      <div className="rounded-lg border border-white/10 bg-card/95 backdrop-blur-sm p-6">
-        <div className="flex items-center justify-between">
-          <div className="flex-1">
-            <h1 className="text-white text-2xl font-bold mb-1">
-              {showExample || userProfile.firstName || userProfile.lastName
-                ? `${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.firstName : examplePrimaryUser.firstName) : userProfile.firstName || ""} ${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.lastName : examplePrimaryUser.lastName) : userProfile.lastName || ""}`
-                : "Name"}
-            </h1>
-            <p className="text-highlight text-lg font-medium mb-4">
-              {displayRole === UserRole.Caregiver 
-                ? (showExample || userProfile.relationship 
-                    ? (showExample ? "Child" : getRelationshipLabel(userProfile.relationship)) 
-                    : "Relationship")
-                : 'Primary User'}
-            </p>
-            
-            {/* Contact Info Row */}
-            <div className="flex items-center gap-6 text-white/80 mb-4">
-              {/* Only show phone for loved ones, not primary users */}
-              {displayRole === UserRole.Caregiver && (
-                <div className="flex items-center gap-2">
-                  <Phone className="h-4 w-4 text-highlight" />
-                  <span>
-                    {showExample || userProfile.phoneNumber
-                      ? (showExample ? exampleProfile.phoneNumber : userProfile.phoneNumber)
-                      : "Not provided"}
-                  </span>
-                </div>
-              )}
-              
-              {displayRole === UserRole.PrimaryUser && (
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-highlight" />
-                  <span>
-                    {showExample || userProfile.dateOfBirth
-                      ? (showExample ? examplePrimaryUser.dateOfBirth : userProfile.dateOfBirth)
-                      : "Not provided"}
-                  </span>
-                </div>
-              )}
-            </div>
-
-            {/* Health Conditions */}
-            {displayRole === UserRole.PrimaryUser && (
-              <div className="flex flex-wrap gap-2">
-                {getPrimaryUserConditions().length === 0 ? (
-                  <div className="text-white/40 text-sm">No health conditions</div>
-                ) : (
-                  getPrimaryUserConditions().map((condition, index) => (
-                    <Badge 
-                      key={index} 
-                      className="bg-highlight/20 text-white border-highlight/30 px-3 py-1 flex items-center gap-2"
-                    >
-                      <Heart className="h-3 w-3" />
-                      {condition}
-                      {!showExample && (
-                        <X 
-                          className="h-3 w-3 cursor-pointer hover:text-red-300" 
-                          onClick={() => removeHealthCondition(index)}
-                        />
-                      )}
-                    </Badge>
-                  ))
-                )}
-                
-                {!showExample && (
-                  <div className="flex gap-2 mt-2 w-full">
-                    <Input
-                      value={newCondition}
-                      onChange={(e) => setNewCondition(e.target.value)}
-                      onKeyPress={handleKeyPress}
-                      placeholder="Add health condition"
-                      className="bg-white/10 border-white/20 text-white flex-1"
-                    />
-                    <Button onClick={handleAddCondition} size="sm" className="bg-highlight hover:bg-highlight/90">
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {displayRole === UserRole.Caregiver && (
-        <div className="rounded-lg border border-white/10 bg-card/95 backdrop-blur-sm p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex-1">
-              <h1 className="text-white text-2xl font-bold mb-1">
-                {showExample || userProfile.lovedOne?.firstName || userProfile.lovedOne?.lastName
-                  ? (showExample ? "Margaret Eleanor Thompson" : `${userProfile.lovedOne?.firstName || ""} ${userProfile.lovedOne?.lastName || ""}`)
-                  : "Loved One's Name"}
-              </h1>
-              <p className="text-highlight text-lg font-medium mb-4">
-                {showExample || userProfile.relationship
-                  ? (showExample ? "Parent" : getRelationshipLabel(userProfile.relationship))
-                  : "Relationship"}
-              </p>
-              
-              {/* Contact Info Row - Phone always shown for loved ones */}
-              <div className="flex items-center gap-6 text-white/80 mb-4">
-                <div className="flex items-center gap-2">
-                  <Phone className="h-4 w-4 text-highlight" />
-                  <span>
-                    {showExample || userProfile.lovedOne?.phoneNumber
-                      ? (showExample ? "(555) 987-6543" : userProfile.lovedOne?.phoneNumber)
-                      : "Not provided"}
-                  </span>
-                </div>
-                
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-highlight" />
-                  <span>
-                    {showExample || userProfile.lovedOne?.dateOfBirth
-                      ? (showExample ? "01/01/1970" : userProfile.lovedOne?.dateOfBirth)
-                      : "Not provided"}
-                  </span>
-                </div>
-              </div>
-
-              {/* Health Conditions for Loved One */}
-              <div className="flex flex-wrap gap-2">
-                {getLovedOneConditions().length === 0 ? (
-                  <div className="text-white/40 text-sm">No health conditions</div>
-                ) : (
-                  getLovedOneConditions().map((condition, index) => (
-                    <Badge 
-                      key={index} 
-                      className="bg-highlight/20 text-white border-highlight/30 px-3 py-1 flex items-center gap-2"
-                    >
-                      <Heart className="h-3 w-3" />
-                      {condition}
-                    </Badge>
-                  ))
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
 
   // Split Layout
   const splitLayout = (
@@ -325,7 +161,7 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
                     </div>
                   )}
                   
-                  {!showExample && showExample && (
+                  {!showExample && (
                     <div className="flex gap-2 mt-2">
                       <Input
                         value={newCondition}
@@ -419,11 +255,8 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
   );
 
   return (
-    <div className="animate-fade-in flex flex-col h-full px-6 py-2 relative">
-      {layoutToggle}
-      
-      {layout === 'dashboard' && dashboardLayout}
-      {layout === 'split' && splitLayout}
+    <div className="bg-gradient-to-br from-gray-800 to-gray-900 text-white rounded-lg p-4 relative min-h-[400px]">
+      {splitLayout}
     </div>
   );
 };

@@ -35,6 +35,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   // Fix: Only show example medications when showExample is true
   const displayMedications = showExample ? exampleMedications : (userProfile.medications || []);
   const [selectedSchedule, setSelectedSchedule] = useState<DoseSchedule | null>(null);
+  const [showAllMedicationsDialog, setShowAllMedicationsDialog] = useState(false);
   
   // Current medication being worked on (last one in the list) - only if showing example
   const currentMedication = showExample ? displayMedications[displayMedications.length - 1] : null;
@@ -270,7 +271,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               <p className="text-xl font-bold text-white/60 italic">Name • Strength • Form</p>
               <div className="flex items-center gap-2">
                 <span className="text-xs text-white/60">
-                  0 total • 0 PRN • 0 scheduled
+                  0 total meds
                 </span>
               </div>
             </div>
@@ -367,8 +368,11 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               }
             </p>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-white/60">
-                {displayMedications.length} total • {displayMedications.filter(m => m.asNeeded).length} PRN • {displayMedications.filter(m => !m.asNeeded).length} scheduled
+              <span 
+                className="text-xs text-white/60 hover:text-white/80 cursor-pointer transition-colors" 
+                onClick={() => setShowAllMedicationsDialog(true)}
+              >
+                {displayMedications.length} total meds
               </span>
             </div>
           </div>
@@ -418,6 +422,33 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               </div>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* All Medications Dialog */}
+      <Dialog open={showAllMedicationsDialog} onOpenChange={setShowAllMedicationsDialog}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>All Medications ({displayMedications.length})</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3 max-h-[400px] overflow-y-auto">
+            {displayMedications.map((med, index) => (
+              <div key={med.id || index} className="flex items-center gap-3 p-3 rounded-lg bg-white/5">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full" style={{ backgroundColor: '#F26C3A' }}>
+                  <Pill size={24} className="text-white" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-white">{med.name}</h3>
+                  <p className="text-white/70">{med.strength} • {med.form.charAt(0).toUpperCase() + med.form.slice(1)}</p>
+                  <div className="flex gap-2 mt-1">
+                    <Badge variant={med.asNeeded ? "secondary" : "default"} className="text-xs">
+                      {med.asNeeded ? 'As needed' : 'Scheduled'}
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </DialogContent>
       </Dialog>
     </>

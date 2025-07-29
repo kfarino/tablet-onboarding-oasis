@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Wifi, ArrowLeft, ArrowRight, Eye } from 'lucide-react';
+import { Wifi, ArrowLeft, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { format } from 'date-fns';
 import { OnboardingStep, UserRole } from '@/types/onboarding';
 import { Button } from '@/components/ui/button';
@@ -106,7 +106,7 @@ const Header: React.FC<HeaderProps> = ({
             className={`absolute right-20 ${showExample ? 'bg-white/20' : 'bg-white/10'} text-white hover:bg-white/20 hover:text-white flex items-center justify-center`}
             aria-label="Toggle preview"
           >
-            <Eye className="h-7 w-7" />
+            {showExample ? <Eye className="h-7 w-7" /> : <EyeOff className="h-7 w-7" />}
           </Button>
         )}
         

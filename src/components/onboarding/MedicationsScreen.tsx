@@ -267,7 +267,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
           {/* No-data medication container matching AccountInfoScreen style */}
           <div className="rounded-lg border border-white/10 bg-white/5 px-4 py-4">
             <div className="flex items-center justify-between">
-              <p className="text-3xl font-bold text-white/60 italic">Name • Strength • Form</p>
+              <p className="text-xl font-bold text-white/60 italic">Name • Strength • Form</p>
               <div className="flex items-center gap-2">
                 <span className="text-xs text-white/60">
                   0 total • 0 PRN • 0 scheduled
@@ -308,17 +308,15 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               ))}
             </div>
             
-            {/* Noon indicator line */}
+            {/* Noon indicator */}
             <div className="grid" style={{ 
               gridTemplateColumns: '120px repeat(7, 1fr)',
               backgroundColor: 'rgba(255, 255, 255, 0.1)'
             }}>
-              <div className="p-1 text-center flex items-center justify-center border-r border-white/10">
-                <div className="text-xs text-white/40">noon</div>
+              <div className="p-2 text-center flex items-center justify-center border-r border-white/10">
+                <div className="text-sm font-semibold text-white/60">Noon</div>
               </div>
-              <div className="col-span-7 p-1">
-                <div className="w-full h-px bg-white/20"></div>
-              </div>
+              <div className="col-span-7 p-2"></div>
             </div>
             
             {/* PM time slot */}

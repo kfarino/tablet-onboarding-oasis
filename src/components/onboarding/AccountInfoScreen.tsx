@@ -96,23 +96,28 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
       {/* User Profile - Compact horizontal card */}
       <div className="w-full">
         <div className="rounded-lg border border-white/10 bg-white/5 p-4 h-fit">
-          <div className="mb-4">
-            <p className="text-white text-3xl font-bold break-words">
-              {showExample || userProfile.firstName || userProfile.lastName
-                ? `${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.firstName : examplePrimaryUser.firstName) : userProfile.firstName || ""} ${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.lastName : examplePrimaryUser.lastName) : userProfile.lastName || ""}`
-                : "Name"}
-            </p>
-            <p className="text-highlight text-xl">
-              {displayRole === UserRole.Caregiver 
-                ? (showExample || userProfile.relationship 
-                    ? (showExample ? "Child" : getRelationshipLabel(userProfile.relationship)) 
-                    : "Relationship")
-                : 'Primary User'}
-            </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-white text-3xl font-bold break-words">
+                {showExample || userProfile.firstName || userProfile.lastName
+                  ? `${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.firstName : examplePrimaryUser.firstName) : userProfile.firstName || ""} ${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.lastName : examplePrimaryUser.lastName) : userProfile.lastName || ""}`
+                  : "Name"}
+              </p>
+            </div>
+            {displayRole === UserRole.Caregiver && (
+              <p className="text-highlight text-xl">
+                {showExample || userProfile.relationship 
+                  ? (showExample ? "Child" : getRelationshipLabel(userProfile.relationship)) 
+                  : "Relationship"}
+              </p>
+            )}
+            {displayRole === UserRole.PrimaryUser && (
+              <p className="text-highlight text-xl">Primary User</p>
+            )}
           </div>
           
-          <div className="space-y-3 ml-1">
-            {/* No additional info for caregivers - removed phone number */}
+          {/* Reduced spacing for caregivers */}
+          <div className="space-y-3 ml-1 mt-2">
             
             {displayRole === UserRole.PrimaryUser && (
               <div className="flex items-center">

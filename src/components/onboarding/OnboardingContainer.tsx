@@ -29,22 +29,6 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
 
   // Example medications matching the specified schedule
   const exampleMedications = [
-    // Tylenol - scheduled at 6 AM and 6 PM, plus as-needed
-    {
-      id: uuidv4(),
-      name: "Tylenol",
-      strength: "500mg",
-      form: "tablet",
-      doses: [
-        {
-          id: uuidv4(),
-          days: ["everyday"],
-          times: ["6:00 AM", "6:00 PM"],
-          quantity: 1
-        }
-      ],
-      asNeeded: { maxPerDay: 3 }
-    },
     // Vitamin D - weekends at 6 AM, plus as-needed
     {
       id: uuidv4(),
@@ -124,6 +108,22 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
         }
       ],
       asNeeded: null
+    },
+    // Tylenol - scheduled at 6 AM and 6 PM, plus as-needed (CURRENT MEDICATION)
+    {
+      id: uuidv4(),
+      name: "Tylenol",
+      strength: "500mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["6:00 AM", "6:00 PM"],
+          quantity: 1
+        }
+      ],
+      asNeeded: { maxPerDay: 3 }
     }
   ];
 

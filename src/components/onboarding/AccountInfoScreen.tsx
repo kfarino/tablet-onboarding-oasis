@@ -95,7 +95,7 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
     <div className="flex flex-col gap-4">
       {/* User Profile - Compact horizontal card */}
       <div className="w-full">
-        <div className="rounded-lg border border-white/10 bg-white/5 p-4 h-fit">
+        <div className="rounded-lg border border-white/10 bg-white/5 px-4 py-4 h-fit">
           <div className="flex items-center justify-between">
             <p className="text-white text-3xl font-bold break-words">
               {showExample || userProfile.firstName || userProfile.lastName

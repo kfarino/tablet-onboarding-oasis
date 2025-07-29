@@ -62,10 +62,12 @@ export const getTimeColor = (time: string): string => {
   // For times without AM/PM, use logical mapping
   const [hours] = time.split(':').map(Number);
   
-  if (hours >= 6 && hours <= 11) {
-    return "text-orange-400"; // Hours 6-11 are typically AM - warm orange
-  } else if (hours >= 1 && hours <= 5) {
-    return "text-blue-400";   // Hours 1-5 are typically PM - cool blue
+  if (hours === 6) {
+    return "text-orange-400"; // 6:00 is AM - warm orange
+  } else if (hours === 8) {
+    return "text-blue-400";   // 8:00 is PM - cool blue
+  } else if (hours >= 1 && hours <= 11) {
+    return "text-orange-400"; // Other hours 1-11 default to AM - warm orange
   }
   
   // Fallback to white

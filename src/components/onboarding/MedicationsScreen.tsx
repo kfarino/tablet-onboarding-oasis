@@ -159,8 +159,12 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
             const prevTime = sortedTimes[timeIndex - 1];
             const prevTimeMinutes = parseTimeForSorting(formatTimeDisplay(prevTime));
             
+            console.log(`Checking noon separator: ${prevTime} (${prevTimeMinutes}min) -> ${formatTimeDisplay(time)} (${currentTimeMinutes}min)`);
+            
             // Show noon if we're crossing from AM (< 720) to PM (> 720)
-            return prevTimeMinutes < 720 && currentTimeMinutes > 720;
+            const shouldShow = prevTimeMinutes < 720 && currentTimeMinutes > 720;
+            console.log(`Should show noon: ${shouldShow}`);
+            return shouldShow;
           })();
 
           return (

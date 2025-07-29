@@ -70,7 +70,9 @@ const SingleMedicationCaptureScreen: React.FC<SingleMedicationCaptureScreenProps
           <Button onClick={onBack} variant="ghost" size="icon" className="text-white hover:bg-white/10">
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h2 className="text-xl font-semibold">Configure Medication</h2>
+          <h2 className="text-xl font-semibold">
+            {currentMedication.name || 'Name'} • {currentMedication.strength || 'Strength'} • {currentMedication.form || 'Form'}
+          </h2>
         </div>
         <Button onClick={onComplete} className="bg-highlight hover:bg-highlight/90">
           Done

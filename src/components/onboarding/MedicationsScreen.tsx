@@ -185,9 +185,9 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                 }`} 
                 style={{ gridTemplateColumns: '120px repeat(7, 1fr)' }}
               >
-                {/* Time column - left aligned */}
+                {/* Time column - left aligned with pill count inline */}
                 <div className="p-2 pl-4 h-[40px] flex items-center justify-start border-r border-white/10">
-                  <div className="space-y-0.5">
+                  <div className="flex items-center gap-2">
                     <div className={`text-sm font-bold ${getTimeColor(time)}`}>
                       {formatTimeDisplay(time)}
                     </div>
@@ -199,7 +199,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                           const quantity = currentMedSchedule.currentMedQuantity;
                           return (
                             <div className="text-xs text-white/70">
-                              {quantity} {quantity === 1 ? 'pill' : 'pills'}
+                              ({quantity}x {quantity === 1 ? 'pill' : 'pills'})
                             </div>
                           );
                         }

@@ -120,7 +120,7 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
           id: uuidv4(),
           days: ["everyday"],
           times: ["6:00 AM", "6:00 PM"],
-          quantity: 1
+          quantity: 2
         }
       ],
       asNeeded: { maxPerDay: 3 }

@@ -162,12 +162,12 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               }`} 
               style={{ gridTemplateColumns: '120px repeat(7, 1fr)' }}
             >
-              {/* Time column with inline quantity display - only for current medication */}
-              <div className="p-2 text-center h-[50px] flex items-center justify-center border-r border-white/10">
-                <div className="flex flex-col items-center">
-                  <div className="text-sm font-semibold text-white">
+              {/* Time column with horizontal inline layout */}
+              <div className="p-2 text-center h-[40px] flex items-center justify-center border-r border-white/10">
+                <div className="flex items-center gap-1">
+                  <span className="text-sm font-semibold text-white">
                     {formatTimeDisplay(time)}
-                  </div>
+                  </span>
                   {hasCurrentMedication && currentMedication && (
                     (() => {
                       // Find the current medication's quantity for this time
@@ -175,9 +175,12 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                       if (currentMedSchedule && currentMedSchedule.currentMedQuantity) {
                         const quantity = currentMedSchedule.currentMedQuantity;
                         return (
-                          <div className="text-xs text-white/80 font-medium">
-                            {quantity} {quantity === 1 ? 'pill' : 'pills'}
-                          </div>
+                          <>
+                            <span className="text-white/60">•</span>
+                            <span className="text-xs text-white/80 font-medium">
+                              {quantity} {quantity === 1 ? 'pill' : 'pills'}
+                            </span>
+                          </>
                         );
                       }
                       return null;
@@ -195,7 +198,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                 });
 
                 return (
-                  <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[50px] flex items-center justify-center border-white/10">
+                  <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[40px] flex items-center justify-center border-white/10">
                     <div className="flex gap-1 w-full">
                       {applicableSchedules.map((schedule, scheduleIndex) => (
                          <div 
@@ -224,12 +227,12 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
             gridTemplateColumns: '120px repeat(7, 1fr)'
           }}>
             {/* Time column for as-needed */}
-            <div className="p-2 text-center min-h-[50px] flex items-center justify-center border-r border-white/10">
+            <div className="p-2 text-center min-h-[40px] flex items-center justify-center border-r border-white/10">
               <div className="text-sm font-semibold text-white">As-needed</div>
             </div>
             
             {/* Span across all day columns for as-needed meds */}
-            <div className="col-span-7 p-2 flex items-center gap-2 min-h-[50px]">
+            <div className="col-span-7 p-2 flex items-center gap-2 min-h-[40px]">
               {asNeededMeds.map((med, index) => (
                 <div
                   key={med.id}

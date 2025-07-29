@@ -38,20 +38,20 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   // Current medication being worked on (last one in the list) - only if showing example
   const currentMedication = showExample ? displayMedications[displayMedications.length - 1] : null;
 
-  // More distinct color palette with better contrast
+  // Color palette matching the design system
   const scheduleColors = [
-    '#FF6B35', // Vibrant Orange
-    '#E6C229', // Bright Yellow  
-    '#28A745', // Green
-    '#FF4757', // Red
-    '#5352ED', // Purple
-    '#FF9F43', // Light Orange
-    '#10AC84', // Teal
-    '#FF6348', // Coral
-    '#7B68EE', // Medium Slate Blue
-    '#20BF6B', // Mint Green
-    '#FA8231', // Orange
-    '#F0D666'  // Light Yellow
+    '#F26C3A', // Primary highlight color
+    '#FF8A5C', // Light highlight
+    '#E55A2B', // Dark highlight  
+    '#FF9F70', // Lighter highlight
+    '#D14D1F', // Darker highlight
+    '#FFA885', // Pastel highlight
+    '#C43E13', // Deep highlight
+    '#FFB299', // Very light highlight
+    '#B52F07', // Very dark highlight
+    '#FFC7B8', // Pale highlight
+    '#A52500', // Ultra dark highlight
+    '#FFD6CC'  // Ultra light highlight
   ];
 
   // Group medications by time and day pattern to create dose schedules
@@ -147,21 +147,18 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
     const asNeededMeds = displayMedications.filter(med => med.asNeeded);
 
     return (
-      <div className="rounded-lg overflow-hidden border-2" style={{ 
-        borderColor: '#F26C3A', 
-        backgroundColor: '#000000' 
-      }}>
-        {/* Header - updated grid with wider first column */}
+      <div className="rounded-lg overflow-hidden border border-white/10 bg-charcoal">
+        {/* Header matching AccountInfoScreen styling */}
         <div className="grid text-xs" style={{ 
           gridTemplateColumns: '120px repeat(7, 1fr)',
           background: 'linear-gradient(to right, rgba(242, 108, 58, 0.15), rgba(255, 138, 92, 0.15))',
-          backgroundColor: '#374151'
+          backgroundColor: 'rgba(255, 255, 255, 0.05)'
         }}>
-          <div className="p-2 font-semibold text-white text-center border-r" style={{ borderColor: '#4B5563' }}>
+          <div className="p-2 font-semibold text-white text-center border-r border-white/10">
             Time
           </div>
           {daysOfWeek.map((day) => (
-            <div key={day} className="p-2 font-semibold text-white text-center border-r last:border-r-0" style={{ borderColor: '#4B5563' }}>
+            <div key={day} className="p-2 font-semibold text-white text-center border-r last:border-r-0 border-white/10">
               {day}
             </div>
           ))}
@@ -169,27 +166,14 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
 
         {/* Time rows */}
         {sortedTimes.map((time, timeIndex) => {
-          // Find if current medication has doses at this time
-          const currentMedQuantityAtTime = timeGroups[time].find(schedule => schedule.isCurrentMedSchedule)?.currentMedQuantity;
-          
           return (
-            <div key={time} className="grid border-b" style={{ 
-              gridTemplateColumns: '120px repeat(7, 1fr)',
-              borderColor: '#4B5563',
-              backgroundColor: '#000000'
+            <div key={time} className="grid border-b border-white/10 bg-charcoal" style={{ 
+              gridTemplateColumns: '120px repeat(7, 1fr)'
             }}>
-              {/* Time column with quantity if current med is present */}
-              <div className="p-2 text-center min-h-[50px] flex items-center justify-center border-r" style={{ 
-                borderColor: '#4B5563',
-                color: '#E5E7EB'
-              }}>
-                <div className="text-sm font-semibold">
+              {/* Time column - clean without quantity */}
+              <div className="p-2 text-center min-h-[50px] flex items-center justify-center border-r border-white/10">
+                <div className="text-sm font-semibold text-white">
                   {time}
-                  {currentMedQuantityAtTime && (
-                    <span className="ml-1 text-xs" style={{ color: '#F26C3A' }}>
-                      ({currentMedQuantityAtTime}x)
-                    </span>
-                  )}
                 </div>
               </div>
               
@@ -202,18 +186,30 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                 });
 
                 return (
-                  <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[50px] flex items-center justify-center" style={{ borderColor: '#4B5563' }}>
+                  <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[50px] flex items-center justify-center border-white/10">
                     <div className="flex gap-1 w-full">
                       {applicableSchedules.map((schedule, scheduleIndex) => (
                         <div 
                           key={scheduleIndex}
-                          className="rounded flex-1 h-8 relative cursor-pointer hover:brightness-110 transition-all"
+                          className="rounded flex-1 h-8 relative cursor-pointer hover:brightness-110 transition-all flex items-center justify-center"
                           style={{ 
                             backgroundColor: schedule.color,
                             opacity: schedule.isCurrentMedSchedule ? 1 : 0.3
                           }}
                           onClick={() => handleDoseClick(schedule)}
-                        />
+                        >
+                          {/* Show quantity as small badge on medication tile */}
+                          {schedule.medications.length === 1 && schedule.medications[0].quantity > 1 && (
+                            <span className="text-xs font-bold text-white bg-black/30 rounded-full px-1 min-w-[16px] h-4 flex items-center justify-center">
+                              {schedule.medications[0].quantity}
+                            </span>
+                          )}
+                          {schedule.medications.length > 1 && (
+                            <span className="text-xs font-bold text-white bg-black/30 rounded-full px-1 min-w-[16px] h-4 flex items-center justify-center">
+                              {schedule.medications.length}
+                            </span>
+                          )}
+                        </div>
                       ))}
                     </div>
                   </div>
@@ -223,19 +219,14 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
           )
         })}
 
-        {/* As needed row - redesigned to match grid structure with wider first column */}
+        {/* As needed row - matching AccountInfoScreen styling */}
         {asNeededMeds.length > 0 && (
-          <div className="grid border-t" style={{ 
-            gridTemplateColumns: '120px repeat(7, 1fr)',
-            backgroundColor: '#000000', 
-            borderColor: '#4B5563' 
+          <div className="grid border-t border-white/10 bg-charcoal" style={{ 
+            gridTemplateColumns: '120px repeat(7, 1fr)'
           }}>
             {/* Time column for as-needed */}
-            <div className="p-2 text-center min-h-[50px] flex items-center justify-center border-r" style={{ 
-              borderColor: '#4B5563',
-              color: '#E5E7EB'
-            }}>
-              <div className="text-sm font-semibold">As-needed</div>
+            <div className="p-2 text-center min-h-[50px] flex items-center justify-center border-r border-white/10">
+              <div className="text-sm font-semibold text-white">As-needed</div>
             </div>
             
             {/* Span across all day columns for as-needed meds */}
@@ -243,9 +234,9 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               {asNeededMeds.map((med, index) => (
                 <div
                   key={med.id}
-                  className="rounded h-8 px-3 flex items-center cursor-pointer hover:brightness-110 transition-all text-white text-sm font-medium"
+                  className="rounded h-8 px-3 flex items-center cursor-pointer hover:brightness-110 transition-all text-white text-sm font-medium relative"
                   style={{ 
-                    backgroundColor: '#FF6B35',
+                    backgroundColor: '#F26C3A',
                     opacity: currentMedication && med.id === currentMedication.id ? 1 : 0.3
                   }}
                   onClick={() => setSelectedSchedule({
@@ -258,7 +249,13 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                     }]
                   })}
                 >
-                  {med.name} ({med.asNeeded?.maxPerDay}/day)
+                  {med.name}
+                  {/* Show max per day as small badge */}
+                  {med.asNeeded?.maxPerDay && med.asNeeded.maxPerDay > 1 && (
+                    <span className="ml-2 text-xs font-bold text-white bg-black/30 rounded-full px-1 min-w-[16px] h-4 flex items-center justify-center">
+                      {med.asNeeded.maxPerDay}
+                    </span>
+                  )}
                 </div>
               ))}
             </div>
@@ -359,35 +356,22 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   return (
     <>
       <div className="animate-fade-in px-2 pb-2 space-y-4">
-        {/* Current medication container - updated header */}
-        <Card className="border p-3" style={{ 
-          background: 'linear-gradient(to right, rgba(242, 108, 58, 0.15), rgba(255, 138, 92, 0.15))',
-          borderColor: 'rgba(242, 108, 58, 0.4)',
-          backgroundColor: '#374151'
-        }}>
-          <div className="flex items-center gap-3">
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-white min-w-0 flex-1">
-                  <h3 className="text-2xl font-bold truncate">
-                    {currentMedication ? `${currentMedication.name} ${currentMedication.strength}` : 'New Medication'}
-                  </h3>
-                  {currentMedication && (
-                    <>
-                      <span style={{ color: 'rgba(255, 255, 255, 0.6)' }}>•</span>
-                      <span className="text-2xl font-bold capitalize" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>{currentMedication.form}</span>
-                    </>
-                  )}
-                </div>
-                <div className="flex items-center gap-2 ml-2">
-                  <span className="text-xs whitespace-nowrap" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
-                    {displayMedications.length} total • {displayMedications.filter(m => m.asNeeded).length} PRN • {displayMedications.filter(m => !m.asNeeded).length} scheduled
-                  </span>
-                </div>
-              </div>
+        {/* Current medication container - matching AccountInfoScreen styling */}
+        <div className="rounded-lg border border-white/10 bg-white/5 px-4 py-4">
+          <div className="flex items-center justify-between">
+            <p className={`text-3xl font-bold break-words ${showExample || currentMedication ? 'text-white' : 'text-white/60 italic'}`}>
+              {currentMedication ? `${currentMedication.name} ${currentMedication.strength}` : 'New Medication'}
+            </p>
+            <div className="flex items-center gap-2">
+              {currentMedication && (
+                <span className="text-highlight text-xl capitalize">{currentMedication.form}</span>
+              )}
+              <span className="text-xs text-white/60">
+                {displayMedications.length} total • {displayMedications.filter(m => m.asNeeded).length} PRN • {displayMedications.filter(m => !m.asNeeded).length} scheduled
+              </span>
             </div>
           </div>
-        </Card>
+        </div>
 
         {/* Consolidated schedule - only show if we have medications */}
         {displayMedications.length > 0 && renderConsolidatedSchedule()}

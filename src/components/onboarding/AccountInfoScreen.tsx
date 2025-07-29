@@ -92,10 +92,10 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
 
   // Split Layout
   const splitLayout = (
-    <div className="flex h-full">
-      {/* User Profile - Takes full width for Primary User, half width for Caregiver */}
-      <div className={`${displayRole === UserRole.PrimaryUser ? 'w-full' : 'w-1/2 pr-2'} flex flex-col space-y-4`}>
-        <div className="rounded-lg border border-white/10 bg-white/5 p-4 flex-1">
+    <div className="flex h-full gap-4">
+      {/* User Profile - Compact for Caregiver, full width for Primary User */}
+      <div className={`${displayRole === UserRole.PrimaryUser ? 'w-full' : 'w-1/3'} flex flex-col`}>
+        <div className="rounded-lg border border-white/10 bg-white/5 p-4 h-fit">
           <div className="mb-4">
             <p className="text-white text-3xl font-bold break-words">
               {showExample || userProfile.firstName || userProfile.lastName
@@ -112,17 +112,7 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
           </div>
           
           <div className="space-y-3 ml-1">
-            {/* Phone number only shown for caregivers, not primary users */}
-            {displayRole === UserRole.Caregiver && (
-              <div className="flex items-center">
-                <Phone className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
-                <p className="text-white text-xl whitespace-nowrap overflow-hidden text-ellipsis">
-                  {showExample || userProfile.phoneNumber
-                    ? (showExample ? exampleProfile.phoneNumber : userProfile.phoneNumber)
-                    : "Not provided"}
-                </p>
-              </div>
-            )}
+            {/* No additional info for caregivers - removed phone number */}
             
             {displayRole === UserRole.PrimaryUser && (
               <div className="flex items-center">
@@ -182,9 +172,9 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
         </div>
       </div>
       
-      {/* Right Half - Loved One Profile (only for caregivers) */}
+      {/* Right Section - Loved One Profile (takes more space now) */}
       {displayRole === UserRole.Caregiver && (
-        <div className="w-1/2 pl-2 flex flex-col">
+        <div className="w-2/3 flex flex-col">
           <div className="rounded-lg border border-white/10 bg-white/5 p-4">
             <div className="mb-4">
               <p className="text-white text-3xl font-bold break-words">

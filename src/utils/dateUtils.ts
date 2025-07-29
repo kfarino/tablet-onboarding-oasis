@@ -76,7 +76,7 @@ export const getTimeColor = (time: string): string => {
 
 /**
  * Parses time for sorting purposes, handling both "Noon" and regular time formats
- * @param timeStr Time string like "8:00", "Noon", "6:00"
+ * @param timeStr Time string like "8:00 AM", "6:00 PM", "Noon", or "6:00"
  * @returns Number representing minutes from midnight for sorting
  */
 export const parseTimeForSorting = (timeStr: string): number => {
@@ -112,6 +112,28 @@ export const parseTimeForSorting = (timeStr: string): number => {
     adjustedHours = hours + 12;
   }
   // 12 stays as 12 (noon)
+  
+  return adjustedHours * 60 + (minutes || 0);
+};
+
+/**
+ * Parses the original time with AM/PM for sorting, before formatting
+ * @param timeStr Original time string like "6:00 AM", "9:00 PM"
+ * @returns Number representing minutes from midnight for sorting
+ */
+export const parseOriginalTimeForSorting = (timeStr: string): number => {
+  if (timeStr === "12:00 PM" || timeStr === "Noon") return 12 * 60; // 12:00 PM = 720 minutes
+  
+  // Extract AM/PM from original time
+  const [time, period] = timeStr.split(' ');
+  const [hours, minutes] = time.split(':').map(Number);
+  
+  let adjustedHours = hours;
+  if (period === "AM") {
+    if (hours === 12) adjustedHours = 0; // 12 AM = midnight
+  } else if (period === "PM") {
+    if (hours !== 12) adjustedHours = hours + 12; // Don't add 12 to 12 PM
+  }
   
   return adjustedHours * 60 + (minutes || 0);
 };

@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Medication } from '@/types/onboarding';
 import { Badge } from '@/components/ui/badge';
-import { formatTimeDisplay, parseTimeForSorting, getTimeColor } from '@/utils/dateUtils';
+import { formatTimeDisplay, parseOriginalTimeForSorting, getTimeColor } from '@/utils/dateUtils';
 
 interface MedicationsScreenProps {
   showExample?: boolean;
@@ -121,9 +121,9 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
       timeGroups[schedule.time].push(schedule);
     });
 
-    // Sort times using the new parsing function
+    // Sort times using the original time parsing function
     const sortedTimes = Object.keys(timeGroups).sort((a, b) => {
-      return parseTimeForSorting(formatTimeDisplay(a)) - parseTimeForSorting(formatTimeDisplay(b));
+      return parseOriginalTimeForSorting(a) - parseOriginalTimeForSorting(b);
     });
 
     // Check if we have as-needed medications
@@ -155,12 +155,12 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
 
           // Check if we should show noon separator before this time
           const shouldShowNoonSeparator = timeIndex === 0 ? false : (() => {
-            const currentTimeMinutes = parseTimeForSorting(formatTimeDisplay(time));
+            const currentTimeMinutes = parseOriginalTimeForSorting(time);
             const prevTime = sortedTimes[timeIndex - 1];
-            const prevTimeMinutes = parseTimeForSorting(formatTimeDisplay(prevTime));
+            const prevTimeMinutes = parseOriginalTimeForSorting(prevTime);
             
-            // Show noon if we're crossing from AM (< 720) to PM (> 720)
-            return prevTimeMinutes < 720 && currentTimeMinutes > 720;
+            // Show noon if we're crossing from AM (< 720) to PM (>= 720)
+            return prevTimeMinutes < 720 && currentTimeMinutes >= 720;
           })();
 
           return (

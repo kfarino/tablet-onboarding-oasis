@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { User, Calendar, Phone, BellRing, Columns, Heart, Plus, X } from 'lucide-react';
+import { User, Calendar, Phone, BellRing, Columns, Heart, Plus, X, EyeOff } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { USER_ROLES, UserRole, RELATIONSHIP_OPTIONS, ALERT_PREFERENCES, AlertPreference } from '@/types/onboarding';
@@ -93,21 +93,50 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
   // Split Layout
   const splitLayout = (
     <div className="flex flex-col gap-4">
+      {/* Role Toggle - only show when not showing example data */}
+      {!showExample && (
+        <div className="w-full">
+          <div className="rounded-lg border border-white/10 bg-white/5 p-4">
+            <div className="flex items-center justify-between">
+              <span className="text-white text-lg font-medium">I am a:</span>
+              <Select value={displayRole} onValueChange={(value: UserRole) => updateUserProfile('role', value)}>
+                <SelectTrigger className="w-48 bg-white/10 border-white/20 text-white">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-800 border-white/20">
+                  <SelectItem value={UserRole.PrimaryUser} className="text-white hover:bg-white/10">
+                    Primary User
+                  </SelectItem>
+                  <SelectItem value={UserRole.Caregiver} className="text-white hover:bg-white/10">
+                    Caregiver
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* User Profile - Compact horizontal card */}
       <div className="w-full">
         <div className="rounded-lg border border-white/10 bg-white/5 px-4 py-4 h-fit">
           <div className="flex items-center justify-between">
-            <p className={`text-3xl font-bold break-words ${showExample || userProfile.firstName || userProfile.lastName ? 'text-white' : 'text-white/60 italic'}`}>
-              {showExample || userProfile.firstName || userProfile.lastName
-                ? `${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.firstName : examplePrimaryUser.firstName) : userProfile.firstName || ""} ${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.lastName : examplePrimaryUser.lastName) : userProfile.lastName || ""}`
-                : "Name"}
-            </p>
-            {displayRole === UserRole.Caregiver && (
-              <p className="text-highlight text-xl">Caregiver Admin</p>
-            )}
-            {displayRole === UserRole.PrimaryUser && (
-              <p className="text-highlight text-xl">Primary User</p>
-            )}
+            <div className="flex items-center">
+              <EyeOff className="text-white/40 h-5 w-5 mr-3 flex-shrink-0" />
+              <p className={`text-xl ${showExample || userProfile.firstName || userProfile.lastName ? 'text-white' : 'text-white/60 italic'}`}>
+                {showExample || userProfile.firstName || userProfile.lastName
+                  ? `${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.firstName : examplePrimaryUser.firstName) : userProfile.firstName || ""} ${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.lastName : examplePrimaryUser.lastName) : userProfile.lastName || ""}`
+                  : "Name"}
+              </p>
+            </div>
+            <div>
+              {displayRole === UserRole.Caregiver && (
+                <p className="text-highlight text-xl">Caregiver Admin</p>
+              )}
+              {displayRole === UserRole.PrimaryUser && (
+                <p className="text-highlight text-xl">Primary User</p>
+              )}
+            </div>
           </div>
           
           {/* Reduced spacing for caregivers */}
@@ -115,19 +144,21 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
             
             {displayRole === UserRole.PrimaryUser && (
               <div className="flex items-center">
-                 <Calendar className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
-                 <p className={`text-xl ${showExample || userProfile.dateOfBirth ? 'text-white' : 'text-white/60 italic'}`}>
-                   {showExample || userProfile.dateOfBirth
-                     ? (showExample ? examplePrimaryUser.dateOfBirth : userProfile.dateOfBirth)
-                     : "Date of birth"}
-                 </p>
+                 <div className="flex items-center">
+                   <EyeOff className="text-white/40 h-5 w-5 mr-3 flex-shrink-0" />
+                   <p className={`text-xl ${showExample || userProfile.dateOfBirth ? 'text-white' : 'text-white/60 italic'}`}>
+                     {showExample || userProfile.dateOfBirth
+                       ? (showExample ? examplePrimaryUser.dateOfBirth : userProfile.dateOfBirth)
+                       : "Date of birth"}
+                   </p>
+                 </div>
               </div>
             )}
 
             {/* Health Conditions Section - only for Primary User in split layout */}
             {displayRole === UserRole.PrimaryUser && (
               <div className="flex items-center">
-                <Heart className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+                 <Heart className={`h-5 w-5 mr-3 flex-shrink-0 ${getPrimaryUserConditions().length === 0 ? 'text-white/40' : 'text-highlight'}`} />
                 <div className="flex-1">
                    {getPrimaryUserConditions().length === 0 ? (
                      <p className="text-white/60 italic text-xl">Health conditions</p>
@@ -177,11 +208,14 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
         <div className="w-full">
           <div className="rounded-lg border border-white/10 bg-white/5 p-4">
             <div className="mb-4 flex items-center justify-between">
-               <p className={`text-3xl font-bold break-words ${showExample || userProfile.lovedOne?.firstName || userProfile.lovedOne?.lastName ? 'text-white' : 'text-white/60 italic'}`}>
-                 {showExample || userProfile.lovedOne?.firstName || userProfile.lovedOne?.lastName
-                   ? (showExample ? "Margaret Eleanor Thompson" : `${userProfile.lovedOne?.firstName || ""} ${userProfile.lovedOne?.lastName || ""}`)
-                   : "Loved one's name"}
-              </p>
+               <div className="flex items-center">
+                 <EyeOff className="text-white/40 h-5 w-5 mr-3 flex-shrink-0" />
+                 <p className={`text-3xl font-bold break-words ${showExample || userProfile.lovedOne?.firstName || userProfile.lovedOne?.lastName ? 'text-white' : 'text-white/60 italic'}`}>
+                   {showExample || userProfile.lovedOne?.firstName || userProfile.lovedOne?.lastName
+                     ? (showExample ? "Margaret Eleanor Thompson" : `${userProfile.lovedOne?.firstName || ""} ${userProfile.lovedOne?.lastName || ""}`)
+                     : "Loved one's name"}
+                 </p>
+               </div>
                <p className={`text-xl ${showExample || userProfile.relationship ? 'text-highlight' : 'text-white/60 italic'}`}>
                  {showExample || userProfile.relationship
                    ? (showExample ? "Parent" : getRelationshipLabel(userProfile.relationship))
@@ -191,37 +225,37 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
             <div className="space-y-3 ml-1">
               {/* Phone, DOB, and Alert Preference on same row */}
               <div className="flex items-center gap-8">
-                <div className="flex items-center">
-                  <Phone className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+                 <div className="flex items-center">
+                   <EyeOff className="text-white/40 h-5 w-5 mr-3 flex-shrink-0" />
                    <p className={`text-xl whitespace-nowrap ${showExample || userProfile.lovedOne?.phoneNumber ? 'text-white' : 'text-white/60 italic'}`}>
                      {showExample || userProfile.lovedOne?.phoneNumber
                        ? (showExample ? "(555) 987-6543" : userProfile.lovedOne?.phoneNumber)
                        : "Phone number"}
                    </p>
-                </div>
+                 </div>
                 
-                <div className="flex items-center">
-                  <Calendar className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+                 <div className="flex items-center">
+                   <EyeOff className="text-white/40 h-5 w-5 mr-3 flex-shrink-0" />
                    <p className={`text-xl ${showExample || userProfile.lovedOne?.dateOfBirth ? 'text-white' : 'text-white/60 italic'}`}>
                      {showExample || userProfile.lovedOne?.dateOfBirth
                        ? (showExample ? "01/01/1970" : userProfile.lovedOne?.dateOfBirth)
                        : "Date of birth"}
                    </p>
-                </div>
+                 </div>
                 
-                <div className="flex items-center">
-                  <BellRing className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+                 <div className="flex items-center">
+                   <EyeOff className="text-white/40 h-5 w-5 mr-3 flex-shrink-0" />
                    <p className={`text-xl ${showExample || userProfile.lovedOne?.alertPreference ? 'text-white' : 'text-white/60 italic'}`}>
                      {showExample || userProfile.lovedOne?.alertPreference
                        ? (showExample ? "Text Message" : getAlertPreferenceLabel(userProfile.lovedOne?.alertPreference))
                        : "Alert preference"}
                    </p>
-                </div>
+                 </div>
               </div>
 
               {/* Health Conditions Section for Loved One */}
               <div className="flex items-center">
-                <Heart className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+                 <Heart className={`h-5 w-5 mr-3 flex-shrink-0 ${getLovedOneConditions().length === 0 ? 'text-white/40' : 'text-highlight'}`} />
                 <div className="flex-1">
                    {getLovedOneConditions().length === 0 ? (
                      <p className="text-white/60 italic text-xl">Health conditions</p>

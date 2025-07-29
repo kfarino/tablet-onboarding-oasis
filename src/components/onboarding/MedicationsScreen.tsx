@@ -159,12 +159,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
             const prevTime = sortedTimes[timeIndex - 1];
             const prevTimeMinutes = parseTimeForSorting(formatTimeDisplay(prevTime));
             
-            console.log(`Checking noon separator: ${prevTime} (${prevTimeMinutes}min) -> ${formatTimeDisplay(time)} (${currentTimeMinutes}min)`);
-            
             // Show noon if we're crossing from AM (< 720) to PM (> 720)
-            const shouldShow = prevTimeMinutes < 720 && currentTimeMinutes > 720;
-            console.log(`Should show noon: ${shouldShow}`);
-            return shouldShow;
+            return prevTimeMinutes < 720 && currentTimeMinutes > 720;
           })();
 
           return (
@@ -175,7 +171,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                   gridTemplateColumns: '120px repeat(7, 1fr)',
                   backgroundColor: 'rgba(255, 255, 255, 0.1)'
                 }}>
-                  <div className="py-0.5 text-center flex items-center justify-center border-r border-white/10">
+                  <div className="py-0.5 pl-4 flex items-center justify-start border-r border-white/10">
                     <div className="text-sm font-semibold text-white">Noon</div>
                   </div>
                   <div className="col-span-7 py-0.5"></div>
@@ -189,12 +185,12 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                 }`} 
                 style={{ gridTemplateColumns: '120px repeat(7, 1fr)' }}
               >
-                {/* Time column with horizontal inline layout */}
-                <div className="p-2 text-center h-[40px] flex items-center justify-center border-r border-white/10">
-                  <div className="flex items-center gap-1">
-                    <span className={`text-sm font-bold ${getTimeColor(time)}`}>
+                {/* Time column - left aligned */}
+                <div className="p-2 pl-4 h-[40px] flex items-center justify-start border-r border-white/10">
+                  <div className="space-y-0.5">
+                    <div className={`text-sm font-bold ${getTimeColor(time)}`}>
                       {formatTimeDisplay(time)}
-                    </span>
+                    </div>
                     {hasCurrentMedication && currentMedication && (
                       (() => {
                         // Find the current medication's quantity for this time
@@ -202,12 +198,9 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                         if (currentMedSchedule && currentMedSchedule.currentMedQuantity) {
                           const quantity = currentMedSchedule.currentMedQuantity;
                           return (
-                            <>
-                              <span className="text-white/60">•</span>
-                              <span className="text-sm text-white/80 font-medium">
-                                {quantity} {quantity === 1 ? 'pill' : 'pills'}
-                              </span>
-                            </>
+                            <div className="text-xs text-white/70">
+                              {quantity} {quantity === 1 ? 'pill' : 'pills'}
+                            </div>
                           );
                         }
                         return null;
@@ -362,9 +355,11 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
             
             {/* Center: As-needed info */}
             {currentMedication && currentMedication.asNeeded && (
-              <div className="text-sm text-white/70 italic text-center px-4">
-                <div>As-needed:</div>
-                <div>up to {currentMedication.asNeeded.maxPerDay}x per day</div>
+              <div className="mx-6 px-4 py-2 rounded-lg bg-white/5 border border-white/10">
+                <div className="text-sm text-white/80 text-center">
+                  <div className="font-medium">As-needed</div>
+                  <div className="text-white/60">up to {currentMedication.asNeeded.maxPerDay}x per day</div>
+                </div>
               </div>
             )}
             

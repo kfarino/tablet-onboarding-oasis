@@ -50,37 +50,25 @@ export const formatTimeDisplay = (time: string): string => {
  * @returns Tailwind color class for the time
  */
 export const getTimeColor = (time: string): string => {
-  // Debug logging
-  console.log(`getTimeColor called with: "${time}"`);
-  
-  if (time === "12:00 PM" || time === "Noon" || time === "12:00") {
-    console.log(`→ Returning white for noon: ${time}`);
-    return "text-white";
-  }
+  if (time === "12:00 PM" || time === "Noon" || time === "12:00") return "text-white";
   
   // Check if time has AM/PM - prioritize this
   if (time.includes("AM")) {
-    console.log(`→ Returning orange for AM: ${time}`);
     return "text-orange-400"; // Morning - warm orange
   } else if (time.includes("PM")) {
-    console.log(`→ Returning blue for PM: ${time}`);
     return "text-blue-400";   // Evening - cool blue
   }
   
   // For times without AM/PM, use logical mapping
   const [hours] = time.split(':').map(Number);
-  console.log(`→ No AM/PM found, hour extracted: ${hours}`);
   
   if (hours >= 1 && hours <= 7) {
-    console.log(`→ Returning orange for hour ${hours} (1-7 range)`);
     return "text-orange-400"; // Hours 1-7 are AM - warm orange
   } else if (hours >= 8 && hours <= 11) {
-    console.log(`→ Returning blue for hour ${hours} (8-11 range)`);
     return "text-blue-400";   // Hours 8-11 are PM - cool blue
   }
   
   // Fallback to white
-  console.log(`→ Fallback to white for: ${time}`);
   return "text-white";
 };
 

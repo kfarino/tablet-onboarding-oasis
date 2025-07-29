@@ -220,42 +220,6 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
           )
         })}
 
-        {/* As needed row - matching AccountInfoScreen styling */}
-        {asNeededMeds.length > 0 && (
-          <div className="grid border-t border-white/10 bg-charcoal" style={{ 
-            gridTemplateColumns: '120px repeat(7, 1fr)'
-          }}>
-            {/* Time column for as-needed */}
-            <div className="p-2 text-center min-h-[40px] flex items-center justify-center border-r border-white/10">
-              <div className="text-sm font-semibold text-white">As-needed</div>
-            </div>
-            
-            {/* Span across all day columns for as-needed meds */}
-            <div className="col-span-7 p-2 flex items-center gap-2 min-h-[40px]">
-              {asNeededMeds.map((med, index) => (
-                <div
-                  key={med.id}
-                  className="rounded h-8 px-3 flex items-center cursor-pointer hover:brightness-110 transition-all text-white text-sm font-medium relative"
-                  style={{ 
-                    backgroundColor: currentMedication && med.id === currentMedication.id ? currentMedColor : otherMedColor,
-                    opacity: currentMedication && med.id === currentMedication.id ? 1 : 0.3
-                  }}
-                  onClick={() => setSelectedSchedule({
-                    time: 'As needed',
-                    dayPattern: 'as needed',
-                    medications: [{
-                      name: med.name,
-                      strength: med.strength,
-                      quantity: med.asNeeded?.maxPerDay || 0,
-                    }]
-                  })}
-                >
-                  {med.name} ({med.asNeeded?.maxPerDay || 0}x / day)
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     );
   };
@@ -268,7 +232,10 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
           {/* No-data medication container matching AccountInfoScreen style */}
           <div className="rounded-lg border border-white/10 bg-white/5 px-4 py-4">
             <div className="flex items-center justify-between">
-              <p className="text-xl font-bold text-white/60 italic">Name • Strength • Form</p>
+              <div className="space-y-1">
+                <p className="text-xl font-bold text-white/60 italic">Name • Strength • Form</p>
+                <p className="text-sm text-white/40 italic">As needed: [frequency per day]</p>
+              </div>
               <div className="flex items-center gap-2">
                 <span className="text-xs text-white/60">
                   0 total meds
@@ -359,12 +326,20 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         {/* Current medication container - matching AccountInfoScreen styling */}
         <div className="rounded-lg border border-white/10 bg-white/5 px-4 py-4">
           <div className="flex items-center justify-between">
-            <p className={`text-xl font-bold break-words ${showExample || currentMedication ? 'text-white' : 'text-white/60 italic'}`}>
-              {currentMedication ? 
-                `${currentMedication.name} ${currentMedication.strength} • ${currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}` :
-                'New Medication'
-              }
-            </p>
+            <div className="space-y-1">
+              <p className={`text-xl font-bold break-words ${showExample || currentMedication ? 'text-white' : 'text-white/60 italic'}`}>
+                {currentMedication ? 
+                  `${currentMedication.name} ${currentMedication.strength} • ${currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}` :
+                  'New Medication'
+                }
+              </p>
+              {/* Show as-needed info for current medication only */}
+              {currentMedication && currentMedication.asNeeded && (
+                <p className="text-sm text-white/70 italic">
+                  As needed: up to {currentMedication.asNeeded.maxPerDay}x per day
+                </p>
+              )}
+            </div>
             <div className="flex items-center gap-2">
               <div 
                 className="px-3 py-1.5 bg-white/10 hover:bg-white/15 rounded-full border border-white/20 hover:border-white/30 cursor-pointer transition-all duration-200 hover:scale-105" 

@@ -92,9 +92,9 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
 
   // Split Layout
   const splitLayout = (
-    <div className="flex h-full gap-4">
-      {/* User Profile - Compact for Caregiver, full width for Primary User */}
-      <div className={`${displayRole === UserRole.PrimaryUser ? 'w-full' : 'w-1/3'} flex flex-col`}>
+    <div className="flex flex-col gap-4">
+      {/* User Profile - Compact horizontal card */}
+      <div className="w-full">
         <div className="rounded-lg border border-white/10 bg-white/5 p-4 h-fit">
           <div className="mb-4">
             <p className="text-white text-3xl font-bold break-words">
@@ -172,9 +172,10 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
         </div>
       </div>
       
-      {/* Right Section - Loved One Profile (takes more space now) */}
+      
+      {/* Loved One Profile - Horizontal card below */}
       {displayRole === UserRole.Caregiver && (
-        <div className="w-2/3 flex flex-col">
+        <div className="w-full">
           <div className="rounded-lg border border-white/10 bg-white/5 p-4">
             <div className="mb-4">
               <p className="text-white text-3xl font-bold break-words">
@@ -190,22 +191,25 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
             </div>
             
             <div className="space-y-3 ml-1">
-              <div className="flex items-center">
-                <Phone className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
-                <p className="text-white text-xl whitespace-nowrap overflow-hidden text-ellipsis">
-                  {showExample || userProfile.lovedOne?.phoneNumber
-                    ? (showExample ? "(555) 987-6543" : userProfile.lovedOne?.phoneNumber)
-                    : "Not provided"}
-                </p>
-              </div>
-              
-              <div className="flex items-center">
-                <Calendar className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
-                <p className="text-white text-xl">
-                  {showExample || userProfile.lovedOne?.dateOfBirth
-                    ? (showExample ? "01/01/1970" : userProfile.lovedOne?.dateOfBirth)
-                    : "Not provided"}
-                </p>
+              {/* Phone and DOB on same row */}
+              <div className="flex items-center gap-8">
+                <div className="flex items-center">
+                  <Phone className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+                  <p className="text-white text-xl whitespace-nowrap">
+                    {showExample || userProfile.lovedOne?.phoneNumber
+                      ? (showExample ? "(555) 987-6543" : userProfile.lovedOne?.phoneNumber)
+                      : "Not provided"}
+                  </p>
+                </div>
+                
+                <div className="flex items-center">
+                  <Calendar className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+                  <p className="text-white text-xl">
+                    {showExample || userProfile.lovedOne?.dateOfBirth
+                      ? (showExample ? "01/01/1970" : userProfile.lovedOne?.dateOfBirth)
+                      : "Not provided"}
+                  </p>
+                </div>
               </div>
               
               <div className="flex items-center">

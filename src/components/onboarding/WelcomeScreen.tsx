@@ -14,7 +14,7 @@ const WelcomeScreen: React.FC = () => {
         >
           <div className="text-center -mt-2">
             <p className="text-[25px] font-light mb-[-5px]">Tap to</p>
-            <p className="text-[40px] font-medium">Connect</p>
+            <p className="text-[40px] font-medium">Start</p>
           </div>
         </button>
       </div>

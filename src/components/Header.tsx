@@ -110,7 +110,7 @@ const Header: React.FC<HeaderProps> = ({
           </Button>
         )}
         
-        {onTogglePreviewRole && (
+        {onTogglePreviewRole && currentStep !== OnboardingStep.Welcome && (
           <Button
             variant="ghost"
             size="icon-circle"

@@ -169,10 +169,10 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               {shouldShowNoonSeparator && (
                 <div className="grid" style={{ 
                   gridTemplateColumns: '120px repeat(7, 1fr)',
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)'
+                  backgroundColor: 'white'
                 }}>
-                  <div className="py-0.5 pl-4 flex items-center justify-start border-r border-white/10">
-                    <div className="text-sm font-semibold text-white">Noon</div>
+                  <div className="py-0.5 pl-4 flex items-center justify-start border-r border-gray-300">
+                    <div className="text-sm font-semibold text-black">Noon</div>
                   </div>
                   <div className="col-span-7 py-0.5"></div>
                 </div>
@@ -309,10 +309,10 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
             {/* Noon indicator */}
             <div className="grid" style={{ 
               gridTemplateColumns: '120px repeat(7, 1fr)',
-              backgroundColor: 'rgba(255, 255, 255, 0.1)'
+              backgroundColor: 'white'
             }}>
-              <div className="py-0.5 text-center flex items-center justify-center border-r border-white/10">
-                <div className="text-sm font-semibold text-white">Noon</div>
+              <div className="py-0.5 text-center flex items-center justify-center border-r border-gray-300">
+                <div className="text-sm font-semibold text-black">Noon</div>
               </div>
               <div className="col-span-7 py-0.5"></div>
             </div>

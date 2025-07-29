@@ -174,15 +174,25 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               }`} 
               style={{ gridTemplateColumns: '120px repeat(7, 1fr)' }}
             >
-              {/* Time column with quantity display */}
+              {/* Time column with quantity display - only for current medication */}
               <div className="p-2 text-center min-h-[50px] flex flex-col items-center justify-center border-r border-white/10">
                 <div className="text-sm font-semibold text-white">
                   {formatTimeDisplay(time)}
                 </div>
-                {totalQuantity > 0 && (
-                  <div className="text-xs text-white/60 mt-1">
-                    ({totalQuantity}x pills)
-                  </div>
+                {hasCurrentMedication && currentMedication && (
+                  (() => {
+                    // Find the current medication's quantity for this time
+                    const currentMedSchedule = timeSchedules.find(schedule => schedule.isCurrentMedSchedule);
+                    if (currentMedSchedule && currentMedSchedule.currentMedQuantity) {
+                      const quantity = currentMedSchedule.currentMedQuantity;
+                      return (
+                        <div className="text-xs text-white/80 mt-1 font-medium">
+                          {quantity} {quantity === 1 ? 'pill' : 'pills'}
+                        </div>
+                      );
+                    }
+                    return null;
+                  })()
                 )}
               </div>
               
@@ -198,27 +208,17 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                   <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[50px] flex items-center justify-center border-white/10">
                     <div className="flex gap-1 w-full">
                       {applicableSchedules.map((schedule, scheduleIndex) => (
-                        <div 
-                          key={scheduleIndex}
-                          className="rounded flex-1 h-8 relative cursor-pointer hover:brightness-110 transition-all flex items-center justify-center"
-                          style={{ 
-                            backgroundColor: schedule.color,
-                            opacity: schedule.isCurrentMedSchedule ? 1 : 0.3
-                          }}
-                          onClick={() => handleDoseClick(schedule)}
-                        >
-                          {/* Show quantity as small badge on medication tile */}
-                          {schedule.medications.length === 1 && schedule.medications[0].quantity > 1 && (
-                            <span className="text-xs font-bold text-white bg-black/30 rounded-full px-1 min-w-[16px] h-4 flex items-center justify-center">
-                              {schedule.medications[0].quantity}
-                            </span>
-                          )}
-                          {schedule.medications.length > 1 && (
-                            <span className="text-xs font-bold text-white bg-black/30 rounded-full px-1 min-w-[16px] h-4 flex items-center justify-center">
-                              {schedule.medications.length}
-                            </span>
-                          )}
-                        </div>
+                         <div 
+                           key={scheduleIndex}
+                           className="rounded flex-1 h-8 relative cursor-pointer hover:brightness-110 transition-all flex items-center justify-center"
+                           style={{ 
+                             backgroundColor: schedule.color,
+                             opacity: schedule.isCurrentMedSchedule ? 1 : 0.3
+                           }}
+                           onClick={() => handleDoseClick(schedule)}
+                         >
+                           {/* Clean medication tile - quantity shown in time column for current med */}
+                         </div>
                       ))}
                     </div>
                   </div>

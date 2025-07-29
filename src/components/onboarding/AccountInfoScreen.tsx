@@ -255,7 +255,7 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
   );
 
   return (
-    <div className="bg-gradient-to-br from-gray-800 to-gray-900 text-white rounded-lg p-4 relative min-h-[400px]">
+    <div className="bg-charcoal text-white rounded-lg p-4 relative min-h-[400px]">
       {splitLayout}
     </div>
   );

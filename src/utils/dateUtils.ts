@@ -46,11 +46,11 @@ export const formatTimeDisplay = (time: string): string => {
 
 /**
  * Gets color based on time of day for day/night theme
- * @param time Time string like "8:00 AM", "12:00 PM", "6:00 PM"
+ * @param time Time string like "8:00 AM", "12:00 PM", "6:00 PM" (original format with AM/PM)
  * @returns Tailwind color class for the time
  */
 export const getTimeColor = (time: string): string => {
-  if (time === "12:00 PM" || time === "Noon") return "text-primary";
+  if (time === "12:00 PM" || time === "Noon") return "text-white";
   
   // Parse the time to determine if it's AM or PM
   const isAM = time.includes("AM");
@@ -64,8 +64,8 @@ export const getTimeColor = (time: string): string => {
     return "text-blue-400";
   }
   
-  // Fallback to primary color
-  return "text-primary";
+  // Fallback to white
+  return "text-white";
 };
 
 /**

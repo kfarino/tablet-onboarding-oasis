@@ -368,12 +368,14 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               }
             </p>
             <div className="flex items-center gap-2">
-              <span 
-                className="text-xs text-white/60 hover:text-white/80 cursor-pointer transition-colors" 
+              <div 
+                className="px-3 py-1.5 bg-white/10 hover:bg-white/15 rounded-full border border-white/20 hover:border-white/30 cursor-pointer transition-all duration-200 hover:scale-105" 
                 onClick={() => setShowAllMedicationsDialog(true)}
               >
-                {displayMedications.length} total meds
-              </span>
+                <span className="text-xs text-white/80 hover:text-white font-medium">
+                  {displayMedications.length} total meds
+                </span>
+              </div>
             </div>
           </div>
         </div>

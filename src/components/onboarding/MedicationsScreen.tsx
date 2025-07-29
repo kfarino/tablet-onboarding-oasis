@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
-import { Pill } from 'lucide-react';
+import { Pill, EyeOff } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Medication } from '@/types/onboarding';
@@ -271,26 +271,87 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   // Check if we should show empty state - when not showing example AND no real medications
   if (!showExample && displayMedications.length === 0) {
     return (
-      <div className="animate-fade-in px-6 pb-10 space-y-6">
-        {/* Current medication container */}
-        <Card className="border p-4" style={{ 
-          background: 'linear-gradient(to right, rgba(242, 108, 58, 0.1), rgba(255, 138, 92, 0.1))',
-          borderColor: 'rgba(242, 108, 58, 0.3)',
-          backgroundColor: '#374151'
-        }}>
-          <div className="flex items-center justify-center py-8">
-            <div className="text-center">
-              <div className="h-12 w-12 mx-auto mb-3 rounded-full flex items-center justify-center text-xl font-bold" style={{ 
-                backgroundColor: '#F26C3A',
-                color: '#FFFFFF'
-              }}>
-                0
+      <div className="bg-charcoal text-white rounded-lg p-4 relative min-h-[400px]">
+        <div className="space-y-4">
+          {/* No-data medication container matching AccountInfoScreen style */}
+          <div className="rounded-lg border border-white/10 bg-white/5 px-4 py-4">
+            <div className="flex items-center justify-between">
+              <p className="text-3xl font-bold text-white/60 italic">New Medication</p>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-white/60">
+                  0 total • 0 PRN • 0 scheduled
+                </span>
               </div>
-              <h3 className="text-lg font-semibold text-white mb-2">No medications added yet</h3>
-              <p style={{ color: 'rgba(255, 255, 255, 0.6)' }}>Add your first medication to get started with your schedule.</p>
+            </div>
+            
+            <div className="space-y-3 ml-1 mt-2">
+              <div className="flex items-center">
+                <EyeOff className="text-white/60 h-5 w-5 mr-3 flex-shrink-0" />
+                <p className="text-white/60 italic text-xl">Medication name</p>
+              </div>
+              
+              <div className="flex items-center">
+                <EyeOff className="text-white/60 h-5 w-5 mr-3 flex-shrink-0" />
+                <p className="text-white/60 italic text-xl">Strength and form</p>
+              </div>
+              
+              <div className="flex items-center">
+                <EyeOff className="text-white/60 h-5 w-5 mr-3 flex-shrink-0" />
+                <p className="text-white/60 italic text-xl">Schedule</p>
+              </div>
             </div>
           </div>
-        </Card>
+          
+          {/* Empty schedule grid matching the layout but with no-data styling */}
+          <div className="rounded-lg overflow-hidden border-2 border-white/10 bg-white/5">
+            {/* Header */}
+            <div className="grid text-xs" style={{ 
+              gridTemplateColumns: '120px repeat(7, 1fr)',
+              backgroundColor: 'rgba(255, 255, 255, 0.05)'
+            }}>
+              <div className="p-2 font-semibold text-white/60 text-center border-r border-white/10">
+                Time
+              </div>
+              {['Su', 'M', 'T', 'W', 'Th', 'F', 'Sa'].map((day) => (
+                <div key={day} className="p-2 font-semibold text-white/60 text-center border-r last:border-r-0 border-white/10">
+                  {day}
+                </div>
+              ))}
+            </div>
+            
+            {/* Empty time slots */}
+            {['8:00 AM', '6:00 PM'].map((time) => (
+              <div key={time} className="grid border-b border-white/10" style={{ 
+                gridTemplateColumns: '120px repeat(7, 1fr)',
+                backgroundColor: 'rgba(0, 0, 0, 0.2)'
+              }}>
+                <div className="p-2 text-center min-h-[50px] flex items-center justify-center border-r border-white/10">
+                  <div className="text-sm font-semibold text-white/60">{time}</div>
+                </div>
+                {Array.from({ length: 7 }).map((_, dayIndex) => (
+                  <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[50px] flex items-center justify-center border-white/10">
+                    <div className="w-full h-8 rounded bg-white/10"></div>
+                  </div>
+                ))}
+              </div>
+            ))}
+            
+            {/* As-needed row */}
+            <div className="grid border-t border-white/10" style={{ 
+              gridTemplateColumns: '120px repeat(7, 1fr)',
+              backgroundColor: 'rgba(0, 0, 0, 0.2)'
+            }}>
+              <div className="p-2 text-center min-h-[50px] flex items-center justify-center border-r border-white/10">
+                <div className="text-sm font-semibold text-white/60">As-needed</div>
+              </div>
+              <div className="col-span-7 p-2 flex items-center gap-2 min-h-[50px]">
+                <div className="rounded h-8 px-3 flex items-center text-white/60 text-sm italic bg-white/10">
+                  No as-needed medications
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

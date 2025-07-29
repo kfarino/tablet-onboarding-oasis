@@ -300,7 +300,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               backgroundColor: 'rgba(0, 0, 0, 0.2)'
             }}>
               <div className="p-2 text-center min-h-[50px] flex items-center justify-center border-r border-white/10">
-                <div className="text-sm font-semibold text-white/60">AM</div>
+                <div className="text-sm font-semibold text-orange-400">AM</div>
               </div>
               {Array.from({ length: 7 }).map((_, dayIndex) => (
                 <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[50px] flex items-center justify-center border-white/10">
@@ -315,7 +315,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               backgroundColor: 'rgba(255, 255, 255, 0.1)'
             }}>
               <div className="py-0.5 text-center flex items-center justify-center border-r border-white/10">
-                <div className="text-sm font-semibold text-white/60">Noon</div>
+                <div className="text-sm font-semibold text-white">Noon</div>
               </div>
               <div className="col-span-7 py-0.5"></div>
             </div>
@@ -326,7 +326,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               backgroundColor: 'rgba(0, 0, 0, 0.2)'
             }}>
               <div className="p-2 text-center min-h-[50px] flex items-center justify-center border-r border-white/10">
-                <div className="text-sm font-semibold text-white/60">PM</div>
+                <div className="text-sm font-semibold text-blue-400">PM</div>
               </div>
               {Array.from({ length: 7 }).map((_, dayIndex) => (
                 <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[50px] flex items-center justify-center border-white/10">

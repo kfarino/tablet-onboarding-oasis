@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Medication } from '@/types/onboarding';
 import { Badge } from '@/components/ui/badge';
+import { formatTimeDisplay, parseTimeForSorting } from '@/utils/dateUtils';
 
 interface MedicationsScreenProps {
   showExample?: boolean;
@@ -131,16 +132,9 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
       timeGroups[schedule.time].push(schedule);
     });
 
-    // Sort times
+    // Sort times using the new parsing function
     const sortedTimes = Object.keys(timeGroups).sort((a, b) => {
-      const parseTime = (timeStr: string) => {
-        const [time, meridiem] = timeStr.split(' ');
-        let [hours, minutes] = time.split(':').map(Number);
-        if (meridiem === 'PM' && hours !== 12) hours += 12;
-        if (meridiem === 'AM' && hours === 12) hours = 0;
-        return hours * 60 + (minutes || 0);
-      };
-      return parseTime(a) - parseTime(b);
+      return parseTimeForSorting(formatTimeDisplay(a)) - parseTimeForSorting(formatTimeDisplay(b));
     });
 
     // Check if we have as-needed medications
@@ -166,15 +160,30 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
 
         {/* Time rows */}
         {sortedTimes.map((time, timeIndex) => {
+          const timeSchedules = timeGroups[time];
+          const hasCurrentMedication = timeSchedules.some(schedule => schedule.isCurrentMedSchedule);
+          const totalQuantity = timeSchedules.reduce((sum, schedule) => 
+            sum + schedule.medications.reduce((medSum, med) => medSum + med.quantity, 0), 0
+          );
+
           return (
-            <div key={time} className="grid border-b border-white/10 bg-charcoal" style={{ 
-              gridTemplateColumns: '120px repeat(7, 1fr)'
-            }}>
-              {/* Time column - clean without quantity */}
-              <div className="p-2 text-center min-h-[50px] flex items-center justify-center border-r border-white/10">
+            <div 
+              key={time} 
+              className={`grid border-b border-white/10 transition-colors ${
+                hasCurrentMedication ? 'bg-white/5' : 'bg-charcoal'
+              }`} 
+              style={{ gridTemplateColumns: '120px repeat(7, 1fr)' }}
+            >
+              {/* Time column with quantity display */}
+              <div className="p-2 text-center min-h-[50px] flex flex-col items-center justify-center border-r border-white/10">
                 <div className="text-sm font-semibold text-white">
-                  {time}
+                  {formatTimeDisplay(time)}
                 </div>
+                {totalQuantity > 0 && (
+                  <div className="text-xs text-white/60 mt-1">
+                    ({totalQuantity}x pills)
+                  </div>
+                )}
               </div>
               
               {/* Day columns */}
@@ -249,13 +258,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                     }]
                   })}
                 >
-                  {med.name}
-                  {/* Show max per day as small badge */}
-                  {med.asNeeded?.maxPerDay && med.asNeeded.maxPerDay > 1 && (
-                    <span className="ml-2 text-xs font-bold text-white bg-black/30 rounded-full px-1 min-w-[16px] h-4 flex items-center justify-center">
-                      {med.asNeeded.maxPerDay}
-                    </span>
-                  )}
+                  {med.name} ({med.asNeeded?.maxPerDay || 0}x / day)
                 </div>
               ))}
             </div>
@@ -323,7 +326,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                 backgroundColor: 'rgba(0, 0, 0, 0.2)'
               }}>
                 <div className="p-2 text-center min-h-[50px] flex items-center justify-center border-r border-white/10">
-                  <div className="text-sm font-semibold text-white/60">{time}</div>
+                  <div className="text-sm font-semibold text-white/60">{formatTimeDisplay(time)}</div>
                 </div>
                 {Array.from({ length: 7 }).map((_, dayIndex) => (
                   <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[50px] flex items-center justify-center border-white/10">
@@ -360,12 +363,12 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         <div className="rounded-lg border border-white/10 bg-white/5 px-4 py-4">
           <div className="flex items-center justify-between">
             <p className={`text-3xl font-bold break-words ${showExample || currentMedication ? 'text-white' : 'text-white/60 italic'}`}>
-              {currentMedication ? `${currentMedication.name} ${currentMedication.strength}` : 'New Medication'}
+              {currentMedication ? 
+                `${currentMedication.name} ${currentMedication.strength} • ${currentMedication.form}` : 
+                'New Medication'
+              }
             </p>
             <div className="flex items-center gap-2">
-              {currentMedication && (
-                <span className="text-highlight text-xl capitalize">{currentMedication.form}</span>
-              )}
               <span className="text-xs text-white/60">
                 {displayMedications.length} total • {displayMedications.filter(m => m.asNeeded).length} PRN • {displayMedications.filter(m => !m.asNeeded).length} scheduled
               </span>
@@ -381,7 +384,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
       <Dialog open={!!selectedSchedule} onOpenChange={() => setSelectedSchedule(null)}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Dose Details - {selectedSchedule?.time}</DialogTitle>
+            <DialogTitle>Dose Details - {selectedSchedule ? formatTimeDisplay(selectedSchedule.time) : ''}</DialogTitle>
           </DialogHeader>
           {selectedSchedule && (
             <div className="space-y-4">

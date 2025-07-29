@@ -340,13 +340,11 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               gridTemplateColumns: '120px repeat(7, 1fr)',
               backgroundColor: 'rgba(0, 0, 0, 0.2)'
             }}>
-              <div className="p-2 text-center min-h-[50px] flex items-center justify-center border-r border-white/10">
+              <div className="p-2 text-center min-h-[32px] flex items-center justify-center border-r border-white/10">
                 <div className="text-sm font-semibold text-white/60">As-needed</div>
               </div>
-              <div className="col-span-7 p-2 flex items-center gap-2 min-h-[50px]">
-                <div className="rounded h-8 px-3 flex items-center text-white/60 text-sm italic bg-white/10">
-                  No as-needed medications
-                </div>
+              <div className="col-span-7 p-2 flex items-center gap-2 min-h-[32px]">
+                {/* Empty - no pill needed */}
               </div>
             </div>
           </div>

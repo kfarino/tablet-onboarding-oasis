@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Pill, EyeOff } from 'lucide-react';
 import { Card } from '@/components/ui/card';
@@ -153,70 +153,95 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
             sum + schedule.medications.reduce((medSum, med) => medSum + med.quantity, 0), 0
           );
 
-          return (
-            <div 
-              key={time} 
-              className={`grid border-b border-white/10 transition-colors ${
-                hasCurrentMedication ? 'bg-white/5' : 'bg-charcoal'
-              }`} 
-              style={{ gridTemplateColumns: '120px repeat(7, 1fr)' }}
-            >
-              {/* Time column with horizontal inline layout */}
-              <div className="p-2 text-center h-[40px] flex items-center justify-center border-r border-white/10">
-                <div className="flex items-center gap-1">
-                  <span className={`text-sm font-bold ${getTimeColor(time)}`}>
-                    {formatTimeDisplay(time)}
-                  </span>
-                  {hasCurrentMedication && currentMedication && (
-                    (() => {
-                      // Find the current medication's quantity for this time
-                      const currentMedSchedule = timeSchedules.find(schedule => schedule.isCurrentMedSchedule);
-                      if (currentMedSchedule && currentMedSchedule.currentMedQuantity) {
-                        const quantity = currentMedSchedule.currentMedQuantity;
-                        return (
-                          <>
-                            <span className="text-white/60">•</span>
-                            <span className="text-sm text-white/80 font-medium">
-                              {quantity} {quantity === 1 ? 'pill' : 'pills'}
-                            </span>
-                          </>
-                        );
-                      }
-                      return null;
-                    })()
-                  )}
-                </div>
-              </div>
-              
-              {/* Day columns */}
-              {daysOfWeek.map((_, dayIndex) => {
-                const fullDayName = fullDayNames[dayIndex];
-                const applicableSchedules = timeGroups[time].filter(schedule => {
-                  const days = schedule.dayPattern.split(',');
-                  return days.includes('everyday') || days.includes(fullDayName);
-                });
+          // Check if we should show noon separator before this time
+          const shouldShowNoonSeparator = timeIndex === 0 ? false : (() => {
+            const currentTimeMinutes = parseTimeForSorting(formatTimeDisplay(time));
+            const prevTime = sortedTimes[timeIndex - 1];
+            const prevTimeMinutes = parseTimeForSorting(formatTimeDisplay(prevTime));
+            
+            // Show noon if we're crossing from AM (< 720) to PM (> 720)
+            return prevTimeMinutes < 720 && currentTimeMinutes > 720;
+          })();
 
-                return (
-                  <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[40px] flex items-center justify-center border-white/10">
-                    <div className="flex gap-1 w-full">
-                      {applicableSchedules.map((schedule, scheduleIndex) => (
-                         <div 
-                           key={scheduleIndex}
-                           className="rounded flex-1 h-8 relative cursor-pointer hover:brightness-110 transition-all flex items-center justify-center"
-                           style={{ 
-                             backgroundColor: schedule.color,
-                             opacity: schedule.isCurrentMedSchedule ? 1 : 0.3
-                           }}
-                           onClick={() => handleDoseClick(schedule)}
-                         >
-                           {/* Clean medication tile - quantity shown in time column for current med */}
-                         </div>
-                      ))}
-                    </div>
+          return (
+            <React.Fragment key={time}>
+              {/* Noon separator */}
+              {shouldShowNoonSeparator && (
+                <div className="grid" style={{ 
+                  gridTemplateColumns: '120px repeat(7, 1fr)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)'
+                }}>
+                  <div className="py-0.5 text-center flex items-center justify-center border-r border-white/10">
+                    <div className="text-sm font-semibold text-white">Noon</div>
                   </div>
-                );
-              })}
-            </div>
+                  <div className="col-span-7 py-0.5"></div>
+                </div>
+              )}
+              
+              {/* Time row */}
+              <div 
+                className={`grid border-b border-white/10 transition-colors ${
+                  hasCurrentMedication ? 'bg-white/5' : 'bg-charcoal'
+                }`} 
+                style={{ gridTemplateColumns: '120px repeat(7, 1fr)' }}
+              >
+                {/* Time column with horizontal inline layout */}
+                <div className="p-2 text-center h-[40px] flex items-center justify-center border-r border-white/10">
+                  <div className="flex items-center gap-1">
+                    <span className={`text-sm font-bold ${getTimeColor(time)}`}>
+                      {formatTimeDisplay(time)}
+                    </span>
+                    {hasCurrentMedication && currentMedication && (
+                      (() => {
+                        // Find the current medication's quantity for this time
+                        const currentMedSchedule = timeSchedules.find(schedule => schedule.isCurrentMedSchedule);
+                        if (currentMedSchedule && currentMedSchedule.currentMedQuantity) {
+                          const quantity = currentMedSchedule.currentMedQuantity;
+                          return (
+                            <>
+                              <span className="text-white/60">•</span>
+                              <span className="text-sm text-white/80 font-medium">
+                                {quantity} {quantity === 1 ? 'pill' : 'pills'}
+                              </span>
+                            </>
+                          );
+                        }
+                        return null;
+                      })()
+                    )}
+                  </div>
+                </div>
+                
+                {/* Day columns */}
+                {daysOfWeek.map((_, dayIndex) => {
+                  const fullDayName = fullDayNames[dayIndex];
+                  const applicableSchedules = timeGroups[time].filter(schedule => {
+                    const days = schedule.dayPattern.split(',');
+                    return days.includes('everyday') || days.includes(fullDayName);
+                  });
+
+                  return (
+                    <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[40px] flex items-center justify-center border-white/10">
+                      <div className="flex gap-1 w-full">
+                        {applicableSchedules.map((schedule, scheduleIndex) => (
+                           <div 
+                             key={scheduleIndex}
+                             className="rounded flex-1 h-8 relative cursor-pointer hover:brightness-110 transition-all flex items-center justify-center"
+                             style={{ 
+                               backgroundColor: schedule.color,
+                               opacity: schedule.isCurrentMedSchedule ? 1 : 0.3
+                             }}
+                             onClick={() => handleDoseClick(schedule)}
+                           >
+                             {/* Clean medication tile - quantity shown in time column for current med */}
+                           </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </React.Fragment>
           )
         })}
 

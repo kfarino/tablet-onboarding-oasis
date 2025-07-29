@@ -107,60 +107,85 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
     </div>
   );
 
-  // Dashboard Layout
+  // Dashboard Layout - Streamlined dark theme design
   const dashboardLayout = (
     <div className="flex flex-col space-y-4">
-      <div className="rounded-lg border border-white/10 bg-white/5 p-4 flex items-center">
-        <div className="w-1/2 flex items-center">
-          <User className="text-highlight h-10 w-10 mr-3 flex-shrink-0" />
-          <div>
-            <p className="text-white text-xl font-bold break-words hyphens-auto">
+      <div className="rounded-lg border border-white/10 bg-card/95 backdrop-blur-sm p-6">
+        <div className="flex items-center justify-between">
+          <div className="flex-1">
+            <h1 className="text-white text-2xl font-bold mb-1">
               {showExample || userProfile.firstName || userProfile.lastName
                 ? `${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.firstName : examplePrimaryUser.firstName) : userProfile.firstName || ""} ${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.lastName : examplePrimaryUser.lastName) : userProfile.lastName || ""}`
                 : "Name"}
-            </p>
-            <p className="text-highlight text-lg font-medium">
+            </h1>
+            <p className="text-highlight text-lg font-medium mb-4">
               {displayRole === UserRole.Caregiver 
                 ? (showExample || userProfile.relationship 
                     ? (showExample ? "Child" : getRelationshipLabel(userProfile.relationship)) 
                     : "Relationship")
                 : 'Primary User'}
             </p>
-            {/* Health Conditions in Dashboard Layout - only for Primary User */}
+            
+            {/* Contact Info Row */}
+            <div className="flex items-center gap-6 text-white/80 mb-4">
+              {/* Only show phone for loved ones, not primary users */}
+              {displayRole === UserRole.Caregiver && (
+                <div className="flex items-center gap-2">
+                  <Phone className="h-4 w-4 text-highlight" />
+                  <span>
+                    {showExample || userProfile.phoneNumber
+                      ? (showExample ? exampleProfile.phoneNumber : userProfile.phoneNumber)
+                      : "Not provided"}
+                  </span>
+                </div>
+              )}
+              
+              {displayRole === UserRole.PrimaryUser && (
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-highlight" />
+                  <span>
+                    {showExample || userProfile.dateOfBirth
+                      ? (showExample ? examplePrimaryUser.dateOfBirth : userProfile.dateOfBirth)
+                      : "Not provided"}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Health Conditions */}
             {displayRole === UserRole.PrimaryUser && (
-              <div className="mt-3">
+              <div className="flex flex-wrap gap-2">
                 {getPrimaryUserConditions().length === 0 ? (
-                  <p className="text-white/40 text-sm">No health conditions</p>
+                  <div className="text-white/40 text-sm">No health conditions</div>
                 ) : (
-                  <div className="flex flex-wrap gap-1">
-                    {getPrimaryUserConditions().map((condition, index) => (
-                      <Badge 
-                        key={index} 
-                        className="bg-white/10 hover:bg-white/20 text-white text-xs py-1 px-2 flex items-center gap-1"
-                      >
-                        {condition}
-                        {!showExample && (
-                          <X 
-                            className="h-2 w-2 cursor-pointer hover:text-red-300" 
-                            onClick={() => removeHealthCondition(index)}
-                          />
-                        )}
-                      </Badge>
-                    ))}
-                  </div>
+                  getPrimaryUserConditions().map((condition, index) => (
+                    <Badge 
+                      key={index} 
+                      className="bg-highlight/20 text-white border-highlight/30 px-3 py-1 flex items-center gap-2"
+                    >
+                      <Heart className="h-3 w-3" />
+                      {condition}
+                      {!showExample && (
+                        <X 
+                          className="h-3 w-3 cursor-pointer hover:text-red-300" 
+                          onClick={() => removeHealthCondition(index)}
+                        />
+                      )}
+                    </Badge>
+                  ))
                 )}
                 
                 {!showExample && (
-                  <div className="flex gap-2 mt-2">
+                  <div className="flex gap-2 mt-2 w-full">
                     <Input
                       value={newCondition}
                       onChange={(e) => setNewCondition(e.target.value)}
                       onKeyPress={handleKeyPress}
-                      placeholder="Add condition"
-                      className="bg-white/10 border-white/20 text-white text-sm h-8"
+                      placeholder="Add health condition"
+                      className="bg-white/10 border-white/20 text-white flex-1"
                     />
-                    <Button onClick={handleAddCondition} size="sm" className="bg-highlight hover:bg-highlight/90 h-8">
-                      <Plus className="h-3 w-3" />
+                    <Button onClick={handleAddCondition} size="sm" className="bg-highlight hover:bg-highlight/90">
+                      <Plus className="h-4 w-4" />
                     </Button>
                   </div>
                 )}
@@ -168,86 +193,60 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
             )}
           </div>
         </div>
-
-        <div className="w-1/2 flex items-center justify-end space-x-8">
-          {displayRole === UserRole.PrimaryUser && (
-            <div className="flex flex-col items-end">
-              <p className="text-white text-xl font-bold text-right">
-                {showExample || userProfile.dateOfBirth
-                  ? (showExample ? examplePrimaryUser.dateOfBirth : userProfile.dateOfBirth)
-                  : ""}
-              </p>
-              <p className="text-white/70 text-lg">Date of Birth</p>
-            </div>
-          )}
-          
-          <div className="flex flex-col items-end">
-            <p className="text-white text-xl font-bold whitespace-nowrap">
-              {showExample || userProfile.phoneNumber
-                ? (showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.phoneNumber : examplePrimaryUser.phoneNumber) : userProfile.phoneNumber)
-                : ""}
-            </p>
-            <p className="text-white/70 text-lg">Phone</p>
-          </div>
-        </div>
       </div>
 
       {displayRole === UserRole.Caregiver && (
-        <div className="rounded-lg border border-white/10 bg-white/5 p-4 flex items-center">
-          <div className="w-1/2 flex items-center">
-            <User className="text-highlight h-10 w-10 mr-3 flex-shrink-0" />
-            <div>
-              <p className="text-white text-xl font-bold break-words hyphens-auto">
+        <div className="rounded-lg border border-white/10 bg-card/95 backdrop-blur-sm p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <h1 className="text-white text-2xl font-bold mb-1">
                 {showExample || userProfile.lovedOne?.firstName || userProfile.lovedOne?.lastName
                   ? (showExample ? "Margaret Eleanor Thompson" : `${userProfile.lovedOne?.firstName || ""} ${userProfile.lovedOne?.lastName || ""}`)
                   : "Loved One's Name"}
-              </p>
-              <p className="text-highlight text-lg font-medium">
+              </h1>
+              <p className="text-highlight text-lg font-medium mb-4">
                 {showExample || userProfile.relationship
                   ? (showExample ? "Parent" : getRelationshipLabel(userProfile.relationship))
                   : "Relationship"}
               </p>
-              {/* Health Conditions for Loved One in Dashboard Layout */}
-              <div className="mt-3">
+              
+              {/* Contact Info Row - Phone always shown for loved ones */}
+              <div className="flex items-center gap-6 text-white/80 mb-4">
+                <div className="flex items-center gap-2">
+                  <Phone className="h-4 w-4 text-highlight" />
+                  <span>
+                    {showExample || userProfile.lovedOne?.phoneNumber
+                      ? (showExample ? "(555) 987-6543" : userProfile.lovedOne?.phoneNumber)
+                      : "Not provided"}
+                  </span>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-highlight" />
+                  <span>
+                    {showExample || userProfile.lovedOne?.dateOfBirth
+                      ? (showExample ? "01/01/1970" : userProfile.lovedOne?.dateOfBirth)
+                      : "Not provided"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Health Conditions for Loved One */}
+              <div className="flex flex-wrap gap-2">
                 {getLovedOneConditions().length === 0 ? (
-                  <p className="text-white/40 text-sm">No health conditions</p>
+                  <div className="text-white/40 text-sm">No health conditions</div>
                 ) : (
-                  <div className="flex flex-wrap gap-1">
-                    {getLovedOneConditions().map((condition, index) => (
-                      <Badge 
-                        key={index} 
-                        className="bg-white/10 hover:bg-white/20 text-white text-xs py-1 px-2 flex items-center gap-1"
-                      >
-                        {condition}
-                      </Badge>
-                    ))}
-                  </div>
+                  getLovedOneConditions().map((condition, index) => (
+                    <Badge 
+                      key={index} 
+                      className="bg-highlight/20 text-white border-highlight/30 px-3 py-1 flex items-center gap-2"
+                    >
+                      <Heart className="h-3 w-3" />
+                      {condition}
+                    </Badge>
+                  ))
                 )}
               </div>
-            </div>
-          </div>
-          
-          <div className="w-1/2 flex items-center justify-end space-x-8">
-            <div className="flex flex-col items-end">
-              <p className="text-white text-xl font-bold text-right">
-                {showExample || userProfile.lovedOne?.dateOfBirth
-                  ? (showExample ? "01/01/1970" : userProfile.lovedOne?.dateOfBirth)
-                  : ""}
-              </p>
-              <p className="text-white/70 text-lg">Date of Birth</p>
-            </div>
-            
-            <div className="flex flex-col items-end">
-              <p className="text-white text-xl font-bold whitespace-nowrap">
-                {showExample || userProfile.lovedOne?.phoneNumber
-                  ? (showExample ? "(555) 987-6543" : userProfile.lovedOne?.phoneNumber)
-                  : ""}
-              </p>
-              <p className="text-white/70 text-lg">
-                {showExample || userProfile.lovedOne?.alertPreference
-                  ? (showExample ? "Text Message" : getAlertPreferenceLabel(userProfile.lovedOne?.alertPreference))
-                  : "Alert Preference"}
-              </p>
             </div>
           </div>
         </div>
@@ -277,14 +276,17 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
           </div>
           
           <div className="space-y-3 ml-1">
-            <div className="flex items-center">
-              <Phone className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
-              <p className="text-white text-xl whitespace-nowrap overflow-hidden text-ellipsis">
-                {showExample || userProfile.phoneNumber
-                  ? (showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.phoneNumber : examplePrimaryUser.phoneNumber) : userProfile.phoneNumber)
-                  : "Not provided"}
-              </p>
-            </div>
+            {/* Phone number only shown for caregivers, not primary users */}
+            {displayRole === UserRole.Caregiver && (
+              <div className="flex items-center">
+                <Phone className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+                <p className="text-white text-xl whitespace-nowrap overflow-hidden text-ellipsis">
+                  {showExample || userProfile.phoneNumber
+                    ? (showExample ? exampleProfile.phoneNumber : userProfile.phoneNumber)
+                    : "Not provided"}
+                </p>
+              </div>
+            )}
             
             {displayRole === UserRole.PrimaryUser && (
               <div className="flex items-center">

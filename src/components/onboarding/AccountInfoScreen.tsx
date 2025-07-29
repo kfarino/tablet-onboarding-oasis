@@ -112,12 +112,12 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
             
             {displayRole === UserRole.PrimaryUser && (
               <div className="flex items-center">
-                <Calendar className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
-                <p className="text-white text-xl">
-                  {showExample || userProfile.dateOfBirth
-                    ? (showExample ? examplePrimaryUser.dateOfBirth : userProfile.dateOfBirth)
-                    : "Not provided"}
-                </p>
+                 <Calendar className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+                 <p className={`text-xl ${showExample || userProfile.dateOfBirth ? 'text-white' : 'text-white/60 italic'}`}>
+                   {showExample || userProfile.dateOfBirth
+                     ? (showExample ? examplePrimaryUser.dateOfBirth : userProfile.dateOfBirth)
+                     : "Date of birth"}
+                 </p>
               </div>
             )}
 
@@ -126,41 +126,41 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
               <div className="flex items-center">
                 <Heart className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
                 <div className="flex-1">
-                  {getPrimaryUserConditions().length === 0 ? (
-                    <p className="text-white text-xl">No health conditions</p>
-                  ) : (
-                    <div className="flex flex-wrap gap-2">
-                      {getPrimaryUserConditions().map((condition, index) => (
-                        <Badge 
-                          key={index} 
-                          className="bg-white/10 hover:bg-white/20 text-white text-base py-1 px-3 flex items-center gap-2"
-                        >
-                          {condition}
-                          {!showExample && (
-                            <X 
-                              className="h-3 w-3 cursor-pointer hover:text-red-300" 
-                              onClick={() => removeHealthCondition(index)}
-                            />
-                          )}
-                        </Badge>
-                      ))}
-                    </div>
-                  )}
-                  
-                  {!showExample && (
-                    <div className="flex gap-2 mt-2">
-                      <Input
-                        value={newCondition}
-                        onChange={(e) => setNewCondition(e.target.value)}
-                        onKeyPress={handleKeyPress}
-                        placeholder="Add health condition"
-                        className="bg-white/10 border-white/20 text-white flex-1"
-                      />
-                      <Button onClick={handleAddCondition} size="sm" className="bg-highlight hover:bg-highlight/90">
-                        <Plus className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  )}
+                   {getPrimaryUserConditions().length === 0 ? (
+                     <p className="text-white/60 italic text-xl">Health conditions</p>
+                   ) : (
+                     <div className="flex flex-wrap gap-2">
+                       {getPrimaryUserConditions().map((condition, index) => (
+                         <Badge 
+                           key={index} 
+                           className="bg-white/10 hover:bg-white/20 text-white text-base py-1 px-3 flex items-center gap-2"
+                         >
+                           {condition}
+                           {!showExample && (
+                             <X 
+                               className="h-3 w-3 cursor-pointer hover:text-red-300" 
+                               onClick={() => removeHealthCondition(index)}
+                             />
+                           )}
+                         </Badge>
+                       ))}
+                       
+                       {!showExample && (
+                         <div className="flex gap-2 mt-2 w-full">
+                           <Input
+                             value={newCondition}
+                             onChange={(e) => setNewCondition(e.target.value)}
+                             onKeyPress={handleKeyPress}
+                             placeholder="Add health condition"
+                             className="bg-white/10 border-white/20 text-white flex-1"
+                           />
+                           <Button onClick={handleAddCondition} size="sm" className="bg-highlight hover:bg-highlight/90">
+                             <Plus className="h-4 w-4" />
+                           </Button>
+                         </div>
+                       )}
+                     </div>
+                   )}
                 </div>
               </div>
             )}
@@ -174,45 +174,45 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
         <div className="w-full">
           <div className="rounded-lg border border-white/10 bg-white/5 p-4">
             <div className="mb-4 flex items-center justify-between">
-              <p className="text-white text-3xl font-bold break-words">
-                {showExample || userProfile.lovedOne?.firstName || userProfile.lovedOne?.lastName
-                  ? (showExample ? "Margaret Eleanor Thompson" : `${userProfile.lovedOne?.firstName || ""} ${userProfile.lovedOne?.lastName || ""}`)
-                  : "Loved One's Name"}
+               <p className={`text-3xl font-bold break-words ${showExample || userProfile.lovedOne?.firstName || userProfile.lovedOne?.lastName ? 'text-white' : 'text-white/60 italic'}`}>
+                 {showExample || userProfile.lovedOne?.firstName || userProfile.lovedOne?.lastName
+                   ? (showExample ? "Margaret Eleanor Thompson" : `${userProfile.lovedOne?.firstName || ""} ${userProfile.lovedOne?.lastName || ""}`)
+                   : "Loved one's name"}
               </p>
-              <p className="text-highlight text-xl">
-                {showExample || userProfile.relationship
-                  ? (showExample ? "Parent" : getRelationshipLabel(userProfile.relationship))
-                  : "Relationship"}
-              </p>
+               <p className={`text-xl ${showExample || userProfile.relationship ? 'text-highlight' : 'text-white/60 italic'}`}>
+                 {showExample || userProfile.relationship
+                   ? (showExample ? "Parent" : getRelationshipLabel(userProfile.relationship))
+                   : "Relationship"}
+               </p>
             </div>
             <div className="space-y-3 ml-1">
               {/* Phone, DOB, and Alert Preference on same row */}
               <div className="flex items-center gap-8">
                 <div className="flex items-center">
                   <Phone className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
-                  <p className="text-white text-xl whitespace-nowrap">
-                    {showExample || userProfile.lovedOne?.phoneNumber
-                      ? (showExample ? "(555) 987-6543" : userProfile.lovedOne?.phoneNumber)
-                      : "Not provided"}
-                  </p>
+                   <p className={`text-xl whitespace-nowrap ${showExample || userProfile.lovedOne?.phoneNumber ? 'text-white' : 'text-white/60 italic'}`}>
+                     {showExample || userProfile.lovedOne?.phoneNumber
+                       ? (showExample ? "(555) 987-6543" : userProfile.lovedOne?.phoneNumber)
+                       : "Phone number"}
+                   </p>
                 </div>
                 
                 <div className="flex items-center">
                   <Calendar className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
-                  <p className="text-white text-xl">
-                    {showExample || userProfile.lovedOne?.dateOfBirth
-                      ? (showExample ? "01/01/1970" : userProfile.lovedOne?.dateOfBirth)
-                      : "Not provided"}
-                  </p>
+                   <p className={`text-xl ${showExample || userProfile.lovedOne?.dateOfBirth ? 'text-white' : 'text-white/60 italic'}`}>
+                     {showExample || userProfile.lovedOne?.dateOfBirth
+                       ? (showExample ? "01/01/1970" : userProfile.lovedOne?.dateOfBirth)
+                       : "Date of birth"}
+                   </p>
                 </div>
                 
                 <div className="flex items-center">
                   <BellRing className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
-                  <p className="text-white text-xl">
-                    {showExample || userProfile.lovedOne?.alertPreference
-                      ? (showExample ? "Text Message" : getAlertPreferenceLabel(userProfile.lovedOne?.alertPreference))
-                      : "Not provided"}
-                  </p>
+                   <p className={`text-xl ${showExample || userProfile.lovedOne?.alertPreference ? 'text-white' : 'text-white/60 italic'}`}>
+                     {showExample || userProfile.lovedOne?.alertPreference
+                       ? (showExample ? "Text Message" : getAlertPreferenceLabel(userProfile.lovedOne?.alertPreference))
+                       : "Alert preference"}
+                   </p>
                 </div>
               </div>
 
@@ -220,8 +220,8 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
               <div className="flex items-center">
                 <Heart className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
                 <div className="flex-1">
-                  {getLovedOneConditions().length === 0 ? (
-                    <p className="text-white text-xl">No health conditions</p>
+                   {getLovedOneConditions().length === 0 ? (
+                     <p className="text-white/60 italic text-xl">Health conditions</p>
                   ) : (
                     <div className="flex flex-wrap gap-2">
                       {getLovedOneConditions().map((condition, index) => (

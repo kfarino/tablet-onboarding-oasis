@@ -96,21 +96,12 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
       {/* User Profile - Compact horizontal card */}
       <div className="w-full">
         <div className="rounded-lg border border-white/10 bg-white/5 p-4 h-fit">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-white text-3xl font-bold break-words">
-                {showExample || userProfile.firstName || userProfile.lastName
-                  ? `${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.firstName : examplePrimaryUser.firstName) : userProfile.firstName || ""} ${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.lastName : examplePrimaryUser.lastName) : userProfile.lastName || ""}`
-                  : "Name"}
-              </p>
-            </div>
-            {displayRole === UserRole.Caregiver && (
-              <p className="text-highlight text-xl">
-                {showExample || userProfile.relationship 
-                  ? (showExample ? "Child" : getRelationshipLabel(userProfile.relationship)) 
-                  : "Relationship"}
-              </p>
-            )}
+          <div>
+            <p className="text-white text-3xl font-bold break-words">
+              {showExample || userProfile.firstName || userProfile.lastName
+                ? `${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.firstName : examplePrimaryUser.firstName) : userProfile.firstName || ""} ${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.lastName : examplePrimaryUser.lastName) : userProfile.lastName || ""}`
+                : "Name"}
+            </p>
             {displayRole === UserRole.PrimaryUser && (
               <p className="text-highlight text-xl">Primary User</p>
             )}
@@ -182,7 +173,7 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
       {displayRole === UserRole.Caregiver && (
         <div className="w-full">
           <div className="rounded-lg border border-white/10 bg-white/5 p-4">
-            <div className="mb-4">
+            <div className="mb-4 flex items-center justify-between">
               <p className="text-white text-3xl font-bold break-words">
                 {showExample || userProfile.lovedOne?.firstName || userProfile.lovedOne?.lastName
                   ? (showExample ? "Margaret Eleanor Thompson" : `${userProfile.lovedOne?.firstName || ""} ${userProfile.lovedOne?.lastName || ""}`)

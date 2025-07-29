@@ -60,17 +60,17 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
       ],
       asNeeded: { maxPerDay: 4 }
     },
-    // Albuterol - current medication being worked on
+    // Tylenol - current medication being worked on
     {
       id: uuidv4(),
-      name: "Albuterol",
-      strength: "90mcg",
-      form: "inhaler",
+      name: "Tylenol",
+      strength: "500mg",
+      form: "tablet",
       doses: [
         {
           id: uuidv4(),
           days: ["everyday"],
-          times: ["8:00 AM", "6:00 PM"],
+          times: ["6:00 AM", "8:00 AM", "12:00 PM", "6:00 PM", "9:00 PM"],
           quantity: 2
         }
       ],

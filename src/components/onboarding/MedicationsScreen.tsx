@@ -355,11 +355,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
             
             {/* Center: As-needed info */}
             {currentMedication && currentMedication.asNeeded && (
-              <div className="mx-6 px-4 py-2 rounded-lg bg-white/5 border border-white/10">
-                <div className="text-sm text-white/80 text-center">
-                  <div className="font-medium">As-needed</div>
-                  <div className="text-white/60">up to {currentMedication.asNeeded.maxPerDay}x per day</div>
-                </div>
+              <div className="text-sm text-white/70 text-center">
+                As-needed: {currentMedication.asNeeded.maxPerDay}x/day
               </div>
             )}
             

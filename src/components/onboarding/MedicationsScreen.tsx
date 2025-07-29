@@ -39,21 +39,9 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   // Current medication being worked on (last one in the list) - only if showing example
   const currentMedication = showExample ? displayMedications[displayMedications.length - 1] : null;
 
-  // Color palette matching the design system
-  const scheduleColors = [
-    '#F26C3A', // Primary highlight color
-    '#FF8A5C', // Light highlight
-    '#E55A2B', // Dark highlight  
-    '#FF9F70', // Lighter highlight
-    '#D14D1F', // Darker highlight
-    '#FFA885', // Pastel highlight
-    '#C43E13', // Deep highlight
-    '#FFB299', // Very light highlight
-    '#B52F07', // Very dark highlight
-    '#FFC7B8', // Pale highlight
-    '#A52500', // Ultra dark highlight
-    '#FFD6CC'  // Ultra light highlight
-  ];
+  // Simplified 2-color palette
+  const currentMedColor = '#F26C3A';  // Primary highlight for current medication
+  const otherMedColor = '#8B4513';    // Darker color for other medications
 
   // Group medications by time and day pattern to create dose schedules
   const createDoseSchedules = () => {
@@ -84,11 +72,10 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                 time,
                 dayPattern,
                 medications: [],
-                color: scheduleColors[colorIndex % scheduleColors.length],
+                color: otherMedColor, // Default to other med color, will be updated if current med is found
                 isCurrentMedSchedule: false,
                 currentMedQuantity: 0
               };
-              colorIndex++;
             }
             
             schedules[scheduleKey].medications.push({
@@ -97,10 +84,11 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               quantity: dose.quantity
             });
             
-            // Check if this schedule contains the current medication and store its quantity
+            // Check if this schedule contains the current medication and update color
             if (currentMedication && med.id === currentMedication.id) {
               schedules[scheduleKey].isCurrentMedSchedule = true;
               schedules[scheduleKey].currentMedQuantity = dose.quantity;
+              schedules[scheduleKey].color = currentMedColor; // Use current med color
             }
           }
         });
@@ -247,7 +235,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                   key={med.id}
                   className="rounded h-8 px-3 flex items-center cursor-pointer hover:brightness-110 transition-all text-white text-sm font-medium relative"
                   style={{ 
-                    backgroundColor: '#F26C3A',
+                    backgroundColor: currentMedication && med.id === currentMedication.id ? currentMedColor : otherMedColor,
                     opacity: currentMedication && med.id === currentMedication.id ? 1 : 0.3
                   }}
                   onClick={() => setSelectedSchedule({

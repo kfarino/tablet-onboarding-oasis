@@ -257,9 +257,15 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
           {/* No-data medication container matching AccountInfoScreen style */}
           <div className="rounded-lg border border-white/10 bg-white/5 px-4 py-4">
             <div className="flex items-center justify-between">
-              <div className="space-y-1">
+              <div className="flex items-center gap-4">
+                {/* As-needed placeholder on the left */}
+                <div className="text-sm text-white/40 italic text-right min-w-[80px]">
+                  <div>As-needed:</div>
+                  <div>[frequency per day]</div>
+                </div>
+                
+                {/* Medication name placeholder */}
                 <p className="text-xl font-bold text-white/60 italic">Name • Strength • Form</p>
-                <p className="text-sm text-white/40 italic">As needed: [frequency per day]</p>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-xs text-white/60">
@@ -326,19 +332,6 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                 </div>
               ))}
             </div>
-            
-            {/* As-needed row */}
-            <div className="grid border-t border-white/10" style={{ 
-              gridTemplateColumns: '120px repeat(7, 1fr)',
-              backgroundColor: 'rgba(0, 0, 0, 0.2)'
-            }}>
-              <div className="p-2 text-center min-h-[32px] flex items-center justify-center border-r border-white/10">
-                <div className="text-sm font-semibold text-white/60">As-needed</div>
-              </div>
-              <div className="col-span-7 p-2 flex items-center gap-2 min-h-[32px]">
-                {/* Empty - no pill needed */}
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -351,19 +344,22 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         {/* Current medication container - matching AccountInfoScreen styling */}
         <div className="rounded-lg border border-white/10 bg-white/5 px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="space-y-1">
+            <div className="flex items-center gap-4">
+              {/* As-needed info on the left */}
+              {currentMedication && currentMedication.asNeeded && (
+                <div className="text-sm text-white/70 italic text-right min-w-[80px]">
+                  <div>As-needed:</div>
+                  <div>up to {currentMedication.asNeeded.maxPerDay}x per day</div>
+                </div>
+              )}
+              
+              {/* Medication name */}
               <p className={`text-xl font-bold break-words ${showExample || currentMedication ? 'text-white' : 'text-white/60 italic'}`}>
                 {currentMedication ? 
                   `${currentMedication.name} ${currentMedication.strength} • ${currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}` :
                   'New Medication'
                 }
               </p>
-              {/* Show as-needed info for current medication only */}
-              {currentMedication && currentMedication.asNeeded && (
-                <p className="text-sm text-white/70 italic">
-                  As needed: up to {currentMedication.asNeeded.maxPerDay}x per day
-                </p>
-              )}
             </div>
             <div className="flex items-center gap-2">
               <div 

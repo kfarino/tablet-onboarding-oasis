@@ -347,14 +347,12 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
             <div className="flex-1">
               <h2 className="text-2xl font-bold text-white leading-tight">
                 {currentMedication ? 
-                  `${currentMedication.name}` :
+                  `${currentMedication.name} ${currentMedication.strength}` :
                   'New Medication'
                 }
               </h2>
               {currentMedication && (
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="text-white/80 font-medium">{currentMedication.strength}</span>
-                  <span className="text-white/60">•</span>
                   <span className="text-white/80">{currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}</span>
                   {currentMedication.asNeeded && (
                     <>

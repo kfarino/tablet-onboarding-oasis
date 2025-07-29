@@ -102,6 +102,9 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
                 ? `${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.firstName : examplePrimaryUser.firstName) : userProfile.firstName || ""} ${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.lastName : examplePrimaryUser.lastName) : userProfile.lastName || ""}`
                 : "Name"}
             </p>
+            {displayRole === UserRole.Caregiver && (
+              <p className="text-highlight text-xl">Caregiver Admin</p>
+            )}
             {displayRole === UserRole.PrimaryUser && (
               <p className="text-highlight text-xl">Primary User</p>
             )}

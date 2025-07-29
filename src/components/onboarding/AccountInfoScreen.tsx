@@ -21,8 +21,8 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
 
   // Example data for populated view
   const exampleProfile = {
-    firstName: "Elizabeth Alexandra",
-    lastName: "Smith-Worthington",
+    firstName: "Elizabeth",
+    lastName: "Alexandra",
     role: UserRole.Caregiver,
     relationship: "child",
     phoneNumber: "(555) 123-4567",
@@ -189,9 +189,8 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
                   : "Relationship"}
               </p>
             </div>
-            
             <div className="space-y-3 ml-1">
-              {/* Phone and DOB on same row */}
+              {/* Phone, DOB, and Alert Preference on same row */}
               <div className="flex items-center gap-8">
                 <div className="flex items-center">
                   <Phone className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
@@ -210,15 +209,15 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
                       : "Not provided"}
                   </p>
                 </div>
-              </div>
-              
-              <div className="flex items-center">
-                <BellRing className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
-                <p className="text-white text-xl">
-                  {showExample || userProfile.lovedOne?.alertPreference
-                    ? (showExample ? "Text Message" : getAlertPreferenceLabel(userProfile.lovedOne?.alertPreference))
-                    : "Not provided"}
-                </p>
+                
+                <div className="flex items-center">
+                  <BellRing className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+                  <p className="text-white text-xl">
+                    {showExample || userProfile.lovedOne?.alertPreference
+                      ? (showExample ? "Text Message" : getAlertPreferenceLabel(userProfile.lovedOne?.alertPreference))
+                      : "Not provided"}
+                  </p>
+                </div>
               </div>
 
               {/* Health Conditions Section for Loved One */}

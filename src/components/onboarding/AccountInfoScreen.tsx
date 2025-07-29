@@ -97,7 +97,7 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
       <div className="w-full">
         <div className="rounded-lg border border-white/10 bg-white/5 px-4 py-4 h-fit">
           <div className="flex items-center justify-between">
-            <p className="text-white text-3xl font-bold break-words">
+            <p className={`text-3xl font-bold break-words ${showExample || userProfile.firstName || userProfile.lastName ? 'text-white' : 'text-white/60 italic'}`}>
               {showExample || userProfile.firstName || userProfile.lastName
                 ? `${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.firstName : examplePrimaryUser.firstName) : userProfile.firstName || ""} ${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.lastName : examplePrimaryUser.lastName) : userProfile.lastName || ""}`
                 : "Name"}

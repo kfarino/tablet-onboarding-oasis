@@ -27,9 +27,41 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
   const [previewRole, setPreviewRole] = useState<UserRole | null>(UserRole.PrimaryUser); // Default to PrimaryUser
   const [showSingleMedicationCapture, setShowSingleMedicationCapture] = useState(false);
 
-  // Simplified example medications - 9 total with cleaner patterns
+  // Example medications matching the specified schedule
   const exampleMedications = [
-    // Everyday morning medications
+    // Tylenol - scheduled at 6 AM and 6 PM, plus as-needed
+    {
+      id: uuidv4(),
+      name: "Tylenol",
+      strength: "500mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["6:00 AM", "6:00 PM"],
+          quantity: 1
+        }
+      ],
+      asNeeded: { maxPerDay: 3 }
+    },
+    // Vitamin D - weekends at 6 AM, plus as-needed
+    {
+      id: uuidv4(),
+      name: "Vitamin D",
+      strength: "2000 IU",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["saturday", "sunday"],
+          times: ["6:00 AM"],
+          quantity: 1
+        }
+      ],
+      asNeeded: { maxPerDay: 1 }
+    },
+    // Lisinopril - everyday at 8 AM
     {
       id: uuidv4(),
       name: "Lisinopril",
@@ -45,6 +77,7 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
       ],
       asNeeded: null
     },
+    // Metformin - everyday at 8 AM and 6 PM
     {
       id: uuidv4(),
       name: "Metformin",
@@ -58,57 +91,9 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
           quantity: 1
         }
       ],
-      asNeeded: { maxPerDay: 4 }
-    },
-    // Tylenol - current medication being worked on
-    {
-      id: uuidv4(),
-      name: "Tylenol",
-      strength: "500mg",
-      form: "tablet",
-      doses: [
-        {
-          id: uuidv4(),
-          days: ["everyday"],
-          times: ["6:00 AM", "8:00 AM", "12:00 PM", "6:00 PM", "9:00 PM"],
-          quantity: 2
-        }
-      ],
       asNeeded: null
     },
-    // Everyday evening medication
-    {
-      id: uuidv4(),
-      name: "Lipitor",
-      strength: "20mg",
-      form: "tablet",
-      doses: [
-        {
-          id: uuidv4(),
-          days: ["everyday"],
-          times: ["9:00 PM"],
-          quantity: 1
-        }
-      ],
-      asNeeded: null
-    },
-    // Weekend medications
-    {
-      id: uuidv4(),
-      name: "Vitamin D",
-      strength: "2000 IU",
-      form: "tablet",
-      doses: [
-        {
-          id: uuidv4(),
-          days: ["saturday", "sunday"],
-          times: ["8:00 AM"],
-          quantity: 1
-        }
-      ],
-      asNeeded: null
-    },
-    // Weekday medication
+    // Aspirin - weekdays at 8 AM
     {
       id: uuidv4(),
       name: "Aspirin",
@@ -124,27 +109,21 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
       ],
       asNeeded: null
     },
-    // Both scheduled and as-needed medication
+    // Lipitor - everyday at 9 PM
     {
       id: uuidv4(),
-      name: "Tylenol",
-      strength: "500mg",
+      name: "Lipitor",
+      strength: "20mg",
       form: "tablet",
       doses: [
         {
           id: uuidv4(),
-          days: ["saturday", "sunday"],
-          times: ["8:00 AM"],
-          quantity: 2
-        },
-        {
-          id: uuidv4(),
           days: ["everyday"],
-          times: ["6:00 PM"],
+          times: ["9:00 PM"],
           quantity: 1
         }
       ],
-      asNeeded: { maxPerDay: 6 }
+      asNeeded: null
     }
   ];
 

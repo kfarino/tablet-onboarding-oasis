@@ -30,8 +30,8 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
 
   // Example for primary user
   const examplePrimaryUser = {
-    firstName: "Christopher Frederick",
-    lastName: "Johnson-Williams",
+    firstName: "Christopher",
+    lastName: "Frederick",
     role: UserRole.PrimaryUser,
     dateOfBirth: "05/12/1945",
     phoneNumber: "(555) 987-6543",
@@ -96,7 +96,7 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
       {/* User Profile - Compact horizontal card */}
       <div className="w-full">
         <div className="rounded-lg border border-white/10 bg-white/5 p-4 h-fit">
-          <div>
+          <div className="flex items-center justify-between mb-4">
             <p className="text-white text-3xl font-bold break-words">
               {showExample || userProfile.firstName || userProfile.lastName
                 ? `${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.firstName : examplePrimaryUser.firstName) : userProfile.firstName || ""} ${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.lastName : examplePrimaryUser.lastName) : userProfile.lastName || ""}`

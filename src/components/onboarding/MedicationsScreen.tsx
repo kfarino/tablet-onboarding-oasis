@@ -274,23 +274,6 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                 </span>
               </div>
             </div>
-            
-            <div className="space-y-3 ml-1 mt-2">
-              <div className="flex items-center">
-                <EyeOff className="text-white/60 h-5 w-5 mr-3 flex-shrink-0" />
-                <p className="text-white/60 italic text-xl">Medication name</p>
-              </div>
-              
-              <div className="flex items-center">
-                <EyeOff className="text-white/60 h-5 w-5 mr-3 flex-shrink-0" />
-                <p className="text-white/60 italic text-xl">Strength and form</p>
-              </div>
-              
-              <div className="flex items-center">
-                <EyeOff className="text-white/60 h-5 w-5 mr-3 flex-shrink-0" />
-                <p className="text-white/60 italic text-xl">Schedule</p>
-              </div>
-            </div>
           </div>
           
           {/* Empty schedule grid matching the layout but with no-data styling */}
@@ -310,22 +293,48 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               ))}
             </div>
             
-            {/* Empty time slots */}
-            {['8:00 AM', '6:00 PM'].map((time) => (
-              <div key={time} className="grid border-b border-white/10" style={{ 
-                gridTemplateColumns: '120px repeat(7, 1fr)',
-                backgroundColor: 'rgba(0, 0, 0, 0.2)'
-              }}>
-                <div className="p-2 text-center min-h-[50px] flex items-center justify-center border-r border-white/10">
-                  <div className="text-sm font-semibold text-white/60">{formatTimeDisplay(time)}</div>
-                </div>
-                {Array.from({ length: 7 }).map((_, dayIndex) => (
-                  <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[50px] flex items-center justify-center border-white/10">
-                    <div className="w-full h-8 rounded bg-white/10"></div>
-                  </div>
-                ))}
+            {/* AM time slot */}
+            <div className="grid border-b border-white/10" style={{ 
+              gridTemplateColumns: '120px repeat(7, 1fr)',
+              backgroundColor: 'rgba(0, 0, 0, 0.2)'
+            }}>
+              <div className="p-2 text-center min-h-[50px] flex items-center justify-center border-r border-white/10">
+                <div className="text-sm font-semibold text-white/60">AM</div>
               </div>
-            ))}
+              {Array.from({ length: 7 }).map((_, dayIndex) => (
+                <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[50px] flex items-center justify-center border-white/10">
+                  <div className="w-full h-8 rounded bg-white/10"></div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Noon indicator line */}
+            <div className="grid" style={{ 
+              gridTemplateColumns: '120px repeat(7, 1fr)',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)'
+            }}>
+              <div className="p-1 text-center flex items-center justify-center border-r border-white/10">
+                <div className="text-xs text-white/40">noon</div>
+              </div>
+              <div className="col-span-7 p-1">
+                <div className="w-full h-px bg-white/20"></div>
+              </div>
+            </div>
+            
+            {/* PM time slot */}
+            <div className="grid border-b border-white/10" style={{ 
+              gridTemplateColumns: '120px repeat(7, 1fr)',
+              backgroundColor: 'rgba(0, 0, 0, 0.2)'
+            }}>
+              <div className="p-2 text-center min-h-[50px] flex items-center justify-center border-r border-white/10">
+                <div className="text-sm font-semibold text-white/60">PM</div>
+              </div>
+              {Array.from({ length: 7 }).map((_, dayIndex) => (
+                <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[50px] flex items-center justify-center border-white/10">
+                  <div className="w-full h-8 rounded bg-white/10"></div>
+                </div>
+              ))}
+            </div>
             
             {/* As-needed row */}
             <div className="grid border-t border-white/10" style={{ 

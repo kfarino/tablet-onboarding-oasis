@@ -177,7 +177,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                         return (
                           <>
                             <span className="text-white/60">•</span>
-                            <span className="text-xs text-white/80 font-medium">
+                            <span className="text-sm text-white/80 font-medium">
                               {quantity} {quantity === 1 ? 'pill' : 'pills'}
                             </span>
                           </>
@@ -355,7 +355,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         {/* Current medication container - matching AccountInfoScreen styling */}
         <div className="rounded-lg border border-white/10 bg-white/5 px-4 py-4">
           <div className="flex items-center justify-between">
-            <p className={`text-3xl font-bold break-words ${showExample || currentMedication ? 'text-white' : 'text-white/60 italic'}`}>
+            <p className={`text-xl font-bold break-words ${showExample || currentMedication ? 'text-white' : 'text-white/60 italic'}`}>
               {currentMedication ? 
                 `${currentMedication.name} ${currentMedication.strength} • ${currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}` :
                 'New Medication'

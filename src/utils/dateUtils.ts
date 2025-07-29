@@ -46,22 +46,33 @@ export const formatTimeDisplay = (time: string): string => {
 
 /**
  * Gets color based on time of day for day/night theme
- * @param time Time string like "8:00 AM", "12:00 PM", "6:00 PM" (original format with AM/PM)
+ * @param time Time string like "8:00 AM", "12:00 PM", "6:00 PM" or "6:00", "8:00", "12:00"
  * @returns Tailwind color class for the time
  */
 export const getTimeColor = (time: string): string => {
-  if (time === "12:00 PM" || time === "Noon") return "text-white";
+  if (time === "12:00 PM" || time === "Noon" || time === "12:00") return "text-white";
   
-  // Parse the time to determine if it's AM or PM
-  const isAM = time.includes("AM");
-  const isPM = time.includes("PM");
+  // Check if time has AM/PM
+  const hasAMPM = time.includes("AM") || time.includes("PM");
   
-  if (isAM) {
-    // Morning times - warm orange/amber
-    return "text-orange-400";
-  } else if (isPM) {
-    // Evening times - cool blue/purple  
-    return "text-blue-400";
+  if (hasAMPM) {
+    const isAM = time.includes("AM");
+    const isPM = time.includes("PM");
+    
+    if (isAM) {
+      return "text-orange-400"; // Morning - warm orange
+    } else if (isPM) {
+      return "text-blue-400";   // Evening - cool blue
+    }
+  } else {
+    // For times without AM/PM, use logic to determine morning vs evening
+    const [hours] = time.split(':').map(Number);
+    
+    if (hours >= 6 && hours <= 11) {
+      return "text-orange-400"; // Morning - warm orange
+    } else if ((hours >= 1 && hours <= 5) || hours === 12) {
+      return "text-blue-400";   // Evening/Night - cool blue
+    }
   }
   
   // Fallback to white

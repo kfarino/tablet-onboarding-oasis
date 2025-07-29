@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Medication } from '@/types/onboarding';
 import { Badge } from '@/components/ui/badge';
-import { formatTimeDisplay, parseTimeForSorting } from '@/utils/dateUtils';
+import { formatTimeDisplay, parseTimeForSorting, getTimeColor } from '@/utils/dateUtils';
 
 interface MedicationsScreenProps {
   showExample?: boolean;
@@ -164,7 +164,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               {/* Time column with horizontal inline layout */}
               <div className="p-2 text-center h-[40px] flex items-center justify-center border-r border-white/10">
                 <div className="flex items-center gap-1">
-                  <span className="text-sm font-bold text-primary">
+                  <span className={`text-sm font-bold ${getTimeColor(time)}`}>
                     {formatTimeDisplay(time)}
                   </span>
                   {hasCurrentMedication && currentMedication && (

@@ -33,15 +33,39 @@ export const getDayAbbreviation = (day: string): string => {
 };
 
 /**
- * Formats time display to include AM/PM on one line and convert 12:00 PM to "Noon"
+ * Formats time display without AM/PM and convert 12:00 PM to "Noon"
  * @param time Time string like "8:00 AM", "12:00 PM", "6:00 PM"
- * @returns Formatted time like "8:00 AM", "Noon", "6:00 PM"
+ * @returns Formatted time like "8:00", "Noon", "6:00"
  */
 export const formatTimeDisplay = (time: string): string => {
   if (time === "12:00 PM") return "Noon";
   
-  // Keep AM/PM in the time display
-  return time;
+  // Remove AM/PM from time display
+  return time.replace(/ (AM|PM)/g, '');
+};
+
+/**
+ * Gets color based on time of day for day/night theme
+ * @param time Time string like "8:00 AM", "12:00 PM", "6:00 PM"
+ * @returns Tailwind color class for the time
+ */
+export const getTimeColor = (time: string): string => {
+  if (time === "12:00 PM" || time === "Noon") return "text-primary";
+  
+  // Parse the time to determine if it's AM or PM
+  const isAM = time.includes("AM");
+  const isPM = time.includes("PM");
+  
+  if (isAM) {
+    // Morning times - warm orange/amber
+    return "text-orange-400";
+  } else if (isPM) {
+    // Evening times - cool blue/purple  
+    return "text-blue-400";
+  }
+  
+  // Fallback to primary color
+  return "text-primary";
 };
 
 /**

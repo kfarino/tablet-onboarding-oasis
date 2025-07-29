@@ -174,26 +174,28 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               }`} 
               style={{ gridTemplateColumns: '120px repeat(7, 1fr)' }}
             >
-              {/* Time column with quantity display - only for current medication */}
-              <div className="p-2 text-center min-h-[50px] flex flex-col items-center justify-center border-r border-white/10">
-                <div className="text-sm font-semibold text-white">
-                  {formatTimeDisplay(time)}
+              {/* Time column with inline quantity display - only for current medication */}
+              <div className="p-2 text-center h-[50px] flex items-center justify-center border-r border-white/10">
+                <div className="flex flex-col items-center">
+                  <div className="text-sm font-semibold text-white">
+                    {formatTimeDisplay(time)}
+                  </div>
+                  {hasCurrentMedication && currentMedication && (
+                    (() => {
+                      // Find the current medication's quantity for this time
+                      const currentMedSchedule = timeSchedules.find(schedule => schedule.isCurrentMedSchedule);
+                      if (currentMedSchedule && currentMedSchedule.currentMedQuantity) {
+                        const quantity = currentMedSchedule.currentMedQuantity;
+                        return (
+                          <div className="text-xs text-white/80 font-medium">
+                            {quantity} {quantity === 1 ? 'pill' : 'pills'}
+                          </div>
+                        );
+                      }
+                      return null;
+                    })()
+                  )}
                 </div>
-                {hasCurrentMedication && currentMedication && (
-                  (() => {
-                    // Find the current medication's quantity for this time
-                    const currentMedSchedule = timeSchedules.find(schedule => schedule.isCurrentMedSchedule);
-                    if (currentMedSchedule && currentMedSchedule.currentMedQuantity) {
-                      const quantity = currentMedSchedule.currentMedQuantity;
-                      return (
-                        <div className="text-xs text-white/80 mt-1 font-medium">
-                          {quantity} {quantity === 1 ? 'pill' : 'pills'}
-                        </div>
-                      );
-                    }
-                    return null;
-                  })()
-                )}
               </div>
               
               {/* Day columns */}
@@ -364,7 +366,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
           <div className="flex items-center justify-between">
             <p className={`text-3xl font-bold break-words ${showExample || currentMedication ? 'text-white' : 'text-white/60 italic'}`}>
               {currentMedication ? 
-                `${currentMedication.name} ${currentMedication.strength} • ${currentMedication.form}` : 
+                `${currentMedication.name} ${currentMedication.strength} • ${currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}` :
                 'New Medication'
               }
             </p>

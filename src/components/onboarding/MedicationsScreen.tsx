@@ -406,7 +406,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                         <div>
                           <h3 className="text-base font-semibold text-white">{med.name} {med.strength}</h3>
                         </div>
-                        <div className="text-sm text-white/70">
+                        <div className="text-base text-white/70">
                           {med.quantity}x {med.quantity === 1 ? 'pill' : 'pills'}
                         </div>
                       </div>

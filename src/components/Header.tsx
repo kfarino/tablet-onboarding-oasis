@@ -53,7 +53,7 @@ const Header: React.FC<HeaderProps> = ({
       case OnboardingStep.PersonalInfo:
         return 'Account Details';
       case OnboardingStep.Medications:
-        return 'Medications';
+        return 'Dosing Schedule';
       default:
         return '';
     }

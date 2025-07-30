@@ -367,30 +367,19 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
       <Dialog open={!!selectedSchedule} onOpenChange={() => setSelectedSchedule(null)}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Dose Details - {selectedSchedule ? formatTimeDisplay(selectedSchedule.time) : ''}</DialogTitle>
+            <DialogTitle>
+              Dose Details - {selectedSchedule ? (() => {
+                const time = selectedSchedule.time;
+                const [hours, minutes] = time.split(':').map(Number);
+                const period = hours >= 12 ? 'PM' : 'AM';
+                const displayHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
+                return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
+              })() : ''}
+            </DialogTitle>
           </DialogHeader>
           {selectedSchedule && (
             <div className="space-y-4">
-            <div className="space-y-2">
-              {selectedSchedule.medications.map((med, index) => (
-                <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-white/5">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full flex-shrink-0" style={{ backgroundColor: '#F26C3A' }}>
-                    <Pill size={20} className="text-white" />
-                  </div>
-                  <div className="flex-1 flex items-center justify-between">
-                    <div>
-                      <h3 className="text-base font-semibold text-white">{med.name}</h3>
-                      <p className="text-sm text-white/70">{med.strength}</p>
-                    </div>
-                    <div className="text-sm text-white/70">
-                      {med.quantity}x {med.quantity === 1 ? 'pill' : 'pills'}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-              
-              <div className="pt-2 border-t border-white/10">
+              <div className="pt-2 border-b border-white/10 pb-4">
                 <div className="text-sm">
                   <span className="text-white/70">Schedule:</span>
                   <p className="text-white font-medium">
@@ -402,6 +391,25 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                     }
                   </p>
                 </div>
+              </div>
+              
+              <div className="space-y-2">
+                {selectedSchedule.medications.map((med, index) => (
+                  <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-white/5">
+                    <div className="flex items-center justify-center w-10 h-10 rounded-full flex-shrink-0" style={{ backgroundColor: '#F26C3A' }}>
+                      <Pill size={20} className="text-white" />
+                    </div>
+                    <div className="flex-1 flex items-center justify-between">
+                      <div>
+                        <h3 className="text-base font-semibold text-white">{med.name}</h3>
+                        <p className="text-sm text-white/70">{med.strength}</p>
+                      </div>
+                      <div className="text-sm text-white/70">
+                        {med.quantity}x {med.quantity === 1 ? 'pill' : 'pills'}
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           )}

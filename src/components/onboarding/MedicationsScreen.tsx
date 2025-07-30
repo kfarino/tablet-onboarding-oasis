@@ -339,8 +339,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               {currentMedication ? (
                 <span className="flex items-center gap-3">
                   <span>{currentMedication.name}</span>
-                  <span className="text-2xl text-white/80">{currentMedication.strength}</span>
-                  <span className="text-2xl text-white/80">{currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}</span>
+                  <span>{currentMedication.strength}</span>
+                  <span className="text-white/80">{currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}</span>
                 </span>
               ) : (
                 'New Medication'

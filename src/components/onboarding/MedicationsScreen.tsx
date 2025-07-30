@@ -422,25 +422,24 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         </DialogContent>
       </Dialog>
 
-      {/* All Medications Dialog */}
+      {/* All Medications Dialog - Simplified */}
       <Dialog open={showAllMedicationsDialog} onOpenChange={setShowAllMedicationsDialog}>
-        <DialogContent className="sm:max-w-lg">
+        <DialogContent className="sm:max-w-2xl max-h-[80vh]">
           <DialogHeader>
             <DialogTitle>All Medications ({displayMedications.length})</DialogTitle>
           </DialogHeader>
-          <div className="space-y-3 max-h-[400px] overflow-y-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[60vh] overflow-y-auto">
             {displayMedications.map((med, index) => (
-              <div key={med.id || index} className="flex items-center gap-3 p-3 rounded-lg bg-white/5">
-                <div className="flex items-center justify-center w-12 h-12 rounded-full" style={{ backgroundColor: '#F26C3A' }}>
-                  <Pill size={24} className="text-white" />
+              <div key={med.id || index} className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                <div className="flex items-center justify-center w-8 h-8 rounded-full flex-shrink-0" style={{ backgroundColor: '#F26C3A' }}>
+                  <Pill size={16} className="text-white" />
                 </div>
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-white">{med.name}</h3>
-                  <p className="text-white/70">{med.strength} • {med.form.charAt(0).toUpperCase() + med.form.slice(1)}</p>
-                  <div className="flex gap-2 mt-1">
-                    <Badge variant={med.asNeeded ? "secondary" : "default"} className="text-xs">
-                      {med.asNeeded ? 'As needed' : 'Scheduled'}
-                    </Badge>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 text-white">
+                    <span className="font-semibold">{med.name}</span>
+                    <span className="text-white/80 text-sm">{med.strength}</span>
+                    <span className="text-white/60">•</span>
+                    <span className="text-white/70 text-sm capitalize">{med.form}</span>
                   </div>
                 </div>
               </div>

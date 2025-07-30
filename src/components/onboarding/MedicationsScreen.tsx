@@ -138,7 +138,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
             Time (Qty/Dose)
           </div>
           {daysOfWeek.map((day) => (
-            <div key={day} className="p-2 font-semibold text-white text-center border-r last:border-r-0 border-white/10">
+            <div key={day} className="p-2 text-xl font-bold text-white text-center border-r last:border-r-0 border-white/10">
               {day}
             </div>
           ))}
@@ -272,7 +272,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                 Time (Qty/Dose)
               </div>
               {['Su', 'M', 'T', 'W', 'Th', 'F', 'Sa'].map((day) => (
-                <div key={day} className="p-2 font-semibold text-white text-center border-r last:border-r-0 border-white/10">
+                <div key={day} className="p-2 text-xl font-bold text-white text-center border-r last:border-r-0 border-white/10">
                   {day}
                 </div>
               ))}

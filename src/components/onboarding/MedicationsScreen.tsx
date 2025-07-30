@@ -185,7 +185,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                 style={{ gridTemplateColumns: '120px repeat(7, 1fr)' }}
               >
                 {/* Time column - left aligned with quantity and time */}
-                <div className="p-2 pl-4 h-[40px] flex items-center justify-start border-r border-white/10">
+                <div className="p-1 pl-4 h-[28px] flex items-center justify-start border-r border-white/10">
                   <div className="text-xl font-bold flex items-center gap-1">
                     {hasCurrentMedication && currentMedication && (() => {
                       // Find the current medication's quantity for this time
@@ -213,12 +213,12 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                   });
 
                   return (
-                    <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[40px] flex items-center justify-center border-white/10">
-                      <div className="flex gap-1 w-full">
-                        {applicableSchedules.map((schedule, scheduleIndex) => (
-                           <div 
-                             key={scheduleIndex}
-                             className="rounded flex-1 h-8 relative cursor-pointer hover:brightness-110 transition-all flex items-center justify-center"
+                    <div key={dayIndex} className="p-1 border-r last:border-r-0 min-h-[28px] flex items-center justify-center border-white/10">
+                        <div className="flex gap-1 w-full">
+                          {applicableSchedules.map((schedule, scheduleIndex) => (
+                             <div 
+                               key={scheduleIndex}
+                               className="rounded flex-1 h-5 relative cursor-pointer hover:brightness-110 transition-all flex items-center justify-center"
                              style={{ 
                                backgroundColor: schedule.color,
                                opacity: schedule.isCurrentMedSchedule ? 1 : 0.3
@@ -282,13 +282,13 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
             <div className="grid border-b border-white/10 bg-charcoal" style={{ 
               gridTemplateColumns: '120px repeat(7, 1fr)'
             }}>
-              <div className="p-2 pl-4 h-[40px] flex items-center justify-start border-r border-white/10">
+              <div className="p-1 pl-4 h-[28px] flex items-center justify-start border-r border-white/10">
                 <div className="text-xl font-bold text-orange-400">AM</div>
               </div>
               {Array.from({ length: 7 }).map((_, dayIndex) => (
-                <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[40px] flex items-center justify-center border-white/10">
+                <div key={dayIndex} className="p-1 border-r last:border-r-0 min-h-[28px] flex items-center justify-center border-white/10">
                   <div className="flex gap-1 w-full">
-                    <div className="rounded flex-1 h-8 bg-white/10"></div>
+                    <div className="rounded flex-1 h-5 bg-white/10"></div>
                   </div>
                 </div>
               ))}
@@ -309,13 +309,13 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
             <div className="grid border-b border-white/10 bg-charcoal" style={{ 
               gridTemplateColumns: '120px repeat(7, 1fr)'
             }}>
-              <div className="p-2 pl-4 h-[40px] flex items-center justify-start border-r border-white/10">
+              <div className="p-1 pl-4 h-[28px] flex items-center justify-start border-r border-white/10">
                 <div className="text-xl font-bold text-blue-400">PM</div>
               </div>
               {Array.from({ length: 7 }).map((_, dayIndex) => (
-                <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[40px] flex items-center justify-center border-white/10">
+                <div key={dayIndex} className="p-1 border-r last:border-r-0 min-h-[28px] flex items-center justify-center border-white/10">
                   <div className="flex gap-1 w-full">
-                    <div className="rounded flex-1 h-8 bg-white/10"></div>
+                    <div className="rounded flex-1 h-5 bg-white/10"></div>
                   </div>
                 </div>
               ))}

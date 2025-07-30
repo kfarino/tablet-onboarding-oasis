@@ -134,11 +134,11 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         <div className="grid text-xs bg-charcoal" style={{ 
           gridTemplateColumns: '120px repeat(7, 1fr)'
         }}>
-          <div className="p-2 text-xl font-bold text-white text-center border-r border-white/10">
+          <div className="p-1 text-xl font-bold text-white text-center border-r border-white/10">
             Time
           </div>
           {daysOfWeek.map((day) => (
-            <div key={day} className="p-2 text-xl font-bold text-white text-center border-r last:border-r-0 border-white/10">
+            <div key={day} className="p-1 text-xl font-bold text-white text-center border-r last:border-r-0 border-white/10">
               {day}
             </div>
           ))}
@@ -268,11 +268,11 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
             <div className="grid text-xs bg-charcoal" style={{ 
               gridTemplateColumns: '120px repeat(7, 1fr)'
             }}>
-              <div className="p-2 text-xl font-bold text-white text-center border-r border-white/10">
+              <div className="p-1 text-xl font-bold text-white text-center border-r border-white/10">
                 Time
               </div>
               {['Su', 'M', 'T', 'W', 'Th', 'F', 'Sa'].map((day) => (
-                <div key={day} className="p-2 text-xl font-bold text-white text-center border-r last:border-r-0 border-white/10">
+                <div key={day} className="p-1 text-xl font-bold text-white text-center border-r last:border-r-0 border-white/10">
                   {day}
                 </div>
               ))}

@@ -260,13 +260,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                   <span className="text-white/50">Form</span>
                 </span>
               </div>
-              <div className="flex items-center gap-4">
-                <div className="text-lg text-white/40">
-                  As-needed: (frequency per day)
-                </div>
-                <span className="text-xs text-white/60">
-                  0 total meds
-                </span>
+              <div className="text-lg text-white/40">
+                As-needed: (frequency per day)
               </div>
             </div>
           </div>

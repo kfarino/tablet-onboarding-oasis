@@ -371,22 +371,24 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
           </DialogHeader>
           {selectedSchedule && (
             <div className="space-y-4">
-              <div className="space-y-3">
-                {selectedSchedule.medications.map((med, index) => (
-                  <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-white/5">
-                    <div className="flex items-center justify-center w-12 h-12 rounded-full" style={{ backgroundColor: '#F26C3A' }}>
-                      <Pill size={24} className="text-white" />
+            <div className="space-y-2">
+              {selectedSchedule.medications.map((med, index) => (
+                <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-white/5">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full flex-shrink-0" style={{ backgroundColor: '#F26C3A' }}>
+                    <Pill size={20} className="text-white" />
+                  </div>
+                  <div className="flex-1 flex items-center justify-between">
+                    <div>
+                      <h3 className="text-base font-semibold text-white">{med.name}</h3>
+                      <p className="text-sm text-white/70">{med.strength}</p>
                     </div>
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-white">{med.name}</h3>
-                      <p className="text-white/70">{med.strength}</p>
-                      <p className="text-white/70">
-                        {med.quantity} {med.quantity === 1 ? 'dose' : 'doses'}
-                      </p>
+                    <div className="text-sm text-white/70">
+                      {med.quantity}x {med.quantity === 1 ? 'pill' : 'pills'}
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
+            </div>
               
               <div className="pt-2 border-t border-white/10">
                 <div className="text-sm">

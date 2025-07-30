@@ -371,7 +371,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
           </DialogHeader>
           {selectedSchedule && (
             <div className="space-y-4">
-              <div className="flex items-center justify-between text-base">
+              <div className="flex items-center justify-between text-lg">
                 <span className={getTimeColor(selectedSchedule.time)}>
                   {(() => {
                     const time = selectedSchedule.time;

@@ -35,7 +35,6 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   // Fix: Only show example medications when showExample is true
   const displayMedications = showExample ? exampleMedications : (userProfile.medications || []);
   const [selectedSchedule, setSelectedSchedule] = useState<DoseSchedule | null>(null);
-  const [showAllMedicationsDialog, setShowAllMedicationsDialog] = useState(false);
   
   // Current medication being worked on (last one in the list) - only if showing example
   const currentMedication = showExample ? displayMedications[displayMedications.length - 1] : null;
@@ -337,14 +336,6 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
     );
   }
 
-  // Expose setShowAllMedicationsDialog to parent for Header button
-  React.useEffect(() => {
-    const element = document.querySelector('[data-medications-screen]') as any;
-    if (element) {
-      element._setShowAllMedicationsDialog = setShowAllMedicationsDialog;
-    }
-  }, []);
-
   return (
     <>
       <div className="animate-fade-in px-2 pb-2 space-y-4" data-medications-screen>
@@ -419,32 +410,6 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               </div>
             </div>
           )}
-        </DialogContent>
-      </Dialog>
-
-      {/* All Medications Dialog - Simplified */}
-      <Dialog open={showAllMedicationsDialog} onOpenChange={setShowAllMedicationsDialog}>
-        <DialogContent className="sm:max-w-2xl max-h-[80vh]">
-          <DialogHeader>
-            <DialogTitle>All Medications ({displayMedications.length})</DialogTitle>
-          </DialogHeader>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[60vh] overflow-y-auto">
-            {displayMedications.map((med, index) => (
-              <div key={med.id || index} className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full flex-shrink-0" style={{ backgroundColor: '#F26C3A' }}>
-                  <Pill size={16} className="text-white" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 text-white">
-                    <span className="font-semibold">{med.name}</span>
-                    <span className="text-white/80 text-sm">{med.strength}</span>
-                    <span className="text-white/60">•</span>
-                    <span className="text-white/70 text-sm capitalize">{med.form}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
         </DialogContent>
       </Dialog>
     </>

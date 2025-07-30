@@ -4,6 +4,7 @@ import { OnboardingStep, UserRole } from '@/types/onboarding';
 import WelcomeScreen from './WelcomeScreen';
 import AccountInfoScreen from './AccountInfoScreen';
 import MedicationsScreen from './MedicationsScreen';
+import AllMedicationsScreen from './AllMedicationsScreen';
 import SingleMedicationCaptureScreen from './SingleMedicationCaptureScreen';
 import ProgressIndicator from './ProgressIndicator';
 import Header from '../Header';
@@ -26,6 +27,7 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
   const [showExample, setShowExample] = useState(true); // Changed to default to true
   const [previewRole, setPreviewRole] = useState<UserRole | null>(UserRole.PrimaryUser); // Default to PrimaryUser
   const [showSingleMedicationCapture, setShowSingleMedicationCapture] = useState(false);
+  const [showAllMedications, setShowAllMedications] = useState(false);
 
   // Example medications matching the specified schedule
   const exampleMedications = [
@@ -146,6 +148,17 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
   };
 
   const renderStep = () => {
+    // Show all medications screen when requested
+    if (showAllMedications) {
+      const medications = showExample ? exampleMedications : userProfile.medications;
+      return (
+        <AllMedicationsScreen 
+          medications={medications}
+          onBack={() => setShowAllMedications(false)}
+        />
+      );
+    }
+
     // Show single medication capture screen when requested
     if (showSingleMedicationCapture) {
       return (
@@ -218,13 +231,7 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
         showMedicationSchedule={showMedicationSchedule}
         setShowMedicationSchedule={currentStep === OnboardingStep.Medications ? setShowMedicationSchedule : undefined}
         medicationCount={currentStep === OnboardingStep.Medications ? (showExample ? exampleMedications.length : userProfile.medications?.length || 0) : undefined}
-        onShowAllMedications={currentStep === OnboardingStep.Medications ? () => {
-          // This will be handled by the MedicationsScreen component
-          const medicationsScreen = document.querySelector('[data-medications-screen]') as any;
-          if (medicationsScreen?._setShowAllMedicationsDialog) {
-            medicationsScreen._setShowAllMedicationsDialog(true);
-          }
-        } : undefined}
+        onShowAllMedications={currentStep === OnboardingStep.Medications ? () => setShowAllMedications(true) : undefined}
       />
       <div className="flex-1 flex flex-col overflow-hidden pt-2">
         <div className="flex-1 overflow-hidden px-8 pb-8">

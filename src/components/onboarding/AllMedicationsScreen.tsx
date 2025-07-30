@@ -39,10 +39,9 @@ const AllMedicationsScreen: React.FC<AllMedicationsScreenProps> = ({ medications
               </div>
               <div className="flex-1 min-w-0">
                 <div className="text-white">
-                  <div className="font-semibold text-lg leading-tight">{med.name}</div>
-                  <div className="flex items-center gap-2 text-sm text-white/80 mt-1">
+                  <div className="font-semibold text-base leading-tight">{med.name}</div>
+                  <div className="flex items-center gap-3 text-base text-white/80 mt-1">
                     <span>{med.strength}</span>
-                    <span className="text-white/60">•</span>
                     <span className="capitalize">{med.form}</span>
                   </div>
                 </div>

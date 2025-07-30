@@ -344,24 +344,24 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
           <div className="flex items-center justify-between">
             {/* Medication name and details - all on one line */}
             <div className="flex-1">
-              <h2 className="text-2xl font-bold text-white leading-tight">
-                {currentMedication ? (
-                  <span className="flex items-center gap-2 flex-wrap">
-                    <span>{currentMedication.name}</span>
-                    <span className="text-xl text-white/90">{currentMedication.strength}</span>
-                    <span className="text-white/60">•</span>
-                    <span className="text-lg text-white/80">{currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}</span>
-                    {currentMedication.asNeeded && (
-                      <>
-                        <span className="text-white/60">•</span>
-                        <span className="text-sm text-white/60">As-needed: {currentMedication.asNeeded.maxPerDay}x/day</span>
-                      </>
-                    )}
-                  </span>
-                ) : (
-                  'New Medication'
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-semibold text-white leading-tight">
+                  {currentMedication ? (
+                    <span className="flex items-center gap-3">
+                      <span>{currentMedication.name}</span>
+                      <span className="text-2xl text-white/80">{currentMedication.strength}</span>
+                      <span className="text-2xl text-white/80">{currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}</span>
+                    </span>
+                  ) : (
+                    'New Medication'
+                  )}
+                </h2>
+                {currentMedication?.asNeeded && (
+                  <div className="text-lg text-white/60">
+                    As-needed: {currentMedication.asNeeded.maxPerDay}x/day
+                  </div>
                 )}
-              </h2>
+              </div>
             </div>
           </div>
         </div>

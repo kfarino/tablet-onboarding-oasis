@@ -368,15 +368,20 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>
-              Dose Details - {selectedSchedule ? (() => {
-                const time = selectedSchedule.time;
-                // If time already has AM/PM, use it as is
-                if (time.includes('AM') || time.includes('PM')) {
-                  return time;
-                }
-                // Otherwise, use the original formatTimeDisplay and add AM/PM logic
-                return formatTimeDisplay(time);
-              })() : ''}
+              <span className="text-white">Dose Details - </span>
+              {selectedSchedule ? (
+                <span className={getTimeColor(selectedSchedule.time)}>
+                  {(() => {
+                    const time = selectedSchedule.time;
+                    // If time already has AM/PM, use it as is
+                    if (time.includes('AM') || time.includes('PM')) {
+                      return time;
+                    }
+                    // Otherwise, use the original formatTimeDisplay and add AM/PM logic
+                    return formatTimeDisplay(time);
+                  })()}
+                </span>
+              ) : ''}
             </DialogTitle>
           </DialogHeader>
           {selectedSchedule && (

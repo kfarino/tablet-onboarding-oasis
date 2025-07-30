@@ -387,7 +387,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
           {selectedSchedule && (
             <div className="space-y-4">
               <div className="pt-2 border-b border-white/10 pb-4">
-                <div className="text-sm">
+                <div className="text-base">
                   <span className="text-white/70">Schedule: </span>
                   <span className="text-white font-medium">
                     {selectedSchedule.dayPattern === 'everyday' 
@@ -410,8 +410,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                     </div>
                     <div className="flex-1 flex items-center justify-between">
                       <div>
-                        <h3 className="text-base font-semibold text-white">{med.name}</h3>
-                        <p className="text-sm text-white/70">{med.strength}</p>
+                        <h3 className="text-base font-semibold text-white">{med.name} {med.strength}</h3>
                       </div>
                       <div className="text-sm text-white/70">
                         {med.quantity}x {med.quantity === 1 ? 'pill' : 'pills'}

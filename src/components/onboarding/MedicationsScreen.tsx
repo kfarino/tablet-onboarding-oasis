@@ -331,20 +331,20 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
       <div className="animate-fade-in flex flex-col h-full" data-medications-screen>
         {/* Sticky medication header */}
         <div className="sticky top-0 z-10 bg-charcoal px-2 py-4 border-b border-white/10">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col items-center text-center">
             <h2 className="text-2xl font-semibold text-white leading-tight">
               {currentMedication ? (
                 <span className="flex items-center gap-3">
                   <span>{currentMedication.name}</span>
                   <span>{currentMedication.strength}</span>
-                  <span className="text-white/80">{currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}</span>
+                  <span>{currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}</span>
                 </span>
               ) : (
                 'New Medication'
               )}
             </h2>
             {currentMedication?.asNeeded && (
-              <div className="text-lg text-white/60">
+              <div className="text-lg text-white mt-2">
                 As-needed: {currentMedication.asNeeded.maxPerDay}x/day
               </div>
             )}

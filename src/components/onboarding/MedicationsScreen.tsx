@@ -253,15 +253,15 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
           {/* No-data medication container matching AccountInfoScreen style */}
           <div className="rounded-lg border border-white/10 bg-white/5 px-4 py-4">
             <div className="flex items-center justify-between">
-              <div className="text-2xl font-semibold text-white/60 leading-tight italic">
+              <div className="text-2xl font-semibold text-white/40 leading-tight italic">
                 <span className="flex items-center gap-3">
-                  <span>[Name]</span>
-                  <span className="text-white/50">[Strength]</span>
-                  <span className="text-white/50">[Form]</span>
+                  <span>Name</span>
+                  <span className="text-white/30">Strength</span>
+                  <span className="text-white/30">Form</span>
                 </span>
               </div>
-              <div className="text-lg text-white/40 italic">
-                [As-needed: frequency per day]
+              <div className="text-lg text-white/30 italic">
+                As-needed: frequency per day
               </div>
             </div>
           </div>

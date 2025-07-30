@@ -343,11 +343,6 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                 'New Medication'
               )}
             </h2>
-            {currentMedication?.asNeeded && (
-              <div className="text-lg text-white mt-2">
-                As-needed: {currentMedication.asNeeded.maxPerDay}x/day
-              </div>
-            )}
           </div>
         </div>
 

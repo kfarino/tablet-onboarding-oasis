@@ -186,16 +186,21 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               >
                 {/* Time column - left aligned with quantity and time */}
                 <div className="p-2 pl-4 h-[40px] flex items-center justify-start border-r border-white/10">
-                  <div className={`text-xl font-bold ${getTimeColor(time)}`}>
+                  <div className="text-xl font-bold flex items-center gap-1">
                     {hasCurrentMedication && currentMedication && (() => {
                       // Find the current medication's quantity for this time
                       const currentMedSchedule = timeSchedules.find(schedule => schedule.isCurrentMedSchedule);
                       if (currentMedSchedule && currentMedSchedule.currentMedQuantity) {
                         const quantity = currentMedSchedule.currentMedQuantity;
-                        return `${quantity}x @ ${formatTimeDisplay(time)}`;
+                        return (
+                          <>
+                            <span className="text-white">{quantity}x @</span>
+                            <span className={getTimeColor(time)}>{formatTimeDisplay(time)}</span>
+                          </>
+                        );
                       }
-                      return formatTimeDisplay(time);
-                    })() || formatTimeDisplay(time)}
+                      return <span className={getTimeColor(time)}>{formatTimeDisplay(time)}</span>;
+                    })() || <span className={getTimeColor(time)}>{formatTimeDisplay(time)}</span>}
                   </div>
                 </div>
                 

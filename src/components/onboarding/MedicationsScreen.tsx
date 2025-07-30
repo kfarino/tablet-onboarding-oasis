@@ -337,40 +337,41 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
     );
   }
 
+  // Expose setShowAllMedicationsDialog to parent for Header button
+  React.useEffect(() => {
+    const element = document.querySelector('[data-medications-screen]') as any;
+    if (element) {
+      element._setShowAllMedicationsDialog = setShowAllMedicationsDialog;
+    }
+  }, []);
+
   return (
     <>
-      <div className="animate-fade-in px-2 pb-2 space-y-4">
+      <div className="animate-fade-in px-2 pb-2 space-y-4" data-medications-screen>
         {/* Current medication header - clean and streamlined */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            {/* Medication name and details */}
+            {/* Medication name and details - all on one line */}
             <div className="flex-1">
               <h2 className="text-2xl font-bold text-white leading-tight">
-                {currentMedication ? 
-                  `${currentMedication.name} ${currentMedication.strength}` :
+                {currentMedication ? (
+                  <span className="flex items-center gap-2 flex-wrap">
+                    <span>{currentMedication.name}</span>
+                    <span className="text-xl text-white/90">{currentMedication.strength}</span>
+                    <span className="text-white/60">•</span>
+                    <span className="text-lg text-white/80">{currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}</span>
+                    {currentMedication.asNeeded && (
+                      <>
+                        <span className="text-white/60">•</span>
+                        <span className="text-sm text-white/60">As-needed: {currentMedication.asNeeded.maxPerDay}x/day</span>
+                      </>
+                    )}
+                  </span>
+                ) : (
                   'New Medication'
-                }
+                )}
               </h2>
-              {currentMedication && (
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="text-white/80">{currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}</span>
-                  {currentMedication.asNeeded && (
-                    <>
-                      <span className="text-white/60">•</span>
-                      <span className="text-white/60 text-sm">As-needed: {currentMedication.asNeeded.maxPerDay}x/day</span>
-                    </>
-                  )}
-                </div>
-              )}
             </div>
-            
-            {/* Total medication count - subtle but accessible */}
-            <button 
-              className="px-4 py-2 text-sm text-white/70 hover:text-white border border-white/20 hover:border-white/40 rounded-lg transition-all duration-200 hover:bg-white/5" 
-              onClick={() => setShowAllMedicationsDialog(true)}
-            >
-              {displayMedications.length} {displayMedications.length === 1 ? 'medication' : 'medications'}
-            </button>
           </div>
         </div>
 

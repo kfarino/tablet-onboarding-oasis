@@ -217,6 +217,14 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
         previewRole={previewRole}
         showMedicationSchedule={showMedicationSchedule}
         setShowMedicationSchedule={currentStep === OnboardingStep.Medications ? setShowMedicationSchedule : undefined}
+        medicationCount={currentStep === OnboardingStep.Medications ? (showExample ? exampleMedications.length : userProfile.medications?.length || 0) : undefined}
+        onShowAllMedications={currentStep === OnboardingStep.Medications ? () => {
+          // This will be handled by the MedicationsScreen component
+          const medicationsScreen = document.querySelector('[data-medications-screen]') as any;
+          if (medicationsScreen?._setShowAllMedicationsDialog) {
+            medicationsScreen._setShowAllMedicationsDialog(true);
+          }
+        } : undefined}
       />
       <div className="flex-1 flex flex-col overflow-hidden pt-2">
         <div className="flex-1 overflow-hidden px-8 pb-8">

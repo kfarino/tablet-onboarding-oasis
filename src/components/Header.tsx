@@ -14,6 +14,8 @@ interface HeaderProps {
   previewRole?: UserRole | null;
   showMedicationSchedule?: boolean;
   setShowMedicationSchedule?: (show: boolean) => void;
+  medicationCount?: number;
+  onShowAllMedications?: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ 
@@ -24,7 +26,9 @@ const Header: React.FC<HeaderProps> = ({
   onTogglePreviewRole,
   previewRole,
   showMedicationSchedule,
-  setShowMedicationSchedule
+  setShowMedicationSchedule,
+  medicationCount,
+  onShowAllMedications
 }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const { nextStep } = useOnboarding();
@@ -98,29 +102,40 @@ const Header: React.FC<HeaderProps> = ({
           </Button>
         )}
         
+        {onTogglePreviewRole && currentStep !== OnboardingStep.Welcome && (
+          <Button
+            variant="ghost"
+            size="icon-circle"
+            onClick={onTogglePreviewRole}
+            className="absolute left-12 bg-white/10 text-white hover:bg-white/20 hover:text-white"
+            aria-label="Toggle role"
+          >
+            <span className="text-sm font-bold">
+              {previewRole === UserRole.PrimaryUser ? 'P' : previewRole === UserRole.Caregiver ? 'C' : '?'}
+            </span>
+          </Button>
+        )}
+        
         {showPreviewButton && toggleExample && (
           <Button
             variant="ghost"
             size="icon-circle"
             onClick={toggleExample}
-            className={`absolute right-20 ${showExample ? 'bg-white/20' : 'bg-white/10'} text-white hover:bg-white/20 hover:text-white flex items-center justify-center`}
+            className={`absolute left-28 ${showExample ? 'bg-white/20' : 'bg-white/10'} text-white hover:bg-white/20 hover:text-white flex items-center justify-center`}
             aria-label="Toggle preview"
           >
             {showExample ? <Eye className="h-7 w-7" /> : <EyeOff className="h-7 w-7" />}
           </Button>
         )}
         
-        {onTogglePreviewRole && currentStep !== OnboardingStep.Welcome && (
+        {medicationCount !== undefined && onShowAllMedications && currentStep === OnboardingStep.Medications && (
           <Button
             variant="ghost"
-            size="icon-circle"
-            onClick={onTogglePreviewRole}
-            className="absolute right-36 bg-white/10 text-white hover:bg-white/20 hover:text-white"
-            aria-label="Toggle role"
+            onClick={onShowAllMedications}
+            className="absolute right-0 text-white hover:bg-white/10 hover:text-white text-sm px-3 py-1"
+            aria-label="View all medications"
           >
-            <span className="text-sm font-bold">
-              {previewRole === UserRole.PrimaryUser ? 'P' : previewRole === UserRole.Caregiver ? 'C' : '?'}
-            </span>
+            View all
           </Button>
         )}
         

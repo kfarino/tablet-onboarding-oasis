@@ -241,23 +241,19 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
     );
   };
 
-  // Check if we should show empty state - when not showing example AND no real medications
   if (!showExample && displayMedications.length === 0) {
     return (
       <div className="animate-fade-in flex flex-col h-full" data-medications-screen>
         {/* Sticky medication header - matching the data state */}
         <div className="sticky top-0 z-10 bg-charcoal px-2 py-4 border-b border-white/10">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-semibold text-white/40 leading-tight italic">
+          <div className="flex flex-col items-center text-center">
+            <h2 className="text-2xl font-semibold text-white/40 leading-tight whitespace-nowrap italic">
               <span className="flex items-center gap-3">
                 <span>Name</span>
                 <span>Strength</span>
                 <span className="text-white/30">Form</span>
               </span>
             </h2>
-            <div className="text-lg text-white/30 italic">
-              As-needed: frequency per day
-            </div>
           </div>
         </div>
 

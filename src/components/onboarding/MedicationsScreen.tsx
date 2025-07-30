@@ -332,7 +332,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         {/* Sticky medication header */}
         <div className="sticky top-0 z-10 bg-charcoal px-2 py-4 border-b border-white/10">
           <div className="flex flex-col items-center text-center">
-            <h2 className="text-2xl font-semibold text-white leading-tight">
+            <h2 className="text-2xl font-semibold text-white leading-tight whitespace-nowrap">
               {currentMedication ? (
                 <span className="flex items-center gap-3">
                   <span>{currentMedication.name}</span>

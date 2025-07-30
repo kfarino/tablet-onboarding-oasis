@@ -370,10 +370,12 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
             <DialogTitle>
               Dose Details - {selectedSchedule ? (() => {
                 const time = selectedSchedule.time;
-                const [hours, minutes] = time.split(':').map(Number);
-                const period = hours >= 12 ? 'PM' : 'AM';
-                const displayHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
-                return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
+                // If time already has AM/PM, use it as is
+                if (time.includes('AM') || time.includes('PM')) {
+                  return time;
+                }
+                // Otherwise, use the original formatTimeDisplay and add AM/PM logic
+                return formatTimeDisplay(time);
               })() : ''}
             </DialogTitle>
           </DialogHeader>

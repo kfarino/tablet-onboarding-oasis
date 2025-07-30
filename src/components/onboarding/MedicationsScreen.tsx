@@ -184,27 +184,18 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                 }`} 
                 style={{ gridTemplateColumns: '120px repeat(7, 1fr)' }}
               >
-                {/* Time column - left aligned with pill count inline */}
+                {/* Time column - left aligned with quantity and time */}
                 <div className="p-2 pl-4 h-[40px] flex items-center justify-start border-r border-white/10">
-                  <div className="flex items-center gap-2">
-                    <div className={`text-sm font-bold ${getTimeColor(time)}`}>
-                      {formatTimeDisplay(time)}
-                    </div>
-                    {hasCurrentMedication && currentMedication && (
-                      (() => {
-                        // Find the current medication's quantity for this time
-                        const currentMedSchedule = timeSchedules.find(schedule => schedule.isCurrentMedSchedule);
-                        if (currentMedSchedule && currentMedSchedule.currentMedQuantity) {
-                          const quantity = currentMedSchedule.currentMedQuantity;
-                          return (
-                            <div className="text-xs text-white/70">
-                              ({quantity}x {quantity === 1 ? 'pill' : 'pills'})
-                            </div>
-                          );
-                        }
-                        return null;
-                      })()
-                    )}
+                  <div className={`text-xl font-bold ${getTimeColor(time)}`}>
+                    {hasCurrentMedication && currentMedication && (() => {
+                      // Find the current medication's quantity for this time
+                      const currentMedSchedule = timeSchedules.find(schedule => schedule.isCurrentMedSchedule);
+                      if (currentMedSchedule && currentMedSchedule.currentMedQuantity) {
+                        const quantity = currentMedSchedule.currentMedQuantity;
+                        return `${quantity}x @ ${formatTimeDisplay(time)}`;
+                      }
+                      return formatTimeDisplay(time);
+                    })() || formatTimeDisplay(time)}
                   </div>
                 </div>
                 

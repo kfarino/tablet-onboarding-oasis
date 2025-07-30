@@ -135,7 +135,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
           gridTemplateColumns: '120px repeat(7, 1fr)'
         }}>
           <div className="p-1 text-xl font-bold text-white text-center border-r border-white/10">
-            Time
+            Time (#/dose)
           </div>
           {daysOfWeek.map((day) => (
             <div key={day} className="p-1 text-xl font-bold text-white text-center border-r last:border-r-0 border-white/10">
@@ -269,7 +269,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               gridTemplateColumns: '120px repeat(7, 1fr)'
             }}>
               <div className="p-1 text-xl font-bold text-white text-center border-r border-white/10">
-                Time
+                Time (#/dose)
               </div>
               {['Su', 'M', 'T', 'W', 'Th', 'F', 'Sa'].map((day) => (
                 <div key={day} className="p-1 text-xl font-bold text-white text-center border-r last:border-r-0 border-white/10">

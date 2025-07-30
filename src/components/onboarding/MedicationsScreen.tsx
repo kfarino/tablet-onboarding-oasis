@@ -194,8 +194,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                         const quantity = currentMedSchedule.currentMedQuantity;
                         return (
                           <>
-                            <span className="text-white">{quantity}x @</span>
                             <span className={getTimeColor(time)}>{formatTimeDisplay(time)}</span>
+                            <span className="text-white">({quantity}x)</span>
                           </>
                         );
                       }

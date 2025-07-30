@@ -22,7 +22,7 @@ const AllMedicationsScreen: React.FC<AllMedicationsScreenProps> = ({ medications
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h1 className="text-3xl font-bold text-white">All Medications ({medications.length})</h1>
+          <h1 className="text-3xl font-bold text-white">Your health items ({medications.length})</h1>
         </div>
       </div>
 

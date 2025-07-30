@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Medication } from '@/types/onboarding';
 import { Badge } from '@/components/ui/badge';
-import { formatTimeDisplay, parseOriginalTimeForSorting, getTimeColor } from '@/utils/dateUtils';
+import { formatTimeDisplay, parseOriginalTimeForSorting, getTimeColor, getDayAbbreviation } from '@/utils/dateUtils';
 
 interface MedicationsScreenProps {
   showExample?: boolean;
@@ -388,15 +388,17 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
             <div className="space-y-4">
               <div className="pt-2 border-b border-white/10 pb-4">
                 <div className="text-sm">
-                  <span className="text-white/70">Schedule:</span>
-                  <p className="text-white font-medium">
+                  <span className="text-white/70">Schedule: </span>
+                  <span className="text-white font-medium">
                     {selectedSchedule.dayPattern === 'everyday' 
-                      ? 'Every day'
-                      : selectedSchedule.dayPattern.split(',').map(day => 
-                          day.charAt(0).toUpperCase() + day.slice(1)
-                        ).join(', ')
+                      ? 'Everyday'
+                      : selectedSchedule.dayPattern.split(',').map(day => {
+                          // Get abbreviated form and remove the first 2 characters if it's 3 chars (Mon -> M, Tue -> T, etc.)
+                          const abbrev = getDayAbbreviation(day);
+                          return abbrev.length === 3 ? abbrev.charAt(0) : abbrev;
+                        }).join(',')
                     }
-                  </p>
+                  </span>
                 </div>
               </div>
               

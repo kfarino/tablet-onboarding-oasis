@@ -134,8 +134,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         <div className="grid text-xs bg-charcoal" style={{ 
           gridTemplateColumns: '120px repeat(7, 1fr)'
         }}>
-          <div className="p-1 text-xl font-bold text-white text-center border-r border-white/10">
-            Time (#/dose)
+          <div className="p-1 text-xl font-bold text-white text-center border-r border-white/10 whitespace-nowrap">
+            Time <span className="text-sm">(#/dose)</span>
           </div>
           {daysOfWeek.map((day) => (
             <div key={day} className="p-1 text-xl font-bold text-white text-center border-r last:border-r-0 border-white/10">
@@ -195,7 +195,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                         return (
                           <>
                             <span className={getTimeColor(time)}>{formatTimeDisplay(time)}</span>
-                            <span className="text-white">({quantity}x)</span>
+                            <span className="text-white text-sm">({quantity}x)</span>
                           </>
                         );
                       }
@@ -268,8 +268,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
             <div className="grid text-xs bg-charcoal" style={{ 
               gridTemplateColumns: '120px repeat(7, 1fr)'
             }}>
-              <div className="p-1 text-xl font-bold text-white text-center border-r border-white/10">
-                Time (#/dose)
+              <div className="p-1 text-xl font-bold text-white text-center border-r border-white/10 whitespace-nowrap">
+                Time <span className="text-sm">(#/dose)</span>
               </div>
               {['Su', 'M', 'T', 'W', 'Th', 'F', 'Sa'].map((day) => (
                 <div key={day} className="p-1 text-xl font-bold text-white text-center border-r last:border-r-0 border-white/10">

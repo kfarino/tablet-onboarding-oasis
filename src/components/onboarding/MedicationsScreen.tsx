@@ -248,78 +248,79 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   // Check if we should show empty state - when not showing example AND no real medications
   if (!showExample && displayMedications.length === 0) {
     return (
-      <div className="bg-charcoal text-white rounded-lg p-4 relative min-h-[400px]">
-        <div className="space-y-4">
-          {/* No-data medication container matching AccountInfoScreen style */}
-          <div className="rounded-lg border border-white/10 bg-white/5 px-4 py-4">
-            <div className="flex items-center justify-between">
-              <div className="text-2xl font-semibold text-white/40 leading-tight italic">
-                <span className="flex items-center gap-3">
-                  <span>Name</span>
-                  <span className="text-white/30">Strength</span>
-                  <span className="text-white/30">Form</span>
-                </span>
-              </div>
-              <div className="text-lg text-white/30 italic">
-                As-needed: frequency per day
-              </div>
+      <div className="animate-fade-in flex flex-col h-full" data-medications-screen>
+        {/* Sticky medication header - matching the data state */}
+        <div className="sticky top-0 z-10 bg-charcoal px-2 py-4 border-b border-white/10">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-semibold text-white/40 leading-tight italic">
+              <span className="flex items-center gap-3">
+                <span>Name</span>
+                <span>Strength</span>
+                <span className="text-white/30">Form</span>
+              </span>
+            </h2>
+            <div className="text-lg text-white/30 italic">
+              As-needed: frequency per day
             </div>
           </div>
-          
-          {/* Empty schedule grid matching the layout but with no-data styling */}
-          <div className="rounded-lg overflow-hidden border-2 border-white/10 bg-white/5">
+        </div>
+
+        {/* Scrollable schedule container - matching the data state */}
+        <div className="flex-1 overflow-y-auto px-2 pb-2">
+          <div className="rounded-lg overflow-hidden border border-white/10 bg-charcoal">
             {/* Header */}
-            <div className="grid text-xs" style={{ 
-              gridTemplateColumns: '120px repeat(7, 1fr)',
-              backgroundColor: 'rgba(255, 255, 255, 0.05)'
+            <div className="grid text-xs bg-charcoal" style={{ 
+              gridTemplateColumns: '120px repeat(7, 1fr)'
             }}>
-              <div className="p-2 font-semibold text-white/60 text-center border-r border-white/10">
+              <div className="p-2 font-semibold text-white text-center border-r border-white/10">
                 Time
               </div>
               {['Su', 'M', 'T', 'W', 'Th', 'F', 'Sa'].map((day) => (
-                <div key={day} className="p-2 font-semibold text-white/60 text-center border-r last:border-r-0 border-white/10">
+                <div key={day} className="p-2 font-semibold text-white text-center border-r last:border-r-0 border-white/10">
                   {day}
                 </div>
               ))}
             </div>
             
             {/* AM time slot */}
-            <div className="grid border-b border-white/10" style={{ 
-              gridTemplateColumns: '120px repeat(7, 1fr)',
-              backgroundColor: 'rgba(0, 0, 0, 0.2)'
+            <div className="grid border-b border-white/10 bg-charcoal" style={{ 
+              gridTemplateColumns: '120px repeat(7, 1fr)'
             }}>
-              <div className="p-2 text-center min-h-[50px] flex items-center justify-center border-r border-white/10">
-                <div className="text-sm font-semibold text-orange-400">AM</div>
+              <div className="p-2 pl-4 h-[40px] flex items-center justify-start border-r border-white/10">
+                <div className="text-xl font-bold text-orange-400">AM</div>
               </div>
               {Array.from({ length: 7 }).map((_, dayIndex) => (
-                <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[50px] flex items-center justify-center border-white/10">
-                  <div className="w-full h-8 rounded bg-white/10"></div>
+                <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[40px] flex items-center justify-center border-white/10">
+                  <div className="flex gap-1 w-full">
+                    <div className="rounded flex-1 h-8 bg-white/10"></div>
+                  </div>
                 </div>
               ))}
             </div>
             
-            {/* Noon indicator */}
+            {/* Noon separator */}
             <div className="grid" style={{ 
               gridTemplateColumns: '120px repeat(7, 1fr)',
               backgroundColor: 'rgba(255, 255, 255, 0.2)'
             }}>
-              <div className="py-0.5 text-center flex items-center justify-center border-r border-white/20">
+              <div className="py-0.5 pl-4 flex items-center justify-start border-r border-white/20">
                 <div className="text-sm font-semibold text-white">Noon</div>
               </div>
               <div className="col-span-7 py-0.5"></div>
             </div>
             
             {/* PM time slot */}
-            <div className="grid border-b border-white/10" style={{ 
-              gridTemplateColumns: '120px repeat(7, 1fr)',
-              backgroundColor: 'rgba(0, 0, 0, 0.2)'
+            <div className="grid border-b border-white/10 bg-charcoal" style={{ 
+              gridTemplateColumns: '120px repeat(7, 1fr)'
             }}>
-              <div className="p-2 text-center min-h-[50px] flex items-center justify-center border-r border-white/10">
-                <div className="text-sm font-semibold text-blue-400">PM</div>
+              <div className="p-2 pl-4 h-[40px] flex items-center justify-start border-r border-white/10">
+                <div className="text-xl font-bold text-blue-400">PM</div>
               </div>
               {Array.from({ length: 7 }).map((_, dayIndex) => (
-                <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[50px] flex items-center justify-center border-white/10">
-                  <div className="w-full h-8 rounded bg-white/10"></div>
+                <div key={dayIndex} className="p-2 border-r last:border-r-0 min-h-[40px] flex items-center justify-center border-white/10">
+                  <div className="flex gap-1 w-full">
+                    <div className="rounded flex-1 h-8 bg-white/10"></div>
+                  </div>
                 </div>
               ))}
             </div>

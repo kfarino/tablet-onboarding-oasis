@@ -331,36 +331,33 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
 
   return (
     <>
-      <div className="animate-fade-in px-2 pb-2 space-y-4" data-medications-screen>
-        {/* Current medication header - clean and streamlined */}
-        <div className="space-y-3">
+      <div className="animate-fade-in flex flex-col h-full" data-medications-screen>
+        {/* Sticky medication header */}
+        <div className="sticky top-0 z-10 bg-charcoal px-2 py-4 border-b border-white/10">
           <div className="flex items-center justify-between">
-            {/* Medication name and details - all on one line */}
-            <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-semibold text-white leading-tight">
-                  {currentMedication ? (
-                    <span className="flex items-center gap-3">
-                      <span>{currentMedication.name}</span>
-                      <span className="text-2xl text-white/80">{currentMedication.strength}</span>
-                      <span className="text-2xl text-white/80">{currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}</span>
-                    </span>
-                  ) : (
-                    'New Medication'
-                  )}
-                </h2>
-                {currentMedication?.asNeeded && (
-                  <div className="text-lg text-white/60">
-                    As-needed: {currentMedication.asNeeded.maxPerDay}x/day
-                  </div>
-                )}
+            <h2 className="text-2xl font-semibold text-white leading-tight">
+              {currentMedication ? (
+                <span className="flex items-center gap-3">
+                  <span>{currentMedication.name}</span>
+                  <span className="text-2xl text-white/80">{currentMedication.strength}</span>
+                  <span className="text-2xl text-white/80">{currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}</span>
+                </span>
+              ) : (
+                'New Medication'
+              )}
+            </h2>
+            {currentMedication?.asNeeded && (
+              <div className="text-lg text-white/60">
+                As-needed: {currentMedication.asNeeded.maxPerDay}x/day
               </div>
-            </div>
+            )}
           </div>
         </div>
 
-        {/* Consolidated schedule - only show if we have medications */}
-        {displayMedications.length > 0 && renderConsolidatedSchedule()}
+        {/* Scrollable schedule container */}
+        <div className="flex-1 overflow-y-auto px-2 pb-2">
+          {displayMedications.length > 0 && renderConsolidatedSchedule()}
+        </div>
       </div>
 
       {/* Dose Details Dialog */}

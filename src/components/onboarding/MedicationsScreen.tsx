@@ -367,9 +367,11 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
       <Dialog open={!!selectedSchedule} onOpenChange={() => setSelectedSchedule(null)}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>
-              <span className="text-white">Dose Details - </span>
-              {selectedSchedule ? (
+            <DialogTitle className="text-white">Dose Details</DialogTitle>
+          </DialogHeader>
+          {selectedSchedule && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between text-base">
                 <span className={getTimeColor(selectedSchedule.time)}>
                   {(() => {
                     const time = selectedSchedule.time;
@@ -381,43 +383,36 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                     return formatTimeDisplay(time);
                   })()}
                 </span>
-              ) : ''}
-            </DialogTitle>
-          </DialogHeader>
-          {selectedSchedule && (
-            <div className="space-y-4">
-              <div className="pt-2 border-b border-white/10 pb-4">
-                <div className="text-base">
-                  <span className="text-white/70">Schedule: </span>
-                  <span className="text-white font-medium">
-                    {selectedSchedule.dayPattern === 'everyday' 
-                      ? 'Everyday'
-                      : selectedSchedule.dayPattern.split(',').map(day => {
-                          // Get abbreviated form and remove the first 2 characters if it's 3 chars (Mon -> M, Tue -> T, etc.)
-                          const abbrev = getDayAbbreviation(day);
-                          return abbrev.length === 3 ? abbrev.charAt(0) : abbrev;
-                        }).join(',')
-                    }
-                  </span>
-                </div>
+                <span className="text-white font-medium">
+                  {selectedSchedule.dayPattern === 'everyday' 
+                    ? 'Everyday'
+                    : selectedSchedule.dayPattern.split(',').map(day => {
+                        // Get abbreviated form and remove the first 2 characters if it's 3 chars (Mon -> M, Tue -> T, etc.)
+                        const abbrev = getDayAbbreviation(day);
+                        return abbrev.length === 3 ? abbrev.charAt(0) : abbrev;
+                      }).join(',')
+                  }
+                </span>
               </div>
               
-              <div className="space-y-2">
-                {selectedSchedule.medications.map((med, index) => (
-                  <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-white/5">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-full flex-shrink-0" style={{ backgroundColor: '#F26C3A' }}>
-                      <Pill size={20} className="text-white" />
-                    </div>
-                    <div className="flex-1 flex items-center justify-between">
-                      <div>
-                        <h3 className="text-base font-semibold text-white">{med.name} {med.strength}</h3>
+              <div className="border-t border-white/10 pt-4">
+                <div className="space-y-2">
+                  {selectedSchedule.medications.map((med, index) => (
+                    <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-white/5">
+                      <div className="flex items-center justify-center w-10 h-10 rounded-full flex-shrink-0" style={{ backgroundColor: '#F26C3A' }}>
+                        <Pill size={20} className="text-white" />
                       </div>
-                      <div className="text-sm text-white/70">
-                        {med.quantity}x {med.quantity === 1 ? 'pill' : 'pills'}
+                      <div className="flex-1 flex items-center justify-between">
+                        <div>
+                          <h3 className="text-base font-semibold text-white">{med.name} {med.strength}</h3>
+                        </div>
+                        <div className="text-sm text-white/70">
+                          {med.quantity}x {med.quantity === 1 ? 'pill' : 'pills'}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           )}

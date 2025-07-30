@@ -130,9 +130,9 @@ const Header: React.FC<HeaderProps> = ({
         
         {medicationCount !== undefined && onShowAllMedications && currentStep === OnboardingStep.Medications && (
           <Button
-            variant="ghost"
+            variant="outline"
             onClick={onShowAllMedications}
-            className="absolute right-0 text-white hover:bg-white/10 hover:text-white text-sm px-3 py-1"
+            className="absolute right-0 bg-white/10 border-white/30 text-white hover:bg-white/20 hover:border-white/50 hover:text-white text-sm px-4 py-2 rounded-lg transition-all duration-200"
             aria-label="View all medications"
           >
             View all

@@ -179,10 +179,13 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               
               {/* Time row */}
               <div 
-                className={`grid border-b border-white/10 transition-colors ${
-                  hasCurrentMedication ? 'bg-white/5' : 'bg-charcoal'
+                className={`grid border-b border-white/10 transition-all duration-300 bg-charcoal ${
+                  hasCurrentMedication ? 'border-l-4' : ''
                 }`} 
-                style={{ gridTemplateColumns: '120px repeat(7, 1fr)' }}
+                style={{ 
+                  gridTemplateColumns: '120px repeat(7, 1fr)',
+                  borderLeftColor: hasCurrentMedication ? currentMedColor : 'transparent'
+                }}
               >
                 {/* Time column - left aligned with quantity and time */}
                 <div className="p-1 pl-4 h-[28px] flex items-center justify-start border-r border-white/10">

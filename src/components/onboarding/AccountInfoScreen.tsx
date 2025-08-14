@@ -119,14 +119,6 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
               {displayRole === UserRole.PrimaryUser && (
                 <>
                   <p className="text-highlight text-xl">Primary User</p>
-                  <div className="flex items-center justify-end mt-1">
-                    <Phone className="text-highlight h-4 w-4 mr-2 flex-shrink-0" />
-                    <p className={`text-base ${showExample || userProfile.phoneNumber ? 'text-white' : 'text-white/60 italic'}`}>
-                      {showExample || userProfile.phoneNumber
-                        ? (showExample ? examplePrimaryUser.phoneNumber : userProfile.phoneNumber)
-                        : "Phone number"}
-                    </p>
-                  </div>
                 </>
               )}
             </div>

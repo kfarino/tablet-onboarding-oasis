@@ -71,7 +71,7 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
   const getAlertPreferenceLabel = (preference: string): string => {
     switch (preference) {
       case 'text': return 'Text Message';
-      case 'phone_call': return 'Phone Call';
+      case 'phone_call': return 'Phone';
       case 'app_notification': return 'App Notification';
       default: return 'Not set';
     }

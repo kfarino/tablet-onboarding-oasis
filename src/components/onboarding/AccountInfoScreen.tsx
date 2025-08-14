@@ -111,136 +111,136 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
 
 
 
-  // Single Card Layout - 25px+ font sizes for elderly users
+  // Horizontal Layout - 25px+ font sizes, minimal vertical space
   const splitLayout = (
     <div className="w-full">
-      <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-3">
-        {/* Main User Section */}
-        <div className="mb-3">
-          <div className="flex flex-col gap-1">
-            <p className={`text-3xl font-bold break-words ${showExample || userProfile.firstName || userProfile.lastName ? 'text-white' : 'text-white/60 italic'}`}>
-              {showExample || userProfile.firstName || userProfile.lastName
-                ? `${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.firstName : examplePrimaryUser.firstName) : userProfile.firstName || ""} ${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.lastName : examplePrimaryUser.lastName) : userProfile.lastName || ""}`
-                : "Name"}
-            </p>
-            {displayRole === UserRole.Caregiver && (
-              <p className="text-highlight text-2xl">Caregiver Admin</p>
-            )}
-            {displayRole === UserRole.PrimaryUser && (
-              <p className="text-highlight text-2xl">Primary User</p>
-            )}
-          </div>
-          
-          {/* User Details - Vertical Stack */}
-          <div className="space-y-1 mt-2">
-            {displayRole === UserRole.Caregiver && (
-              <>
-                <div className="flex items-center">
-                  <User className="text-highlight h-6 w-6 mr-3 flex-shrink-0" />
-                  <p className={`text-2xl ${showExample || userProfile.gender ? 'text-white' : 'text-white/60 italic'}`}>
+      <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2">
+        {displayRole === UserRole.Caregiver ? (
+          // Two-column horizontal layout for caregiver
+          <div className="grid grid-cols-2 gap-4">
+            {/* Left Column - Caregiver Info */}
+            <div>
+              <div className="flex flex-col gap-1 mb-2">
+                <p className={`text-3xl font-bold break-words ${showExample || userProfile.firstName || userProfile.lastName ? 'text-white' : 'text-white/60 italic'}`}>
+                  {showExample || userProfile.firstName || userProfile.lastName
+                    ? `${showExample ? exampleProfile.firstName : userProfile.firstName || ""} ${showExample ? exampleProfile.lastName : userProfile.lastName || ""}`
+                    : "Name"}
+                </p>
+                <p className="text-highlight text-2xl">Caregiver Admin</p>
+              </div>
+              
+              {/* Compact horizontal details */}
+              <div className="space-y-1">
+                <div className="flex items-center text-2xl">
+                  <User className="text-highlight h-6 w-6 mr-2 flex-shrink-0" />
+                  <span className={showExample || userProfile.gender ? 'text-white' : 'text-white/60 italic'}>
                     {showExample || userProfile.gender
                       ? (showExample ? getGenderLabel(exampleProfile.gender) : getGenderLabel(userProfile.gender))
                       : "Gender"}
-                  </p>
-                </div>
-                <div className="flex items-center">
-                  <Phone className="text-highlight h-6 w-6 mr-3 flex-shrink-0" />
-                  <p className={`text-2xl ${showExample || userProfile.phoneNumber ? 'text-white' : 'text-white/60 italic'}`}>
+                  </span>
+                  <span className="text-white/40 mx-2">•</span>
+                  <Phone className="text-highlight h-6 w-6 mr-2 flex-shrink-0" />
+                  <span className={showExample || userProfile.phoneNumber ? 'text-white' : 'text-white/60 italic'}>
                     {showExample || userProfile.phoneNumber
                       ? (showExample ? exampleProfile.phoneNumber : userProfile.phoneNumber)
-                      : "Phone number"}
-                  </p>
+                      : "Phone"}
+                  </span>
                 </div>
-              </>
-            )}
-            
-            {displayRole === UserRole.PrimaryUser && (
-              <>
-                <div className="flex items-center">
-                  <Calendar className="text-highlight h-6 w-6 mr-3 flex-shrink-0" />
-                  <p className={`text-2xl ${showExample || userProfile.dateOfBirth ? 'text-white' : 'text-white/60 italic'}`}>
-                    {showExample || userProfile.dateOfBirth
-                      ? (showExample ? examplePrimaryUser.dateOfBirth : userProfile.dateOfBirth)
-                      : "Date of birth"}
-                  </p>
-                </div>
-                <div className="flex items-center">
-                  <User className="text-highlight h-6 w-6 mr-3 flex-shrink-0" />
-                  <p className={`text-2xl ${showExample || userProfile.gender ? 'text-white' : 'text-white/60 italic'}`}>
-                    {showExample || userProfile.gender
-                      ? (showExample ? getGenderLabel(examplePrimaryUser.gender) : getGenderLabel(userProfile.gender))
-                      : "Gender"}
-                  </p>
-                </div>
-                <div className="flex items-center">
-                  <Phone className="text-highlight h-6 w-6 mr-3 flex-shrink-0" />
-                  <p className={`text-2xl ${showExample || userProfile.phoneNumber ? 'text-white' : 'text-white/60 italic'}`}>
-                    {showExample || userProfile.phoneNumber
-                      ? (showExample ? examplePrimaryUser.phoneNumber : userProfile.phoneNumber)
-                      : "Phone number"}
-                  </p>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
+              </div>
+            </div>
 
-        {/* Loved One Section - Caregiver Only */}
-        {displayRole === UserRole.Caregiver && (
-          <div className="border-t border-white/10 pt-3 mt-3">
+            {/* Right Column - Loved One Info */}
+            <div>
+              <div className="flex flex-col gap-1 mb-2">
+                <p className={`text-3xl font-bold break-words ${showExample || userProfile.lovedOne?.firstName || userProfile.lovedOne?.lastName ? 'text-white' : 'text-white/60 italic'}`}>
+                  {showExample || userProfile.lovedOne?.firstName || userProfile.lovedOne?.lastName
+                    ? (showExample ? `${exampleLovedOne.firstName} ${exampleLovedOne.lastName}` : `${userProfile.lovedOne?.firstName || ""} ${userProfile.lovedOne?.lastName || ""}`)
+                    : "Loved one's name"}
+                </p>
+                <p className={`text-2xl ${showExample || userProfile.relationship ? 'text-highlight' : 'text-white/60 italic'}`}>
+                  {showExample || userProfile.relationship
+                    ? (showExample ? "Parent" : getRelationshipLabel(userProfile.relationship))
+                    : "Relationship"}
+                </p>
+              </div>
+              
+              <div className="space-y-1">
+                <div className="flex items-center text-2xl">
+                  <Calendar className="text-highlight h-6 w-6 mr-2 flex-shrink-0" />
+                  <span className={showExample || userProfile.lovedOne?.dateOfBirth ? 'text-white' : 'text-white/60 italic'}>
+                    {showExample || userProfile.lovedOne?.dateOfBirth
+                      ? (showExample ? exampleLovedOne.dateOfBirth : userProfile.lovedOne?.dateOfBirth)
+                      : "DOB"}
+                  </span>
+                  <span className="text-white/40 mx-2">•</span>
+                  <User className="text-highlight h-6 w-6 mr-2 flex-shrink-0" />
+                  <span className={showExample || userProfile.lovedOne?.gender ? 'text-white' : 'text-white/60 italic'}>
+                    {showExample || userProfile.lovedOne?.gender
+                      ? (showExample ? getGenderLabel(exampleLovedOne.gender) : getGenderLabel(userProfile.lovedOne?.gender))
+                      : "Gender"}
+                  </span>
+                </div>
+                
+                <div className="flex items-center text-2xl">
+                  <BellRing className="text-highlight h-6 w-6 mr-2 flex-shrink-0" />
+                  <span className={showExample || userProfile.lovedOne?.alertPreference ? 'text-white' : 'text-white/60 italic'}>
+                    {showExample || userProfile.lovedOne?.alertPreference
+                      ? (showExample ? "Text" : getAlertPreferenceLabel(userProfile.lovedOne?.alertPreference))
+                      : "Alert"}
+                  </span>
+                  {((showExample && true) || 
+                    (userProfile.lovedOne?.alertPreference === 'text' || userProfile.lovedOne?.alertPreference === 'phone_call')) && (
+                    <>
+                      <span className="text-white/40 mx-2">•</span>
+                      <Phone className="text-highlight h-6 w-6 mr-2 flex-shrink-0" />
+                      <span className={showExample || userProfile.lovedOne?.phoneNumber ? 'text-white' : 'text-white/60 italic'}>
+                        {showExample || userProfile.lovedOne?.phoneNumber
+                          ? (showExample ? exampleLovedOne.phoneNumber : userProfile.lovedOne?.phoneNumber)
+                          : "Phone"}
+                      </span>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          // Single column for primary user
+          <div>
             <div className="flex flex-col gap-1 mb-2">
-              <p className={`text-3xl font-bold break-words ${showExample || userProfile.lovedOne?.firstName || userProfile.lovedOne?.lastName ? 'text-white' : 'text-white/60 italic'}`}>
-                {showExample || userProfile.lovedOne?.firstName || userProfile.lovedOne?.lastName
-                  ? (showExample ? `${exampleLovedOne.firstName} ${exampleLovedOne.lastName}` : `${userProfile.lovedOne?.firstName || ""} ${userProfile.lovedOne?.lastName || ""}`)
-                  : "Loved one's name"}
+              <p className={`text-3xl font-bold break-words ${showExample || userProfile.firstName || userProfile.lastName ? 'text-white' : 'text-white/60 italic'}`}>
+                {showExample || userProfile.firstName || userProfile.lastName
+                  ? `${showExample ? examplePrimaryUser.firstName : userProfile.firstName || ""} ${showExample ? examplePrimaryUser.lastName : userProfile.lastName || ""}`
+                  : "Name"}
               </p>
-              <p className={`text-2xl ${showExample || userProfile.relationship ? 'text-highlight' : 'text-white/60 italic'}`}>
-                {showExample || userProfile.relationship
-                  ? (showExample ? "Parent" : getRelationshipLabel(userProfile.relationship))
-                  : "Relationship"}
-              </p>
+              <p className="text-highlight text-2xl">Primary User</p>
             </div>
             
             <div className="space-y-1">
-              <div className="flex items-center">
-                <Calendar className="text-highlight h-6 w-6 mr-3 flex-shrink-0" />
-                <p className={`text-2xl ${showExample || userProfile.lovedOne?.dateOfBirth ? 'text-white' : 'text-white/60 italic'}`}>
-                  {showExample || userProfile.lovedOne?.dateOfBirth
-                    ? (showExample ? exampleLovedOne.dateOfBirth : userProfile.lovedOne?.dateOfBirth)
+              <div className="flex items-center text-2xl">
+                <Calendar className="text-highlight h-6 w-6 mr-2 flex-shrink-0" />
+                <span className={showExample || userProfile.dateOfBirth ? 'text-white' : 'text-white/60 italic'}>
+                  {showExample || userProfile.dateOfBirth
+                    ? (showExample ? examplePrimaryUser.dateOfBirth : userProfile.dateOfBirth)
                     : "Date of birth"}
-                </p>
-              </div>
-              
-              <div className="flex items-center">
-                <User className="text-highlight h-6 w-6 mr-3 flex-shrink-0" />
-                <p className={`text-2xl ${showExample || userProfile.lovedOne?.gender ? 'text-white' : 'text-white/60 italic'}`}>
-                  {showExample || userProfile.lovedOne?.gender
-                    ? (showExample ? getGenderLabel(exampleLovedOne.gender) : getGenderLabel(userProfile.lovedOne?.gender))
+                </span>
+                <span className="text-white/40 mx-2">•</span>
+                <User className="text-highlight h-6 w-6 mr-2 flex-shrink-0" />
+                <span className={showExample || userProfile.gender ? 'text-white' : 'text-white/60 italic'}>
+                  {showExample || userProfile.gender
+                    ? (showExample ? getGenderLabel(examplePrimaryUser.gender) : getGenderLabel(userProfile.gender))
                     : "Gender"}
-                </p>
+                </span>
               </div>
               
-              <div className="flex items-center">
-                <BellRing className="text-highlight h-6 w-6 mr-3 flex-shrink-0" />
-                <p className={`text-2xl ${showExample || userProfile.lovedOne?.alertPreference ? 'text-white' : 'text-white/60 italic'}`}>
-                  {showExample || userProfile.lovedOne?.alertPreference
-                    ? (showExample ? "Text" : getAlertPreferenceLabel(userProfile.lovedOne?.alertPreference))
-                    : "Alert preference"}
-                </p>
+              <div className="flex items-center text-2xl">
+                <Phone className="text-highlight h-6 w-6 mr-2 flex-shrink-0" />
+                <span className={showExample || userProfile.phoneNumber ? 'text-white' : 'text-white/60 italic'}>
+                  {showExample || userProfile.phoneNumber
+                    ? (showExample ? examplePrimaryUser.phoneNumber : userProfile.phoneNumber)
+                    : "Phone number"}
+                </span>
               </div>
-
-              {/* Conditional phone number */}
-              {((showExample && true) || 
-                (userProfile.lovedOne?.alertPreference === 'text' || userProfile.lovedOne?.alertPreference === 'phone_call')) && (
-                <div className="flex items-center">
-                  <Phone className="text-highlight h-6 w-6 mr-3 flex-shrink-0" />
-                  <p className={`text-2xl ${showExample || userProfile.lovedOne?.phoneNumber ? 'text-white' : 'text-white/60 italic'}`}>
-                    {showExample || userProfile.lovedOne?.phoneNumber
-                      ? (showExample ? exampleLovedOne.phoneNumber : userProfile.lovedOne?.phoneNumber)
-                      : "Phone number"}
-                  </p>
-                </div>
-              )}
             </div>
           </div>
         )}

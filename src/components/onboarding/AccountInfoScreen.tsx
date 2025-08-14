@@ -96,18 +96,40 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
       {/* User Profile - Compact horizontal card */}
       <div className="w-full">
         <div className="rounded-lg border border-white/10 bg-white/5 px-4 py-4 h-fit">
-          <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between">
             <p className={`text-3xl font-bold break-words ${showExample || userProfile.firstName || userProfile.lastName ? 'text-white' : 'text-white/60 italic'}`}>
               {showExample || userProfile.firstName || userProfile.lastName
                 ? `${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.firstName : examplePrimaryUser.firstName) : userProfile.firstName || ""} ${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.lastName : examplePrimaryUser.lastName) : userProfile.lastName || ""}`
                 : "Name"}
             </p>
-            {displayRole === UserRole.Caregiver && (
-              <p className="text-highlight text-xl">Caregiver Admin</p>
-            )}
-            {displayRole === UserRole.PrimaryUser && (
-              <p className="text-highlight text-xl">Primary User</p>
-            )}
+            <div className="text-right">
+              {displayRole === UserRole.Caregiver && (
+                <>
+                  <p className="text-highlight text-xl">Caregiver Admin</p>
+                  <div className="flex items-center justify-end mt-1">
+                    <Phone className="text-highlight h-4 w-4 mr-2 flex-shrink-0" />
+                    <p className={`text-base ${showExample || userProfile.phoneNumber ? 'text-white' : 'text-white/60 italic'}`}>
+                      {showExample || userProfile.phoneNumber
+                        ? (showExample ? exampleProfile.phoneNumber : userProfile.phoneNumber)
+                        : "Phone number"}
+                    </p>
+                  </div>
+                </>
+              )}
+              {displayRole === UserRole.PrimaryUser && (
+                <>
+                  <p className="text-highlight text-xl">Primary User</p>
+                  <div className="flex items-center justify-end mt-1">
+                    <Phone className="text-highlight h-4 w-4 mr-2 flex-shrink-0" />
+                    <p className={`text-base ${showExample || userProfile.phoneNumber ? 'text-white' : 'text-white/60 italic'}`}>
+                      {showExample || userProfile.phoneNumber
+                        ? (showExample ? examplePrimaryUser.phoneNumber : userProfile.phoneNumber)
+                        : "Phone number"}
+                    </p>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
           
           {/* Reduced spacing for caregivers */}
@@ -189,17 +211,8 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
                </p>
             </div>
             <div className="space-y-3 ml-1">
-              {/* Phone, DOB, and Alert Preference on same row */}
+              {/* DOB, Alert Preference, and Phone on same row */}
               <div className="flex items-center gap-8">
-                <div className="flex items-center">
-                  <Phone className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
-                   <p className={`text-xl whitespace-nowrap ${showExample || userProfile.lovedOne?.phoneNumber ? 'text-white' : 'text-white/60 italic'}`}>
-                     {showExample || userProfile.lovedOne?.phoneNumber
-                       ? (showExample ? "(555) 987-6543" : userProfile.lovedOne?.phoneNumber)
-                       : "Phone number"}
-                   </p>
-                </div>
-                
                 <div className="flex items-center">
                   <Calendar className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
                    <p className={`text-xl ${showExample || userProfile.lovedOne?.dateOfBirth ? 'text-white' : 'text-white/60 italic'}`}>
@@ -217,6 +230,19 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
                        : "Alert preference"}
                    </p>
                 </div>
+
+                {/* Conditional phone number - only show if alert preference requires it */}
+                {((showExample && true) || 
+                  (userProfile.lovedOne?.alertPreference === 'text' || userProfile.lovedOne?.alertPreference === 'phone_call')) && (
+                  <div className="flex items-center">
+                    <Phone className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+                     <p className={`text-xl whitespace-nowrap ${showExample || userProfile.lovedOne?.phoneNumber ? 'text-white' : 'text-white/60 italic'}`}>
+                       {showExample || userProfile.lovedOne?.phoneNumber
+                         ? (showExample ? "(555) 987-6543" : userProfile.lovedOne?.phoneNumber)
+                         : "Phone number"}
+                     </p>
+                  </div>
+                )}
               </div>
 
               {/* Health Conditions Section for Loved One */}

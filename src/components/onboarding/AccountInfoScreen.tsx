@@ -127,43 +127,40 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
               {displayRole === UserRole.Caregiver && (
                 <>
                   <p className="text-highlight text-xl">Caregiver Admin</p>
-                  <div className="flex items-center justify-end mt-1">
-                    <User className="text-highlight h-4 w-4 mr-2 flex-shrink-0" />
-                    <p className={`text-base ${showExample || userProfile.gender ? 'text-white' : 'text-white/60 italic'}`}>
-                      {showExample || userProfile.gender
-                        ? (showExample ? getGenderLabel(exampleProfile.gender) : getGenderLabel(userProfile.gender))
-                        : "Gender"}
-                    </p>
-                  </div>
-                  <div className="flex items-center justify-end mt-1">
-                    <Phone className="text-highlight h-4 w-4 mr-2 flex-shrink-0" />
-                    <p className={`text-base ${showExample || userProfile.phoneNumber ? 'text-white' : 'text-white/60 italic'}`}>
-                      {showExample || userProfile.phoneNumber
-                        ? (showExample ? exampleProfile.phoneNumber : userProfile.phoneNumber)
-                        : "Phone number"}
-                    </p>
-                  </div>
                 </>
               )}
               {displayRole === UserRole.PrimaryUser && (
                 <>
                   <p className="text-highlight text-xl">Primary User</p>
-                  <div className="flex items-center justify-end mt-1">
-                    <User className="text-highlight h-4 w-4 mr-2 flex-shrink-0" />
-                    <p className={`text-base ${showExample || userProfile.gender ? 'text-white' : 'text-white/60 italic'}`}>
-                      {showExample || userProfile.gender
-                        ? (showExample ? getGenderLabel(examplePrimaryUser.gender) : getGenderLabel(userProfile.gender))
-                        : "Gender"}
-                    </p>
-                  </div>
                 </>
               )}
             </div>
           </div>
           
-          {/* Reduced spacing for caregivers */}
+          {/* Details section */}
           <div className="space-y-3 ml-1 mt-2">
             
+            {displayRole === UserRole.Caregiver && (
+              <div className="flex items-center gap-8">
+                <div className="flex items-center">
+                  <User className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+                  <p className={`text-xl ${showExample || userProfile.gender ? 'text-white' : 'text-white/60 italic'}`}>
+                    {showExample || userProfile.gender
+                      ? (showExample ? getGenderLabel(exampleProfile.gender) : getGenderLabel(userProfile.gender))
+                      : "Gender"}
+                  </p>
+                </div>
+                <div className="flex items-center">
+                  <Phone className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+                  <p className={`text-xl ${showExample || userProfile.phoneNumber ? 'text-white' : 'text-white/60 italic'}`}>
+                    {showExample || userProfile.phoneNumber
+                      ? (showExample ? exampleProfile.phoneNumber : userProfile.phoneNumber)
+                      : "Phone number"}
+                  </p>
+                </div>
+              </div>
+            )}
+
             {displayRole === UserRole.PrimaryUser && (
               <div className="flex items-center gap-8">
                 <div className="flex items-center">

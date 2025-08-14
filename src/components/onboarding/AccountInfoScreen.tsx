@@ -68,11 +68,11 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
     }
   };
 
-  const getAlertPreferenceLabel = (preference: string): string => {
+  const getAlertPreferenceLabel = (preference: string, phoneNumber?: string): string => {
     switch (preference) {
-      case 'text': return 'Text Message';
-      case 'phone_call': return 'Phone';
-      case 'app_notification': return 'App Notification';
+      case 'text': return phoneNumber ? `Text: ${phoneNumber}` : 'Text Message';
+      case 'phone_call': return phoneNumber ? `Phone call: ${phoneNumber}` : 'Phone';
+      case 'app_notification': return 'Mobile app';
       default: return 'Not set';
     }
   };
@@ -279,23 +279,10 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
                   <BellRing className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
                    <p className={`text-xl ${showExample || userProfile.lovedOne?.alertPreference ? 'text-white' : 'text-white/60 italic'}`}>
                      {showExample || userProfile.lovedOne?.alertPreference
-                       ? (showExample ? "Phone" : getAlertPreferenceLabel(userProfile.lovedOne?.alertPreference))
+                       ? (showExample ? "Phone call: (555) 987-6543" : getAlertPreferenceLabel(userProfile.lovedOne?.alertPreference, userProfile.lovedOne?.phoneNumber))
                        : "Alert preference"}
                    </p>
                 </div>
-
-                {/* Conditional phone number - only show if alert preference requires it */}
-                {((showExample && true) || 
-                  (userProfile.lovedOne?.alertPreference === 'text' || userProfile.lovedOne?.alertPreference === 'phone_call')) && (
-                  <div className="flex items-center">
-                    <Phone className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
-                     <p className={`text-xl whitespace-nowrap ${showExample || userProfile.lovedOne?.phoneNumber ? 'text-white' : 'text-white/60 italic'}`}>
-                       {showExample || userProfile.lovedOne?.phoneNumber
-                         ? (showExample ? exampleLovedOne.phoneNumber : userProfile.lovedOne?.phoneNumber)
-                         : "Phone number"}
-                     </p>
-                  </div>
-                )}
               </div>
 
               {/* Health Conditions Section for Loved One */}

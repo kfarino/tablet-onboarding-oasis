@@ -111,60 +111,33 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
 
 
 
-  // Split Layout
+  // Split Layout - Compact single card design for caregiver view
   const splitLayout = (
-    <div className="flex flex-col gap-4">
-      {/* User Profile - Compact horizontal card */}
-      <div className="w-full">
-        <div className="rounded-lg border border-white/10 bg-white/5 px-4 py-4 h-fit">
+    <div className="flex flex-col gap-3">
+      {displayRole === UserRole.PrimaryUser ? (
+        /* Primary User - Original layout */
+        <div className="w-full">
+          <div className="rounded-lg border border-white/10 bg-white/5 px-4 py-4 h-fit">
             <div className="flex items-center justify-between">
-            <p className={`text-3xl font-bold break-words ${showExample || userProfile.firstName || userProfile.lastName ? 'text-white' : 'text-white/60 italic'}`}>
-              {showExample || userProfile.firstName || userProfile.lastName
-                ? `${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.firstName : examplePrimaryUser.firstName) : userProfile.firstName || ""} ${showExample ? (displayRole === UserRole.Caregiver ? exampleProfile.lastName : examplePrimaryUser.lastName) : userProfile.lastName || ""}`
-                : "Name"}
-            </p>
-            <div className="text-right">
-              {displayRole === UserRole.Caregiver && (
-                <>
-                  <p className="text-highlight text-xl">Caregiver Admin</p>
-                  <div className="flex items-center justify-end mt-1">
-                    <User className="text-highlight h-4 w-4 mr-2 flex-shrink-0" />
-                    <p className={`text-base ${showExample || userProfile.gender ? 'text-white' : 'text-white/60 italic'}`}>
-                      {showExample || userProfile.gender
-                        ? (showExample ? getGenderLabel(exampleProfile.gender) : getGenderLabel(userProfile.gender))
-                        : "Gender"}
-                    </p>
-                  </div>
-                  <div className="flex items-center justify-end mt-1">
-                    <Phone className="text-highlight h-4 w-4 mr-2 flex-shrink-0" />
-                    <p className={`text-base ${showExample || userProfile.phoneNumber ? 'text-white' : 'text-white/60 italic'}`}>
-                      {showExample || userProfile.phoneNumber
-                        ? (showExample ? exampleProfile.phoneNumber : userProfile.phoneNumber)
-                        : "Phone number"}
-                    </p>
-                  </div>
-                </>
-              )}
-              {displayRole === UserRole.PrimaryUser && (
-                <>
-                  <p className="text-highlight text-xl">Primary User</p>
-                  <div className="flex items-center justify-end mt-1">
-                    <User className="text-highlight h-4 w-4 mr-2 flex-shrink-0" />
-                    <p className={`text-base ${showExample || userProfile.gender ? 'text-white' : 'text-white/60 italic'}`}>
-                      {showExample || userProfile.gender
-                        ? (showExample ? getGenderLabel(examplePrimaryUser.gender) : getGenderLabel(userProfile.gender))
-                        : "Gender"}
-                    </p>
-                  </div>
-                </>
-              )}
+              <p className={`text-3xl font-bold break-words ${showExample || userProfile.firstName || userProfile.lastName ? 'text-white' : 'text-white/60 italic'}`}>
+                {showExample || userProfile.firstName || userProfile.lastName
+                  ? `${showExample ? examplePrimaryUser.firstName : userProfile.firstName || ""} ${showExample ? examplePrimaryUser.lastName : userProfile.lastName || ""}`
+                  : "Name"}
+              </p>
+              <div className="text-right">
+                <p className="text-highlight text-xl">Primary User</p>
+                <div className="flex items-center justify-end mt-1">
+                  <User className="text-highlight h-4 w-4 mr-2 flex-shrink-0" />
+                  <p className={`text-base ${showExample || userProfile.gender ? 'text-white' : 'text-white/60 italic'}`}>
+                    {showExample || userProfile.gender
+                      ? (showExample ? getGenderLabel(examplePrimaryUser.gender) : getGenderLabel(userProfile.gender))
+                      : "Gender"}
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
-          
-          {/* Reduced spacing for caregivers */}
-          <div className="space-y-3 ml-1 mt-2">
             
-            {displayRole === UserRole.PrimaryUser && (
+            <div className="space-y-3 ml-1 mt-2">
               <div className="flex items-center gap-8">
                 <div className="flex items-center">
                   <Calendar className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
@@ -191,10 +164,8 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
                   </p>
                 </div>
               </div>
-            )}
 
-            {/* Health Conditions Section - only for Primary User in split layout */}
-            {displayRole === UserRole.PrimaryUser && (
+              {/* Health Conditions Section */}
               <div className="flex items-center">
                 <Heart className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
                 <div className="flex-1">
@@ -235,90 +206,178 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
                    )}
                 </div>
               </div>
-            )}
+            </div>
           </div>
         </div>
-      </div>
-      
-      
-      {/* Loved One Profile - Horizontal card below */}
-      {displayRole === UserRole.Caregiver && (
+      ) : (
+        /* Caregiver - Compact single card with side-by-side layout */
         <div className="w-full">
-          <div className="rounded-lg border border-white/10 bg-white/5 p-4">
-            <div className="mb-4 flex items-center justify-between">
-               <p className={`text-3xl font-bold break-words ${showExample || userProfile.lovedOne?.firstName || userProfile.lovedOne?.lastName ? 'text-white' : 'text-white/60 italic'}`}>
-                 {showExample || userProfile.lovedOne?.firstName || userProfile.lovedOne?.lastName
-                   ? (showExample ? `${exampleLovedOne.firstName} ${exampleLovedOne.lastName}` : `${userProfile.lovedOne?.firstName || ""} ${userProfile.lovedOne?.lastName || ""}`)
-                   : "Loved one's name"}
-              </p>
-               <p className={`text-xl ${showExample || userProfile.relationship ? 'text-highlight' : 'text-white/60 italic'}`}>
-                 {showExample || userProfile.relationship
-                   ? (showExample ? "Parent" : getRelationshipLabel(userProfile.relationship))
-                   : "Relationship"}
-               </p>
-            </div>
-            <div className="space-y-3 ml-1">
-              {/* DOB, Gender, Alert Preference, and Phone on same row */}
-              <div className="flex items-center gap-8">
-                <div className="flex items-center">
-                  <Calendar className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
-                   <p className={`text-xl ${showExample || userProfile.lovedOne?.dateOfBirth ? 'text-white' : 'text-white/60 italic'}`}>
-                     {showExample || userProfile.lovedOne?.dateOfBirth
-                       ? (showExample ? exampleLovedOne.dateOfBirth : userProfile.lovedOne?.dateOfBirth)
-                       : "Date of birth"}
-                   </p>
+          <div className="rounded-lg border border-white/10 bg-white/5 p-3">
+            <div className="grid grid-cols-2 gap-4">
+              {/* Left Side - Caregiver Info */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <p className={`text-2xl font-bold ${showExample || userProfile.firstName || userProfile.lastName ? 'text-white' : 'text-white/60 italic'}`}>
+                    {showExample || userProfile.firstName || userProfile.lastName
+                      ? `${showExample ? exampleProfile.firstName : userProfile.firstName || ""} ${showExample ? exampleProfile.lastName : userProfile.lastName || ""}`
+                      : "Name"}
+                  </p>
                 </div>
-                
-                <div className="flex items-center">
-                  <User className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
-                   <p className={`text-xl ${showExample || userProfile.lovedOne?.gender ? 'text-white' : 'text-white/60 italic'}`}>
-                     {showExample || userProfile.lovedOne?.gender
-                       ? (showExample ? getGenderLabel(exampleLovedOne.gender) : getGenderLabel(userProfile.lovedOne?.gender))
-                       : "Gender"}
-                   </p>
-                </div>
-                
-                <div className="flex items-center">
-                  <BellRing className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
-                   <p className={`text-xl ${showExample || userProfile.lovedOne?.alertPreference ? 'text-white' : 'text-white/60 italic'}`}>
-                     {showExample || userProfile.lovedOne?.alertPreference
-                       ? (showExample ? "Text Message" : getAlertPreferenceLabel(userProfile.lovedOne?.alertPreference))
-                       : "Alert preference"}
-                   </p>
-                </div>
-
-                {/* Conditional phone number - only show if alert preference requires it */}
-                {((showExample && true) || 
-                  (userProfile.lovedOne?.alertPreference === 'text' || userProfile.lovedOne?.alertPreference === 'phone_call')) && (
+                <p className="text-highlight text-lg">Caregiver Admin</p>
+                <div className="space-y-1">
                   <div className="flex items-center">
-                    <Phone className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
-                     <p className={`text-xl whitespace-nowrap ${showExample || userProfile.lovedOne?.phoneNumber ? 'text-white' : 'text-white/60 italic'}`}>
-                       {showExample || userProfile.lovedOne?.phoneNumber
-                         ? (showExample ? exampleLovedOne.phoneNumber : userProfile.lovedOne?.phoneNumber)
-                         : "Phone number"}
-                     </p>
+                    <User className="text-highlight h-4 w-4 mr-2 flex-shrink-0" />
+                    <p className={`text-sm ${showExample || userProfile.gender ? 'text-white' : 'text-white/60 italic'}`}>
+                      {showExample || userProfile.gender
+                        ? (showExample ? getGenderLabel(exampleProfile.gender) : getGenderLabel(userProfile.gender))
+                        : "Gender"}
+                    </p>
                   </div>
-                )}
+                  <div className="flex items-center">
+                    <Phone className="text-highlight h-4 w-4 mr-2 flex-shrink-0" />
+                    <p className={`text-sm ${showExample || userProfile.phoneNumber ? 'text-white' : 'text-white/60 italic'}`}>
+                      {showExample || userProfile.phoneNumber
+                        ? (showExample ? exampleProfile.phoneNumber : userProfile.phoneNumber)
+                        : "Phone number"}
+                    </p>
+                  </div>
+                </div>
               </div>
 
-              {/* Health Conditions Section for Loved One */}
-              <div className="flex items-center">
-                <Heart className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
-                <div className="flex-1">
-                   {getLovedOneConditions().length === 0 ? (
-                     <p className="text-white/60 italic text-xl">Health conditions</p>
-                  ) : (
-                    <div className="flex flex-wrap gap-2">
-                      {getLovedOneConditions().map((condition, index) => (
-                        <Badge 
-                          key={index} 
-                          className="bg-white/10 hover:bg-white/20 text-white text-base py-1 px-3 flex items-center gap-2"
-                        >
-                          {condition}
-                        </Badge>
-                      ))}
+              {/* Right Side - Loved One Info */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <p className={`text-2xl font-bold ${showExample || userProfile.lovedOne?.firstName || userProfile.lovedOne?.lastName ? 'text-white' : 'text-white/60 italic'}`}>
+                    {showExample || userProfile.lovedOne?.firstName || userProfile.lovedOne?.lastName
+                      ? (showExample ? `${exampleLovedOne.firstName} ${exampleLovedOne.lastName}` : `${userProfile.lovedOne?.firstName || ""} ${userProfile.lovedOne?.lastName || ""}`)
+                      : "Loved one's name"}
+                  </p>
+                </div>
+                <p className={`text-lg ${showExample || userProfile.relationship ? 'text-highlight' : 'text-white/60 italic'}`}>
+                  {showExample || userProfile.relationship
+                    ? (showExample ? "Parent" : getRelationshipLabel(userProfile.relationship))
+                    : "Relationship"}
+                </p>
+                
+                {/* Loved One Details - 2 rows */}
+                <div className="space-y-1">
+                  {/* Row 1: DOB + Gender */}
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center">
+                      <Calendar className="text-highlight h-4 w-4 mr-2 flex-shrink-0" />
+                      <p className={`text-sm ${showExample || userProfile.lovedOne?.dateOfBirth ? 'text-white' : 'text-white/60 italic'}`}>
+                        {showExample || userProfile.lovedOne?.dateOfBirth
+                          ? (showExample ? exampleLovedOne.dateOfBirth : userProfile.lovedOne?.dateOfBirth)
+                          : "Date of birth"}
+                      </p>
                     </div>
-                  )}
+                    <div className="flex items-center">
+                      <User className="text-highlight h-4 w-4 mr-2 flex-shrink-0" />
+                      <p className={`text-sm ${showExample || userProfile.lovedOne?.gender ? 'text-white' : 'text-white/60 italic'}`}>
+                        {showExample || userProfile.lovedOne?.gender
+                          ? (showExample ? getGenderLabel(exampleLovedOne.gender) : getGenderLabel(userProfile.lovedOne?.gender))
+                          : "Gender"}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  {/* Row 2: Alert + Phone (conditional) */}
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center">
+                      <BellRing className="text-highlight h-4 w-4 mr-2 flex-shrink-0" />
+                      <p className={`text-sm ${showExample || userProfile.lovedOne?.alertPreference ? 'text-white' : 'text-white/60 italic'}`}>
+                        {showExample || userProfile.lovedOne?.alertPreference
+                          ? (showExample ? "Text Message" : getAlertPreferenceLabel(userProfile.lovedOne?.alertPreference))
+                          : "Alert preference"}
+                      </p>
+                    </div>
+                    
+                    {((showExample && true) || 
+                      (userProfile.lovedOne?.alertPreference === 'text' || userProfile.lovedOne?.alertPreference === 'phone_call')) && (
+                      <div className="flex items-center">
+                        <Phone className="text-highlight h-4 w-4 mr-2 flex-shrink-0" />
+                        <p className={`text-sm ${showExample || userProfile.lovedOne?.phoneNumber ? 'text-white' : 'text-white/60 italic'}`}>
+                          {showExample || userProfile.lovedOne?.phoneNumber
+                            ? (showExample ? exampleLovedOne.phoneNumber : userProfile.lovedOne?.phoneNumber)
+                            : "Phone number"}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Health Conditions - Full width at bottom */}
+            <div className="mt-3 pt-3 border-t border-white/10">
+              <div className="grid grid-cols-2 gap-4">
+                {/* Caregiver Health Conditions */}
+                <div>
+                  <div className="flex items-center mb-2">
+                    <Heart className="text-highlight h-4 w-4 mr-2 flex-shrink-0" />
+                    <p className="text-sm text-highlight font-medium">Your Conditions</p>
+                  </div>
+                  <div className="flex-1">
+                    {getPrimaryUserConditions().length === 0 ? (
+                      <p className="text-white/60 italic text-xs">Health conditions</p>
+                    ) : (
+                      <div className="flex flex-wrap gap-1">
+                        {getPrimaryUserConditions().map((condition, index) => (
+                          <Badge 
+                            key={index} 
+                            className="bg-white/10 hover:bg-white/20 text-white text-xs py-0.5 px-2 flex items-center gap-1"
+                          >
+                            {condition}
+                            {!showExample && (
+                              <X 
+                                className="h-3 w-3 cursor-pointer hover:text-red-300" 
+                                onClick={() => removeHealthCondition(index)}
+                              />
+                            )}
+                          </Badge>
+                        ))}
+                        
+                        {!showExample && (
+                          <div className="flex gap-1 mt-1 w-full">
+                            <Input
+                              value={newCondition}
+                              onChange={(e) => setNewCondition(e.target.value)}
+                              onKeyPress={handleKeyPress}
+                              placeholder="Add condition"
+                              className="bg-white/10 border-white/20 text-white flex-1 text-xs h-7"
+                            />
+                            <Button onClick={handleAddCondition} size="sm" className="bg-highlight hover:bg-highlight/90 h-7 w-7 p-0">
+                              <Plus className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Loved One Health Conditions */}
+                <div>
+                  <div className="flex items-center mb-2">
+                    <Heart className="text-highlight h-4 w-4 mr-2 flex-shrink-0" />
+                    <p className="text-sm text-highlight font-medium">Their Conditions</p>
+                  </div>
+                  <div className="flex-1">
+                    {getLovedOneConditions().length === 0 ? (
+                      <p className="text-white/60 italic text-xs">Health conditions</p>
+                    ) : (
+                      <div className="flex flex-wrap gap-1">
+                        {getLovedOneConditions().map((condition, index) => (
+                          <Badge 
+                            key={index} 
+                            className="bg-white/10 hover:bg-white/20 text-white text-xs py-0.5 px-2"
+                          >
+                            {condition}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

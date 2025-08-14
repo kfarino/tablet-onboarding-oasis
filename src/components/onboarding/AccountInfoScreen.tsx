@@ -25,6 +25,7 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
     lastName: "Alexandra",
     role: UserRole.Caregiver,
     relationship: "child",
+    gender: "female",
     phoneNumber: "(555) 123-4567",
   };
 
@@ -34,6 +35,16 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
     lastName: "Frederick",
     role: UserRole.PrimaryUser,
     dateOfBirth: "05/12/1945",
+    gender: "male",
+    phoneNumber: "(555) 987-6543",
+  };
+
+  // Example loved one data
+  const exampleLovedOne = {
+    firstName: "Margaret",
+    lastName: "Eleanor Thompson",
+    dateOfBirth: "01/01/1970",
+    gender: "female",
     phoneNumber: "(555) 987-6543",
   };
 
@@ -63,6 +74,16 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
       case 'phone_call': return 'Phone Call';
       case 'app_notification': return 'App Notification';
       default: return 'Not set';
+    }
+  };
+
+  const getGenderLabel = (gender: string): string => {
+    switch (gender) {
+      case 'male': return 'Male';
+      case 'female': return 'Female';
+      case 'non-binary': return 'Non-binary';
+      case 'prefer-not-to-say': return 'Prefer not to say';
+      default: return 'Gender';
     }
   };
 
@@ -107,6 +128,14 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
                 <>
                   <p className="text-highlight text-xl">Caregiver Admin</p>
                   <div className="flex items-center justify-end mt-1">
+                    <User className="text-highlight h-4 w-4 mr-2 flex-shrink-0" />
+                    <p className={`text-base ${showExample || userProfile.gender ? 'text-white' : 'text-white/60 italic'}`}>
+                      {showExample || userProfile.gender
+                        ? (showExample ? getGenderLabel(exampleProfile.gender) : getGenderLabel(userProfile.gender))
+                        : "Gender"}
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-end mt-1">
                     <Phone className="text-highlight h-4 w-4 mr-2 flex-shrink-0" />
                     <p className={`text-base ${showExample || userProfile.phoneNumber ? 'text-white' : 'text-white/60 italic'}`}>
                       {showExample || userProfile.phoneNumber
@@ -119,6 +148,14 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
               {displayRole === UserRole.PrimaryUser && (
                 <>
                   <p className="text-highlight text-xl">Primary User</p>
+                  <div className="flex items-center justify-end mt-1">
+                    <User className="text-highlight h-4 w-4 mr-2 flex-shrink-0" />
+                    <p className={`text-base ${showExample || userProfile.gender ? 'text-white' : 'text-white/60 italic'}`}>
+                      {showExample || userProfile.gender
+                        ? (showExample ? getGenderLabel(examplePrimaryUser.gender) : getGenderLabel(userProfile.gender))
+                        : "Gender"}
+                    </p>
+                  </div>
                 </>
               )}
             </div>
@@ -135,6 +172,14 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
                     {showExample || userProfile.dateOfBirth
                       ? (showExample ? examplePrimaryUser.dateOfBirth : userProfile.dateOfBirth)
                       : "Date of birth"}
+                  </p>
+                </div>
+                <div className="flex items-center">
+                  <User className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+                  <p className={`text-xl ${showExample || userProfile.gender ? 'text-white' : 'text-white/60 italic'}`}>
+                    {showExample || userProfile.gender
+                      ? (showExample ? getGenderLabel(examplePrimaryUser.gender) : getGenderLabel(userProfile.gender))
+                      : "Gender"}
                   </p>
                 </div>
                 <div className="flex items-center">
@@ -203,7 +248,7 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
             <div className="mb-4 flex items-center justify-between">
                <p className={`text-3xl font-bold break-words ${showExample || userProfile.lovedOne?.firstName || userProfile.lovedOne?.lastName ? 'text-white' : 'text-white/60 italic'}`}>
                  {showExample || userProfile.lovedOne?.firstName || userProfile.lovedOne?.lastName
-                   ? (showExample ? "Margaret Eleanor Thompson" : `${userProfile.lovedOne?.firstName || ""} ${userProfile.lovedOne?.lastName || ""}`)
+                   ? (showExample ? `${exampleLovedOne.firstName} ${exampleLovedOne.lastName}` : `${userProfile.lovedOne?.firstName || ""} ${userProfile.lovedOne?.lastName || ""}`)
                    : "Loved one's name"}
               </p>
                <p className={`text-xl ${showExample || userProfile.relationship ? 'text-highlight' : 'text-white/60 italic'}`}>
@@ -213,14 +258,23 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
                </p>
             </div>
             <div className="space-y-3 ml-1">
-              {/* DOB, Alert Preference, and Phone on same row */}
+              {/* DOB, Gender, Alert Preference, and Phone on same row */}
               <div className="flex items-center gap-8">
                 <div className="flex items-center">
                   <Calendar className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
                    <p className={`text-xl ${showExample || userProfile.lovedOne?.dateOfBirth ? 'text-white' : 'text-white/60 italic'}`}>
                      {showExample || userProfile.lovedOne?.dateOfBirth
-                       ? (showExample ? "01/01/1970" : userProfile.lovedOne?.dateOfBirth)
+                       ? (showExample ? exampleLovedOne.dateOfBirth : userProfile.lovedOne?.dateOfBirth)
                        : "Date of birth"}
+                   </p>
+                </div>
+                
+                <div className="flex items-center">
+                  <User className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+                   <p className={`text-xl ${showExample || userProfile.lovedOne?.gender ? 'text-white' : 'text-white/60 italic'}`}>
+                     {showExample || userProfile.lovedOne?.gender
+                       ? (showExample ? getGenderLabel(exampleLovedOne.gender) : getGenderLabel(userProfile.lovedOne?.gender))
+                       : "Gender"}
                    </p>
                 </div>
                 
@@ -240,7 +294,7 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
                     <Phone className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
                      <p className={`text-xl whitespace-nowrap ${showExample || userProfile.lovedOne?.phoneNumber ? 'text-white' : 'text-white/60 italic'}`}>
                        {showExample || userProfile.lovedOne?.phoneNumber
-                         ? (showExample ? "(555) 987-6543" : userProfile.lovedOne?.phoneNumber)
+                         ? (showExample ? exampleLovedOne.phoneNumber : userProfile.lovedOne?.phoneNumber)
                          : "Phone number"}
                      </p>
                   </div>

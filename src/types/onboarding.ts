@@ -4,6 +4,7 @@ export interface UserProfile {
   role: string;
   relationship: string;
   dateOfBirth: string;
+  gender: string;
   phoneNumber: string;
   alertPreference: AlertPreference | null;
   healthConditions: string[];
@@ -15,6 +16,7 @@ export interface LovedOneProfile {
   firstName: string;
   lastName: string;
   dateOfBirth: string;
+  gender: string;
   phoneNumber: string;
   alertPreference: AlertPreference | null;
   healthConditions: string[];
@@ -99,4 +101,11 @@ export const ALERT_PREFERENCES = [
   { value: AlertPreference.Text, label: 'Text Message' },
   { value: AlertPreference.PhoneCall, label: 'Phone Call' },
   { value: AlertPreference.AppNotification, label: 'App Notification' },
+];
+
+export const GENDER_OPTIONS = [
+  { value: 'male', label: 'Male' },
+  { value: 'female', label: 'Female' },
+  { value: 'non-binary', label: 'Non-binary' },
+  { value: 'prefer-not-to-say', label: 'Prefer not to say' },
 ];

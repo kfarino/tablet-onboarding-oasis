@@ -136,13 +136,23 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
           <div className="space-y-3 ml-1 mt-2">
             
             {displayRole === UserRole.PrimaryUser && (
-              <div className="flex items-center">
-                 <Calendar className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
-                 <p className={`text-xl ${showExample || userProfile.dateOfBirth ? 'text-white' : 'text-white/60 italic'}`}>
-                   {showExample || userProfile.dateOfBirth
-                     ? (showExample ? examplePrimaryUser.dateOfBirth : userProfile.dateOfBirth)
-                     : "Date of birth"}
-                 </p>
+              <div className="flex items-center gap-8">
+                <div className="flex items-center">
+                  <Calendar className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+                  <p className={`text-xl ${showExample || userProfile.dateOfBirth ? 'text-white' : 'text-white/60 italic'}`}>
+                    {showExample || userProfile.dateOfBirth
+                      ? (showExample ? examplePrimaryUser.dateOfBirth : userProfile.dateOfBirth)
+                      : "Date of birth"}
+                  </p>
+                </div>
+                <div className="flex items-center">
+                  <Phone className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
+                  <p className={`text-xl ${showExample || userProfile.phoneNumber ? 'text-white' : 'text-white/60 italic'}`}>
+                    {showExample || userProfile.phoneNumber
+                      ? (showExample ? examplePrimaryUser.phoneNumber : userProfile.phoneNumber)
+                      : "Phone number"}
+                  </p>
+                </div>
               </div>
             )}
 

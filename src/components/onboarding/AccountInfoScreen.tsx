@@ -279,7 +279,7 @@ const AccountInfoScreen: React.FC<AccountInfoScreenProps> = ({ showExample = fal
                   <BellRing className="text-highlight h-5 w-5 mr-3 flex-shrink-0" />
                    <p className={`text-xl ${showExample || userProfile.lovedOne?.alertPreference ? 'text-white' : 'text-white/60 italic'}`}>
                      {showExample || userProfile.lovedOne?.alertPreference
-                       ? (showExample ? "Text Message" : getAlertPreferenceLabel(userProfile.lovedOne?.alertPreference))
+                       ? (showExample ? "Phone" : getAlertPreferenceLabel(userProfile.lovedOne?.alertPreference))
                        : "Alert preference"}
                    </p>
                 </div>

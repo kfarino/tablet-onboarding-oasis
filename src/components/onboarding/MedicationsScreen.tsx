@@ -328,37 +328,26 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   return (
     <>
       <div className="animate-fade-in flex flex-col h-full" data-medications-screen>
-        {/* Beautiful header with medication identity card */}
-        <div className="sticky top-0 z-10 bg-charcoal px-6 py-6 border-b border-white/10">
-          <div className="space-y-6">
-            {/* Clean screen title */}
-            <h1 className="text-3xl font-bold text-white text-center">
-              Dosing Schedule
-            </h1>
-            
-            {/* Highlighted medication identity card */}
-            <Card className="bg-gradient-to-r from-charcoal to-charcoal/90 border-2 p-6 mx-auto max-w-2xl"
-                  style={{ borderColor: currentMedication ? currentMedColor : '#8B4513' }}>
-              <div className="flex items-center justify-center gap-4 flex-wrap">
-                {currentMedication ? (
-                  <>
-                    <h2 className="text-3xl font-bold text-white">
-                      {currentMedication.name}
-                    </h2>
-                    <Badge variant="secondary" className="bg-amber-500/20 text-amber-300 border-amber-500/30 text-lg px-4 py-2 font-semibold">
-                      {currentMedication.strength}
-                    </Badge>
-                    <Badge variant="outline" className="bg-blue-500/20 text-blue-300 border-blue-500/30 text-lg px-4 py-2 font-semibold">
-                      {currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}
-                    </Badge>
-                  </>
-                ) : (
-                  <h2 className="text-3xl font-bold text-white/60 italic">
-                    New Medication
-                  </h2>
-                )}
-              </div>
-            </Card>
+        {/* Medication identity with badges */}
+        <div className="sticky top-0 z-10 bg-charcoal px-6 py-3 border-b border-white/10">
+          <div className="flex items-center justify-center gap-4 flex-wrap">
+            {currentMedication ? (
+              <>
+                <h2 className="text-3xl font-bold text-white">
+                  {currentMedication.name}
+                </h2>
+                <Badge variant="secondary" className="bg-amber-500/20 text-amber-300 border-amber-500/30 text-lg px-4 py-2 font-semibold">
+                  {currentMedication.strength}
+                </Badge>
+                <Badge variant="outline" className="bg-blue-500/20 text-blue-300 border-blue-500/30 text-lg px-4 py-2 font-semibold">
+                  {currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}
+                </Badge>
+              </>
+            ) : (
+              <h2 className="text-3xl font-bold text-white/60 italic">
+                New Medication
+              </h2>
+            )}
           </div>
         </div>
 

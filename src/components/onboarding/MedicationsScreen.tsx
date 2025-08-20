@@ -328,25 +328,24 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   return (
     <>
       <div className="animate-fade-in flex flex-col h-full" data-medications-screen>
-        {/* Medication identity with badges */}
+        {/* Unified medication badge */}
         <div className="sticky top-0 z-10 bg-charcoal px-6 py-3 border-b border-white/10">
-          <div className="flex items-center justify-center gap-4 flex-wrap">
+          <div className="flex justify-center">
             {currentMedication ? (
-              <>
-                <h2 className="text-3xl font-bold text-white">
-                  {currentMedication.name}
-                </h2>
-                <Badge variant="secondary" className="bg-amber-500/20 text-amber-300 border-amber-500/30 text-lg px-4 py-2 font-semibold">
-                  {currentMedication.strength}
-                </Badge>
-                <Badge variant="outline" className="bg-blue-500/20 text-blue-300 border-blue-500/30 text-lg px-4 py-2 font-semibold">
-                  {currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}
-                </Badge>
-              </>
+              <div 
+                className="bg-white/5 backdrop-blur-sm border-2 rounded-full px-6 py-3"
+                style={{ borderColor: currentMedColor }}
+              >
+                <span className="text-xl font-semibold text-white">
+                  {currentMedication.name} {currentMedication.strength} {currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}
+                </span>
+              </div>
             ) : (
-              <h2 className="text-3xl font-bold text-white/60 italic">
-                New Medication
-              </h2>
+              <div className="bg-white/5 backdrop-blur-sm border-2 border-white/20 rounded-full px-6 py-3">
+                <span className="text-xl font-semibold text-white/60 italic">
+                  New Medication
+                </span>
+              </div>
             )}
           </div>
         </div>

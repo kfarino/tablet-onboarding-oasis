@@ -247,16 +247,14 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   if (!showExample && displayMedications.length === 0) {
     return (
       <div className="animate-fade-in flex flex-col h-full" data-medications-screen>
-        {/* Sticky medication header - matching the data state */}
-        <div className="sticky top-0 z-10 bg-charcoal px-2 py-4 border-b border-white/10">
-          <div className="flex flex-col items-center text-center">
-            <h2 className="text-2xl font-semibold text-white/40 leading-tight whitespace-nowrap italic">
-              <span className="flex items-center gap-3">
-                <span>Name</span>
-                <span>Strength</span>
-                <span className="text-white/30">Form</span>
+        {/* Unified medication badge - no data state */}
+        <div className="sticky top-0 z-10 bg-charcoal px-6 py-3 border-b border-white/10">
+          <div className="flex justify-center">
+            <div className="bg-white/5 backdrop-blur-sm border-2 border-white/20 rounded-full px-6 py-3">
+              <span className="text-xl font-semibold text-white/60 italic">
+                No Medications Added
               </span>
-            </h2>
+            </div>
           </div>
         </div>
 

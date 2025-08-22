@@ -14,8 +14,6 @@ interface HeaderProps {
   previewRole?: UserRole | null;
   showMedicationSchedule?: boolean;
   setShowMedicationSchedule?: (show: boolean) => void;
-  medicationCount?: number;
-  onShowAllMedications?: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ 
@@ -26,9 +24,7 @@ const Header: React.FC<HeaderProps> = ({
   onTogglePreviewRole,
   previewRole,
   showMedicationSchedule,
-  setShowMedicationSchedule,
-  medicationCount,
-  onShowAllMedications
+  setShowMedicationSchedule
 }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const { nextStep } = useOnboarding();
@@ -128,16 +124,6 @@ const Header: React.FC<HeaderProps> = ({
           </Button>
         )}
         
-        {medicationCount !== undefined && onShowAllMedications && currentStep === OnboardingStep.Medications && (
-          <Button
-            variant="outline"
-            onClick={onShowAllMedications}
-            className="absolute right-0 bg-white/10 border-white/30 text-white hover:bg-white/20 hover:border-white/50 hover:text-white text-sm px-4 py-2 rounded-lg transition-all duration-200"
-            aria-label="View all medications"
-          >
-            View all
-          </Button>
-        )}
         
         {showNextButton && (
           <Button

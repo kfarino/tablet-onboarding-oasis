@@ -180,6 +180,8 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
                  showMedicationSchedule={showMedicationSchedule}
                  setShowMedicationSchedule={setShowMedicationSchedule}
                  exampleMedications={exampleMedications}
+                 medicationCount={showExample ? exampleMedications.length : userProfile.medications?.length || 0}
+                 onShowAllMedications={() => setShowAllMedications(true)}
                />;
       default:
         return <WelcomeScreen />;
@@ -230,8 +232,6 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
         previewRole={previewRole}
         showMedicationSchedule={showMedicationSchedule}
         setShowMedicationSchedule={currentStep === OnboardingStep.Medications ? setShowMedicationSchedule : undefined}
-        medicationCount={currentStep === OnboardingStep.Medications ? (showExample ? exampleMedications.length : userProfile.medications?.length || 0) : undefined}
-        onShowAllMedications={currentStep === OnboardingStep.Medications ? () => setShowAllMedications(true) : undefined}
       />
       <div className="flex-1 flex flex-col overflow-hidden pt-2">
         <div className="flex-1 overflow-hidden px-8 pb-8">

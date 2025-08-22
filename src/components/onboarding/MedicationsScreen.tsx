@@ -2,7 +2,7 @@ import React, { useState, Fragment } from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { Pill, EyeOff } from 'lucide-react';
 import { Card } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+
 import { Medication } from '@/types/onboarding';
 import { Badge } from '@/components/ui/badge';
 import { formatTimeDisplay, parseOriginalTimeForSorting, getTimeColor, getDayAbbreviation } from '@/utils/dateUtils';
@@ -98,12 +98,10 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
     return Object.values(schedules);
   };
 
-  const handleDoseClick = (schedule: any) => {
-    setSelectedSchedule({
-      time: schedule.time,
-      dayPattern: schedule.dayPattern,
-      medications: schedule.medications
-    });
+  const [expandedTime, setExpandedTime] = useState<string | null>(null);
+
+  const handleDoseClick = (time: string) => {
+    setExpandedTime(expandedTime === time ? null : time);
   };
 
   const renderConsolidatedSchedule = () => {
@@ -131,7 +129,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
     return (
       <div className="rounded-lg overflow-hidden border border-white/10 bg-charcoal">
         {/* Header */}
-        <div className="grid text-xs bg-charcoal" style={{ 
+        <div className="grid bg-charcoal" style={{ 
           gridTemplateColumns: '120px repeat(7, 1fr)'
         }}>
           <div className="p-1 text-xl font-bold text-white text-center border-r border-white/10 whitespace-nowrap">
@@ -217,25 +215,51 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
 
                   return (
                     <div key={dayIndex} className="p-1 border-r last:border-r-0 min-h-[28px] flex items-center justify-center border-white/10">
-                        <div className="flex gap-1 w-full">
-                          {applicableSchedules.map((schedule, scheduleIndex) => (
-                             <div 
-                               key={scheduleIndex}
-                               className="rounded flex-1 h-5 relative cursor-pointer hover:brightness-110 transition-all flex items-center justify-center"
-                             style={{ 
-                               backgroundColor: schedule.color,
-                               opacity: schedule.isCurrentMedSchedule ? 1 : 0.3
-                             }}
-                             onClick={() => handleDoseClick(schedule)}
-                           >
-                             {/* Clean medication tile - quantity shown in time column for current med */}
-                           </div>
+                      <div className="flex gap-1 w-full">
+                        {applicableSchedules.map((schedule, scheduleIndex) => (
+                          <div 
+                            key={scheduleIndex}
+                            className="rounded flex-1 h-5 relative cursor-pointer hover:brightness-110 transition-all flex items-center justify-center"
+                            style={{ 
+                              backgroundColor: schedule.color,
+                              opacity: schedule.isCurrentMedSchedule ? 1 : 0.3
+                            }}
+                            onClick={() => handleDoseClick(time)}
+                          >
+                            {/* Clean medication tile - quantity shown in time column for current med */}
+                          </div>
                         ))}
                       </div>
                     </div>
                   );
                 })}
               </div>
+
+              {/* Medication details row - shown when expanded */}
+              {expandedTime === time && (
+                <div className="grid bg-white/5" style={{ gridTemplateColumns: '120px repeat(7, 1fr)' }}>
+                  <div className="p-2 border-r border-white/10">
+                    <div className="text-sm text-white/70">Medications:</div>
+                  </div>
+                  <div className="col-span-7 p-2">
+                    <div className="space-y-1">
+                      {timeSchedules.flatMap(schedule => 
+                        schedule.medications.map((med, index) => (
+                          <div key={`${schedule.dayPattern}-${index}`} className="bg-white/10 rounded px-3 py-1">
+                            <span className="text-sm text-white">
+                              <span className="font-bold">{med.name}</span>
+                              <span className="text-white/40 mx-2">•</span>
+                              <span className="font-bold">{med.strength}</span>
+                              <span className="text-white/40 mx-2">•</span>
+                              <span className="font-normal">{med.quantity}x</span>
+                            </span>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
             </React.Fragment>
           )
         })}
@@ -268,7 +292,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         <div className="flex-1 overflow-y-auto px-2 pb-2">
           <div className="rounded-lg overflow-hidden border border-white/10 bg-charcoal">
             {/* Header */}
-            <div className="grid text-xs bg-charcoal" style={{ 
+            <div className="grid bg-charcoal" style={{ 
               gridTemplateColumns: '120px repeat(7, 1fr)'
             }}>
               <div className="p-1 text-xl font-bold text-white text-center border-r border-white/10 whitespace-nowrap">
@@ -370,64 +394,6 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         </div>
       </div>
 
-      {/* Dose Details Dialog */}
-      <Dialog open={!!selectedSchedule} onOpenChange={() => setSelectedSchedule(null)}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-          </DialogHeader>
-          {selectedSchedule && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between text-xl">
-                <span className={getTimeColor(selectedSchedule.time)}>
-                  {(() => {
-                    const time = selectedSchedule.time;
-                    // If time already has AM/PM, use it as is
-                    if (time.includes('AM') || time.includes('PM')) {
-                      return time;
-                    }
-                    // Otherwise, use the original formatTimeDisplay and add AM/PM logic
-                    return formatTimeDisplay(time);
-                  })()}
-                </span>
-                <span className="text-white font-medium">
-                  {selectedSchedule.dayPattern === 'everyday' 
-                    ? 'Everyday'
-                    : selectedSchedule.dayPattern.split(',').map(day => {
-                        // Get abbreviated form and remove the first 2 characters if it's 3 chars (Mon -> M, Tue -> T, etc.)
-                        const abbrev = getDayAbbreviation(day);
-                        return abbrev.length === 3 ? abbrev.charAt(0) : abbrev;
-                      }).join(',')
-                  }
-                </span>
-              </div>
-              
-              <div className="border-t border-white/10 pt-4">
-                <div className="space-y-2">
-                  {selectedSchedule.medications.map((med, index) => (
-                    <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-white/5">
-                      <div className="flex items-center justify-center w-10 h-10 rounded-full flex-shrink-0" style={{ backgroundColor: '#F26C3A' }}>
-                        <Pill size={20} className="text-white" />
-                      </div>
-                      <div className="flex-1 flex items-center justify-between">
-                        <div>
-                          <h3 className="text-base text-white">
-                            <span className="font-bold">{med.name}</span>
-                            <span className="text-white/40 mx-2">•</span>
-                            <span className="font-bold">{med.strength}</span>
-                          </h3>
-                        </div>
-                        <div className="text-base text-white/70">
-                          {med.quantity}x {med.quantity === 1 ? 'pill' : 'pills'}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
     </>
   );
 };

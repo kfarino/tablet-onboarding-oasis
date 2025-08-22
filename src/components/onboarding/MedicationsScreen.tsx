@@ -312,8 +312,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
           </div>
         </div>
 
-        {/* Scrollable schedule container - matching the data state */}
-        <div className="flex-1 overflow-y-auto px-2 pb-2">
+        {/* Schedule container - matching the data state */}
+        <div className="px-2 pb-2">
           <div className="rounded-lg overflow-hidden border border-white/10 bg-charcoal">
             {/* Header - Sticky Row 2 */}
             <div className="sticky top-[73px] z-10 grid bg-charcoal border-b-2 border-white/20" style={{ 
@@ -378,11 +378,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   }
 
   return (
-    <div className="animate-fade-in flex flex-col h-full" data-medications-screen>
-      {/* Scrollable schedule container with integrated medication details */}
-      <div className="flex-1 overflow-y-auto px-2 pb-2">
-        {displayMedications.length > 0 && renderConsolidatedScheduleWithMedicationDetails()}
-      </div>
+    <div className="animate-fade-in flex flex-col h-full px-2 pb-2" data-medications-screen>
+      {displayMedications.length > 0 && renderConsolidatedScheduleWithMedicationDetails()}
     </div>
   );
 };

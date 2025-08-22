@@ -126,10 +126,10 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
     const asNeededMeds = displayMedications.filter(med => med.asNeeded);
 
     return (
-      <div className="rounded-lg overflow-hidden border border-white/10 bg-charcoal">
-        {/* Row 1 - Medication Details - Sticky */}
+      <div className="flex flex-col h-full">
+        {/* Row 1 - Medication Details - Fixed */}
         <div 
-          className="sticky top-0 z-20 bg-white/5 backdrop-blur-sm border-2 rounded-lg border-b border-white/10 px-6 py-3"
+          className="bg-white/5 backdrop-blur-sm border-2 rounded-lg border-b border-white/10 px-6 py-3 flex-shrink-0"
           style={{ borderColor: currentMedication ? currentMedColor : 'rgba(255, 255, 255, 0.2)' }}
         >
           <div className="flex justify-between items-center">
@@ -165,8 +165,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
           </div>
         </div>
 
-        {/* Row 2 - Schedule Header - Sticky */}
-        <div className="sticky top-[73px] z-10 grid bg-charcoal border-b-2 border-white/20" style={{ 
+        {/* Row 2 - Schedule Header - Fixed */}
+        <div className="grid bg-charcoal border-b-2 border-white/20 flex-shrink-0" style={{ 
           gridTemplateColumns: '120px repeat(7, 1fr)'
         }}>
           <div className="p-1 h-[28px] text-xl font-bold text-white text-center border-r border-white/10 whitespace-nowrap flex items-center justify-center">
@@ -179,41 +179,15 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
           ))}
         </div>
 
-        {/* Time rows */}
-        {sortedTimes.map((time, timeIndex) => {
-          const timeSchedules = timeGroups[time];
-          const hasCurrentMedication = timeSchedules.some(schedule => schedule.isCurrentMedSchedule);
-          const totalQuantity = timeSchedules.reduce((sum, schedule) => 
-            sum + schedule.medications.reduce((medSum, med) => medSum + med.quantity, 0), 0
-          );
+        {/* Scrollable Time rows */}
+        <div className="flex-1 overflow-y-auto border border-white/10 bg-charcoal rounded-b-lg">
+          {sortedTimes.map((time) => {
+            const timeSchedules = timeGroups[time];
+            const hasCurrentMedication = timeSchedules.some(schedule => schedule.isCurrentMedSchedule);
 
-          // Check if we should show noon separator before this time
-          const shouldShowNoonSeparator = timeIndex === 0 ? false : (() => {
-            const currentTimeMinutes = parseOriginalTimeForSorting(time);
-            const prevTime = sortedTimes[timeIndex - 1];
-            const prevTimeMinutes = parseOriginalTimeForSorting(prevTime);
-            
-            // Show noon if we're crossing from AM (< 720) to PM (>= 720)
-            return prevTimeMinutes < 720 && currentTimeMinutes >= 720;
-          })();
-
-          return (
-            <React.Fragment key={time}>
-              {/* Noon separator */}
-              {shouldShowNoonSeparator && (
-                <div className="grid" style={{ 
-                  gridTemplateColumns: '120px repeat(7, 1fr)',
-                  backgroundColor: 'rgba(255, 255, 255, 0.2)'
-                }}>
-                  <div className="py-0.5 pl-4 flex items-center justify-start border-r border-white/20">
-                    <div className="text-sm font-semibold text-white">Noon</div>
-                  </div>
-                  <div className="col-span-7 py-0.5"></div>
-                </div>
-              )}
-              
-              {/* Time row */}
+            return (
               <div 
+                key={time}
                 className="grid border-b border-white/10 transition-all duration-300 bg-charcoal relative" 
                 style={{ gridTemplateColumns: '120px repeat(7, 1fr)' }}
               >
@@ -273,11 +247,9 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                   );
                 })}
               </div>
-
-            </React.Fragment>
-          )
-        })}
-
+            );
+          })}
+        </div>
       </div>
     );
   };
@@ -286,7 +258,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
     return (
       <div className="animate-fade-in flex flex-col h-full" data-medications-screen>
         {/* Unified medication badge - no data state */}
-        <div className="sticky top-0 z-20 bg-charcoal px-6 py-3 border-b border-white/10">
+        <div className="bg-charcoal px-6 py-3 border-b border-white/10 flex-shrink-0">
           <div className="flex justify-between items-center">
             <div className="flex">
               <div className="bg-white/5 backdrop-blur-sm border-2 border-white/20 rounded-lg px-6 py-3">
@@ -315,8 +287,8 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         {/* Schedule container - matching the data state */}
         <div className="px-2 pb-2">
           <div className="rounded-lg overflow-hidden border border-white/10 bg-charcoal">
-            {/* Header - Sticky Row 2 */}
-            <div className="sticky top-[73px] z-10 grid bg-charcoal border-b-2 border-white/20" style={{ 
+            {/* Header - Fixed Row 2 */}
+            <div className="grid bg-charcoal border-b-2 border-white/20 flex-shrink-0" style={{ 
               gridTemplateColumns: '120px repeat(7, 1fr)'
             }}>
               <div className="p-1 text-xl font-bold text-white text-center border-r border-white/10 whitespace-nowrap">
@@ -329,47 +301,39 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               ))}
             </div>
             
-            {/* AM time slot */}
-            <div className="grid border-b border-white/10 bg-charcoal" style={{ 
-              gridTemplateColumns: '120px repeat(7, 1fr)'
-            }}>
-              <div className="p-1 pl-4 h-[28px] flex items-center justify-start border-r border-white/10">
-                <div className="text-xl font-bold text-orange-400">AM</div>
-              </div>
-              {Array.from({ length: 7 }).map((_, dayIndex) => (
-                <div key={dayIndex} className="p-1 border-r last:border-r-0 min-h-[28px] flex items-center justify-center border-white/10">
-                  <div className="flex gap-1 w-full">
-                    <div className="rounded flex-1 h-5 bg-white/10"></div>
-                  </div>
+            {/* Scrollable placeholder rows */}
+            <div className="flex-1 overflow-y-auto">
+              {/* AM time slot */}
+              <div className="grid border-b border-white/10 bg-charcoal" style={{ 
+                gridTemplateColumns: '120px repeat(7, 1fr)'
+              }}>
+                <div className="p-1 pl-4 h-[28px] flex items-center justify-start border-r border-white/10">
+                  <div className="text-xl font-bold text-orange-400">AM</div>
                 </div>
-              ))}
-            </div>
-            
-            {/* Noon separator */}
-            <div className="grid" style={{ 
-              gridTemplateColumns: '120px repeat(7, 1fr)',
-              backgroundColor: 'rgba(255, 255, 255, 0.2)'
-            }}>
-              <div className="py-0.5 pl-4 flex items-center justify-start border-r border-white/20">
-                <div className="text-sm font-semibold text-white">Noon</div>
-              </div>
-              <div className="col-span-7 py-0.5"></div>
-            </div>
-            
-            {/* PM time slot */}
-            <div className="grid border-b border-white/10 bg-charcoal" style={{ 
-              gridTemplateColumns: '120px repeat(7, 1fr)'
-            }}>
-              <div className="p-1 pl-4 h-[28px] flex items-center justify-start border-r border-white/10">
-                <div className="text-xl font-bold text-blue-400">PM</div>
-              </div>
-              {Array.from({ length: 7 }).map((_, dayIndex) => (
-                <div key={dayIndex} className="p-1 border-r last:border-r-0 min-h-[28px] flex items-center justify-center border-white/10">
-                  <div className="flex gap-1 w-full">
-                    <div className="rounded flex-1 h-5 bg-white/10"></div>
+                {Array.from({ length: 7 }).map((_, dayIndex) => (
+                  <div key={dayIndex} className="p-1 border-r last:border-r-0 min-h-[28px] flex items-center justify-center border-white/10">
+                    <div className="flex gap-1 w-full">
+                      <div className="rounded flex-1 h-5 bg-white/10"></div>
+                    </div>
                   </div>
+                ))}
+              </div>
+              
+              {/* PM time slot */}
+              <div className="grid border-b border-white/10 bg-charcoal" style={{ 
+                gridTemplateColumns: '120px repeat(7, 1fr)'
+              }}>
+                <div className="p-1 pl-4 h-[28px] flex items-center justify-start border-r border-white/10">
+                  <div className="text-xl font-bold text-blue-400">PM</div>
                 </div>
-              ))}
+                {Array.from({ length: 7 }).map((_, dayIndex) => (
+                  <div key={dayIndex} className="p-1 border-r last:border-r-0 min-h-[28px] flex items-center justify-center border-white/10">
+                    <div className="flex gap-1 w-full">
+                      <div className="rounded flex-1 h-5 bg-white/10"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

@@ -103,7 +103,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   };
 
 
-  const renderConsolidatedSchedule = () => {
+  const renderConsolidatedScheduleWithMedicationDetails = () => {
     const daysOfWeek = ['Su', 'M', 'T', 'W', 'Th', 'F', 'Sa'];
     const fullDayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
     const doseSchedules = createDoseSchedules();
@@ -127,7 +127,49 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
 
     return (
       <div className="rounded-lg overflow-hidden border border-white/10 bg-charcoal">
-        {/* Header - Sticky Row 2 */}
+        {/* Row 1 - Medication Details - Sticky */}
+        <div className="sticky top-0 z-20 bg-charcoal border-b border-white/10 px-6 py-3">
+          <div className="flex justify-between items-center">
+            <div className="flex">
+              {currentMedication ? (
+                <div 
+                  className="bg-white/5 backdrop-blur-sm border-2 rounded-lg px-6 py-3"
+                  style={{ borderColor: currentMedColor }}
+                >
+                  <span className="text-xl text-white">
+                    <span className="font-bold">{currentMedication.name}</span>
+                    <span className="text-white/40 mx-2">•</span>
+                    <span className="font-bold">{currentMedication.strength}</span>
+                    <span className="text-white/40 mx-2">•</span>
+                    <span className="font-normal">{currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}</span>
+                    {currentMedication.asNeeded && (
+                      <>
+                        <span className="text-white/40 mx-2">•</span>
+                        <span className="font-light text-white/70">As needed {currentMedication.asNeeded.maxPerDay}x/day</span>
+                      </>
+                    )}
+                  </span>
+                </div>
+              ) : (
+                <div className="bg-white/5 backdrop-blur-sm border-2 border-white/20 rounded-lg px-6 py-3">
+                  <span className="text-xl font-semibold text-white/60 italic">
+                    New Medication
+                  </span>
+                </div>
+              )}
+            </div>
+            
+            {/* View all (X) link - Orange color */}
+            <button
+              onClick={onShowAllMedications}
+              className="text-orange-400 hover:text-orange-300 underline cursor-pointer text-lg transition-colors"
+            >
+              View all ({medicationCount})
+            </button>
+          </div>
+        </div>
+
+        {/* Row 2 - Schedule Header - Sticky */}
         <div className="sticky top-[73px] z-10 grid bg-charcoal border-b-2 border-white/20" style={{ 
           gridTemplateColumns: '120px repeat(7, 1fr)'
         }}>
@@ -264,10 +306,10 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               </div>
             </div>
             
-            {/* View all (X) link */}
+            {/* View all (X) link - Orange color */}
             <button
               onClick={onShowAllMedications}
-              className="text-blue-400 hover:text-blue-300 underline cursor-pointer text-lg transition-colors"
+              className="text-orange-400 hover:text-orange-300 underline cursor-pointer text-lg transition-colors"
             >
               View all ({medicationCount})
             </button>
@@ -340,58 +382,12 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
   }
 
   return (
-    <>
-      <div className="animate-fade-in flex flex-col h-full" data-medications-screen>
-        {/* Unified medication badge - rectangular container */}
-        <div className="sticky top-0 z-20 bg-charcoal px-6 py-3 border-b border-white/10">
-          <div className="flex justify-between items-center">
-            <div className="flex">
-              {currentMedication ? (
-                <div 
-                  className="bg-white/5 backdrop-blur-sm border-2 rounded-lg px-6 py-3"
-                  style={{ borderColor: currentMedColor }}
-                >
-                  <span className="text-xl text-white">
-                    <span className="font-bold">{currentMedication.name}</span>
-                    <span className="text-white/40 mx-2">•</span>
-                    <span className="font-bold">{currentMedication.strength}</span>
-                    <span className="text-white/40 mx-2">•</span>
-                    <span className="font-normal">{currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}</span>
-                    {currentMedication.asNeeded && (
-                      <>
-                        <span className="text-white/40 mx-2">•</span>
-                        <span className="font-light text-white/70">As needed {currentMedication.asNeeded.maxPerDay}x/day</span>
-                      </>
-                    )}
-                  </span>
-                </div>
-              ) : (
-                <div className="bg-white/5 backdrop-blur-sm border-2 border-white/20 rounded-lg px-6 py-3">
-                  <span className="text-xl font-semibold text-white/60 italic">
-                    New Medication
-                  </span>
-                </div>
-              )}
-            </div>
-            
-            {/* View all (X) link */}
-            <button
-              onClick={onShowAllMedications}
-              className="text-blue-400 hover:text-blue-300 underline cursor-pointer text-lg transition-colors"
-            >
-              View all ({medicationCount})
-            </button>
-          </div>
-        </div>
-
-
-        {/* Scrollable schedule container */}
-        <div className="flex-1 overflow-y-auto px-2 pb-2">
-          {displayMedications.length > 0 && renderConsolidatedSchedule()}
-        </div>
+    <div className="animate-fade-in flex flex-col h-full" data-medications-screen>
+      {/* Scrollable schedule container with integrated medication details */}
+      <div className="flex-1 overflow-y-auto px-2 pb-2">
+        {displayMedications.length > 0 && renderConsolidatedScheduleWithMedicationDetails()}
       </div>
-
-    </>
+    </div>
   );
 };
 

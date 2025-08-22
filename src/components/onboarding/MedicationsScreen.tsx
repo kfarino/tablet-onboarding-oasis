@@ -169,11 +169,11 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         <div className="sticky top-[73px] z-10 grid bg-charcoal border-b-2 border-white/20" style={{ 
           gridTemplateColumns: '120px repeat(7, 1fr)'
         }}>
-          <div className="p-1 text-xl font-bold text-white text-center border-r border-white/10 whitespace-nowrap">
+          <div className="p-1 h-[28px] text-xl font-bold text-white text-center border-r border-white/10 whitespace-nowrap flex items-center justify-center">
             Time <span className="text-sm">(#/dose)</span>
           </div>
           {daysOfWeek.map((day) => (
-            <div key={day} className="p-1 text-xl font-bold text-white text-center border-r last:border-r-0 border-white/10">
+            <div key={day} className="p-1 h-[28px] text-xl font-bold text-white text-center border-r last:border-r-0 border-white/10 flex items-center justify-center">
               {day}
             </div>
           ))}

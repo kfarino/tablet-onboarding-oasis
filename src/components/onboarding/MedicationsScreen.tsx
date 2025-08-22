@@ -249,10 +249,16 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
       <div className="animate-fade-in flex flex-col h-full" data-medications-screen>
         {/* Unified medication badge - no data state */}
         <div className="sticky top-0 z-10 bg-charcoal px-6 py-3 border-b border-white/10">
-          <div className="flex justify-center">
+          <div className="flex justify-start">
             <div className="bg-white/5 backdrop-blur-sm border-2 border-white/20 rounded-full px-6 py-3">
-              <span className="text-xl font-semibold text-white/60 italic">
-                No Medications Added
+              <span className="text-xl text-white/60 italic">
+                <span className="font-bold">Medication Name</span>
+                <span className="text-white/40 mx-2">•</span>
+                <span className="font-bold">Strength</span>
+                <span className="text-white/40 mx-2">•</span>
+                <span className="font-normal">Form</span>
+                <span className="text-white/40 mx-2">•</span>
+                <span className="font-light text-white/50">As needed #x/day</span>
               </span>
             </div>
           </div>
@@ -328,14 +334,24 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
       <div className="animate-fade-in flex flex-col h-full" data-medications-screen>
         {/* Unified medication badge */}
         <div className="sticky top-0 z-10 bg-charcoal px-6 py-3 border-b border-white/10">
-          <div className="flex justify-center">
+          <div className="flex justify-start">
             {currentMedication ? (
               <div 
                 className="bg-white/5 backdrop-blur-sm border-2 rounded-full px-6 py-3"
                 style={{ borderColor: currentMedColor }}
               >
-                <span className="text-xl font-semibold text-white">
-                  {currentMedication.name} {currentMedication.strength} {currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}
+                <span className="text-xl text-white">
+                  <span className="font-bold">{currentMedication.name}</span>
+                  <span className="text-white/40 mx-2">•</span>
+                  <span className="font-bold">{currentMedication.strength}</span>
+                  <span className="text-white/40 mx-2">•</span>
+                  <span className="font-normal">{currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}</span>
+                  {currentMedication.asNeeded && (
+                    <>
+                      <span className="text-white/40 mx-2">•</span>
+                      <span className="font-light text-white/70">As needed {currentMedication.asNeeded.maxPerDay}x/day</span>
+                    </>
+                  )}
                 </span>
               </div>
             ) : (
@@ -394,7 +410,11 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                       </div>
                       <div className="flex-1 flex items-center justify-between">
                         <div>
-                          <h3 className="text-base font-semibold text-white">{med.name} {med.strength}</h3>
+                          <h3 className="text-base text-white">
+                            <span className="font-bold">{med.name}</span>
+                            <span className="text-white/40 mx-2">•</span>
+                            <span className="font-bold">{med.strength}</span>
+                          </h3>
                         </div>
                         <div className="text-base text-white/70">
                           {med.quantity}x {med.quantity === 1 ? 'pill' : 'pills'}

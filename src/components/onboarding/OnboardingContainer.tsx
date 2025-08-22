@@ -63,6 +63,38 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
       ],
       asNeeded: null
     },
+    // Calcium - everyday at 10 AM
+    {
+      id: uuidv4(),
+      name: "Calcium",
+      strength: "600mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["10:00 AM"],
+          quantity: 1
+        }
+      ],
+      asNeeded: null
+    },
+    // Amlodipine - weekdays at 12 PM
+    {
+      id: uuidv4(),
+      name: "Amlodipine",
+      strength: "5mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["monday", "tuesday", "wednesday", "thursday", "friday"],
+          times: ["12:00 PM"],
+          quantity: 1
+        }
+      ],
+      asNeeded: null
+    },
     // Metformin - everyday at 8 AM and 6 PM
     {
       id: uuidv4(),
@@ -79,6 +111,22 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
       ],
       asNeeded: null
     },
+    // Insulin - everyday at 2 PM
+    {
+      id: uuidv4(),
+      name: "Insulin",
+      strength: "10 units",
+      form: "injection",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["2:00 PM"],
+          quantity: 1
+        }
+      ],
+      asNeeded: null
+    },
     // Aspirin - weekdays at 8 AM
     {
       id: uuidv4(),
@@ -90,6 +138,38 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
           id: uuidv4(),
           days: ["monday", "tuesday", "wednesday", "thursday", "friday"],
           times: ["8:00 AM"],
+          quantity: 1
+        }
+      ],
+      asNeeded: null
+    },
+    // Omega-3 - weekends at 4 PM
+    {
+      id: uuidv4(),
+      name: "Omega-3",
+      strength: "1000mg",
+      form: "capsule",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["saturday", "sunday"],
+          times: ["4:00 PM"],
+          quantity: 2
+        }
+      ],
+      asNeeded: null
+    },
+    // Simvastatin - everyday at 8 PM
+    {
+      id: uuidv4(),
+      name: "Simvastatin",
+      strength: "40mg",
+      form: "tablet",
+      doses: [
+        {
+          id: uuidv4(),
+          days: ["everyday"],
+          times: ["8:00 PM"],
           quantity: 1
         }
       ],

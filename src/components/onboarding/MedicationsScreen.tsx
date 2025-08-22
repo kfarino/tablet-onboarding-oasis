@@ -263,13 +263,13 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
             <div className="flex">
               <div className="bg-white/5 backdrop-blur-sm border-2 border-white/20 rounded-lg px-6 py-3">
                 <span className="text-xl text-white/60 italic">
-                  <span className="font-bold">Medication Name</span>
+                  <span className="font-bold">Name</span>
                   <span className="text-white/40 mx-2">•</span>
                   <span className="font-bold">Strength</span>
                   <span className="text-white/40 mx-2">•</span>
-                  <span className="font-normal">Form</span>
+                  <span className="font-normal">From</span>
                   <span className="text-white/40 mx-2">•</span>
-                  <span className="font-light text-white/50">As needed #x/day</span>
+                  <span className="font-light text-white/50">As needed?</span>
                 </span>
               </div>
             </div>

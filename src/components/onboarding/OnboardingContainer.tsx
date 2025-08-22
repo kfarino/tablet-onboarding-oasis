@@ -125,7 +125,7 @@ const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
           quantity: 2
         }
       ],
-      asNeeded: { maxPerDay: 3 }
+      asNeeded: { maxPerDay: 2 }
     }
   ];
 

@@ -128,34 +128,30 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
     return (
       <div className="rounded-lg overflow-hidden border border-white/10 bg-charcoal">
         {/* Row 1 - Medication Details - Sticky */}
-        <div className="sticky top-0 z-20 bg-charcoal border-b border-white/10 px-6 py-3">
+        <div 
+          className="sticky top-0 z-20 bg-white/5 backdrop-blur-sm border-2 rounded-lg border-b border-white/10 px-6 py-3"
+          style={{ borderColor: currentMedication ? currentMedColor : 'rgba(255, 255, 255, 0.2)' }}
+        >
           <div className="flex justify-between items-center">
             <div className="flex">
               {currentMedication ? (
-                <div 
-                  className="bg-white/5 backdrop-blur-sm border-2 rounded-lg px-6 py-3"
-                  style={{ borderColor: currentMedColor }}
-                >
-                  <span className="text-xl text-white">
-                    <span className="font-bold">{currentMedication.name}</span>
-                    <span className="text-white/40 mx-2">•</span>
-                    <span className="font-bold">{currentMedication.strength}</span>
-                    <span className="text-white/40 mx-2">•</span>
-                    <span className="font-normal">{currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}</span>
-                    {currentMedication.asNeeded && (
-                      <>
-                        <span className="text-white/40 mx-2">•</span>
-                        <span className="font-light text-white/70">As needed {currentMedication.asNeeded.maxPerDay}x/day</span>
-                      </>
-                    )}
-                  </span>
-                </div>
+                <span className="text-xl text-white">
+                  <span className="font-bold">{currentMedication.name}</span>
+                  <span className="text-white/40 mx-2">•</span>
+                  <span className="font-bold">{currentMedication.strength}</span>
+                  <span className="text-white/40 mx-2">•</span>
+                  <span className="font-normal">{currentMedication.form.charAt(0).toUpperCase() + currentMedication.form.slice(1)}</span>
+                  {currentMedication.asNeeded && (
+                    <>
+                      <span className="text-white/40 mx-2">•</span>
+                      <span className="font-light text-white/70">As needed {currentMedication.asNeeded.maxPerDay}x/day</span>
+                    </>
+                  )}
+                </span>
               ) : (
-                <div className="bg-white/5 backdrop-blur-sm border-2 border-white/20 rounded-lg px-6 py-3">
-                  <span className="text-xl font-semibold text-white/60 italic">
-                    New Medication
-                  </span>
-                </div>
+                <span className="text-xl font-semibold text-white/60 italic">
+                  New Medication
+                </span>
               )}
             </div>
             

@@ -98,11 +98,6 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
     return Object.values(schedules);
   };
 
-  const [expandedTime, setExpandedTime] = useState<string | null>(null);
-
-  const handleDoseClick = (time: string) => {
-    setExpandedTime(expandedTime === time ? null : time);
-  };
 
   const renderConsolidatedSchedule = () => {
     const daysOfWeek = ['Su', 'M', 'T', 'W', 'Th', 'F', 'Sa'];
@@ -129,7 +124,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
     return (
       <div className="rounded-lg overflow-hidden border border-white/10 bg-charcoal">
         {/* Header */}
-        <div className="grid bg-charcoal" style={{ 
+        <div className="grid bg-charcoal border-b-2 border-white/20" style={{ 
           gridTemplateColumns: '120px repeat(7, 1fr)'
         }}>
           <div className="p-1 text-xl font-bold text-white text-center border-r border-white/10 whitespace-nowrap">
@@ -177,14 +172,16 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
               
               {/* Time row */}
               <div 
-                className={`grid border-b border-white/10 transition-all duration-300 bg-charcoal ${
-                  hasCurrentMedication ? 'border-l-4' : ''
-                }`} 
-                style={{ 
-                  gridTemplateColumns: '120px repeat(7, 1fr)',
-                  borderLeftColor: hasCurrentMedication ? currentMedColor : 'transparent'
-                }}
+                className="grid border-b border-white/10 transition-all duration-300 bg-charcoal relative" 
+                style={{ gridTemplateColumns: '120px repeat(7, 1fr)' }}
               >
+                {/* Left border indicator for current medication */}
+                {hasCurrentMedication && (
+                  <div 
+                    className="absolute left-0 top-0 bottom-0 w-1"
+                    style={{ backgroundColor: currentMedColor }}
+                  />
+                )}
                 {/* Time column - left aligned with quantity and time */}
                 <div className="p-1 pl-4 h-[28px] flex items-center justify-start border-r border-white/10">
                   <div className="text-xl font-bold flex items-center gap-1">
@@ -224,7 +221,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                               backgroundColor: schedule.color,
                               opacity: schedule.isCurrentMedSchedule ? 1 : 0.3
                             }}
-                            onClick={() => handleDoseClick(time)}
+                            onClick={() => {}}
                           >
                             {/* Clean medication tile - quantity shown in time column for current med */}
                           </div>
@@ -235,31 +232,6 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
                 })}
               </div>
 
-              {/* Medication details row - shown when expanded */}
-              {expandedTime === time && (
-                <div className="grid bg-white/5" style={{ gridTemplateColumns: '120px repeat(7, 1fr)' }}>
-                  <div className="p-2 border-r border-white/10">
-                    <div className="text-sm text-white/70">Medications:</div>
-                  </div>
-                  <div className="col-span-7 p-2">
-                    <div className="space-y-1">
-                      {timeSchedules.flatMap(schedule => 
-                        schedule.medications.map((med, index) => (
-                          <div key={`${schedule.dayPattern}-${index}`} className="bg-white/10 rounded px-3 py-1">
-                            <span className="text-sm text-white">
-                              <span className="font-bold">{med.name}</span>
-                              <span className="text-white/40 mx-2">•</span>
-                              <span className="font-bold">{med.strength}</span>
-                              <span className="text-white/40 mx-2">•</span>
-                              <span className="font-normal">{med.quantity}x</span>
-                            </span>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
             </React.Fragment>
           )
         })}
@@ -292,7 +264,7 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
         <div className="flex-1 overflow-y-auto px-2 pb-2">
           <div className="rounded-lg overflow-hidden border border-white/10 bg-charcoal">
             {/* Header */}
-            <div className="grid bg-charcoal" style={{ 
+            <div className="grid bg-charcoal border-b-2 border-white/20" style={{ 
               gridTemplateColumns: '120px repeat(7, 1fr)'
             }}>
               <div className="p-1 text-xl font-bold text-white text-center border-r border-white/10 whitespace-nowrap">
@@ -387,6 +359,31 @@ const MedicationsScreen: React.FC<MedicationsScreenProps> = ({
             )}
           </div>
         </div>
+
+        {/* Medication Details Container */}
+        {displayMedications.length > 0 && (
+          <div className="px-2 pt-2">
+            <div className="bg-white/5 border border-white/10 rounded-lg p-4 mb-2">
+              <div className="space-y-2">
+                {displayMedications.map((med, index) => (
+                  <div key={med.id} className="text-white">
+                    <span className="font-bold">{med.name}</span>
+                    <span className="text-white/40 mx-2">•</span>
+                    <span className="font-bold">{med.strength}</span>
+                    <span className="text-white/40 mx-2">•</span>
+                    <span className="font-normal">{med.form.charAt(0).toUpperCase() + med.form.slice(1)}</span>
+                    {med.asNeeded && (
+                      <>
+                        <span className="text-white/40 mx-2">•</span>
+                        <span className="font-light text-white/70">As needed {med.asNeeded.maxPerDay}x/day</span>
+                      </>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Scrollable schedule container */}
         <div className="flex-1 overflow-y-auto px-2 pb-2">
